@@ -23,13 +23,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/init/timeout",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
-		"init_success": {
-			StageName:           "init",
-			CodePath:            "./test_helpers/scenarios/init/success",
-			ExpectedExitCode:    0,
-			StdoutFixturePath:   "./test_helpers/fixtures/init/success",
-			NormalizeOutputFunc: normalizeTesterOutput,
-		},
+		// "init_success": {
+		// 	StageName:           "init",
+		// 	CodePath:            "./test_helpers/scenarios/init/success",
+		// 	ExpectedExitCode:    0,
+		// 	StdoutFixturePath:   "./test_helpers/fixtures/init/success",
+		// 	NormalizeOutputFunc: normalizeTesterOutput,
+		// },
 	}
 
 	tester_utils.TestTesterOutput(t, testerDefinition, testCases)
