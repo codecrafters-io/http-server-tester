@@ -33,5 +33,13 @@ var testerDefinition = testerutils.TesterDefinition{
 			ShouldRunPreviousStages: true,
 			Timeout:                 15 * time.Second,
 		},
+		{
+			Slug:                    "stage-2",
+			Number:                  2,
+			Title:                   "Respond with 404",
+			TestFunc:                test404NotFound,
+			ShouldRunPreviousStages: true,
+			Timeout:                 15 * time.Second,
+		},
 	},
 }
