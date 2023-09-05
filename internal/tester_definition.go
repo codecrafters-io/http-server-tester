@@ -41,5 +41,13 @@ var testerDefinition = testerutils.TesterDefinition{
 			ShouldRunPreviousStages: true,
 			Timeout:                 15 * time.Second,
 		},
+		{
+			Slug:                    "stage-3",
+			Number:                  3,
+			Title:                   "Handle multiple concurrent connections",
+			TestFunc:                testHandlesMultipleConcurrentConnections,
+			ShouldRunPreviousStages: true,
+			Timeout:                 15 * time.Second,
+		},
 	},
 }
