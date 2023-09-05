@@ -16,30 +16,21 @@ func test200OK(stageHarness *testerutils.StageHarness) error {
 	logger := stageHarness.Logger
 	logger.Infof("Running stage 1")
 
-	logger.Infof("Sending Get request")
-	client := http.Client{}
+	httpClient := NewHTTPClient()
 
-	req, err := http.NewRequest("GET", "http://localhost:4221", nil)
-	if err != nil {
-		logFriendlyError(stageHarness.Logger, err)
-		return fmt.Errorf("Error creating request:", err)
-	}
-	req.Close = true
+	requestWithStatus(httpClient, URL, 200, logger)
 
-	// Send the request
-	response, err := client.Do(req)
+	return nil
+}
+
+func requestWithStatus(client *http.Client, url string, statusCode int, logger *testerutils.Logger) error {
+	response, err := client.Get(url)
 	if err != nil {
-		logFriendlyError(stageHarness.Logger, err)
+		logFriendlyError(logger, err)
 		return fmt.Errorf("Failed to connect to server, err: '%v'", err)
 	}
-
-	defer response.Body.Close()
-
-	if response.StatusCode != 200 {
-		return fmt.Errorf("Expected status code 200, got %d", response.StatusCode)
+	if response.StatusCode != statusCode {
+		return fmt.Errorf("Expected status code %d, got %d", statusCode, response.StatusCode)
 	}
-
-	logger.Debugf("Connection successful")
-
 	return nil
 }

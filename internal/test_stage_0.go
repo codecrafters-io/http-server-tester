@@ -22,7 +22,7 @@ func testConnects(stageHarness *testerutils.StageHarness) error {
 	retries := 0
 	var err error
 	for {
-		conn, err = net.Dial("tcp", "localhost:4221")
+		conn, err = net.Dial("tcp", TCP_DEST)
 		if err != nil && retries > 15 {
 			logger.Infof("All retries failed.")
 			return err
