@@ -13,6 +13,7 @@ func test404NotFound(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
+	logger.Infof("Running stage 2")
 
 	httpClient := NewHTTPClient()
 

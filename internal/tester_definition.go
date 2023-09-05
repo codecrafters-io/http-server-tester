@@ -49,5 +49,13 @@ var testerDefinition = testerutils.TesterDefinition{
 			ShouldRunPreviousStages: true,
 			Timeout:                 15 * time.Second,
 		},
+		{
+			Slug:                    "stage-4",
+			Number:                  4,
+			Title:                   "List files",
+			TestFunc:                testFileListing,
+			ShouldRunPreviousStages: true,
+			Timeout:                 15 * time.Second,
+		},
 	},
 }
