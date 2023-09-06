@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -16,11 +17,19 @@ func testFileListing(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
+	fileNames := []string{
+		randSeq(FILENAME_SIZE),
+		randSeq(FILENAME_SIZE),
+	}
+	err := createFiles(DATA_DIR, fileNames)
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
 	httpClient := NewHTTPClient()
 
-	logger.Infof("Running stage 7")
-
-	response, err := httpClient.Get("http://localhost:4221/files")
+	response, err := httpClient.Get(URL + "files")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return fmt.Errorf("Failed to connect to server, err: '%v'", err)
@@ -41,13 +50,14 @@ func testFileListing(stageHarness *testerutils.StageHarness) error {
 		lines[i] = strings.TrimSpace(line)
 	}
 
-	expected := []string{
-		"file1.txt",
-		"file2.txt",
+	if !hasCommonElement(lines, fileNames) {
+		return fmt.Errorf("Expected lines: %v, got: %v", fileNames, lines)
 	}
 
-	if !hasCommonElement(lines, expected) {
-		return fmt.Errorf("Expected lines: %v, got: %v", expected, lines)
+	err = deleteFiles(DATA_DIR, fileNames)
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
 	}
 
 	return nil
@@ -69,4 +79,46 @@ func hasCommonElement(list1, list2 []string) bool {
 		}
 	}
 	return false
+}
+
+func createFiles(location string, fileNames []string) error {
+	err := os.MkdirAll(location, os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("Failed to create directory: %v", err)
+	}
+
+	for _, fileName := range fileNames {
+		err := createFileWith(DATA_DIR+fileName, randSeq(5))
+		if err != nil {
+			return fmt.Errorf("Failed to create file: %v", err)
+		}
+	}
+	return nil
+}
+
+func deleteFiles(location string, fileNames []string) error {
+	for _, fileName := range fileNames {
+		err := os.Remove(location + fileName)
+		if err != nil {
+			return fmt.Errorf("Failed to delete file: %v", err)
+		}
+	}
+	return nil
+}
+
+func createFileWith(location string, content string) error {
+
+	fmt.Println(location)
+	f, err := os.Create(location)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.WriteString(content)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
