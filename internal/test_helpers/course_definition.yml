@@ -10,7 +10,8 @@ description_md: |
 short_description_md: |
   TODO: Add short description
 
-completion_percentage: 10 # We'll update this once we have testers go through the course
+# We'll update this once we have testers go through the course
+completion_percentage: 10
 
 languages:
   - slug: "go"
