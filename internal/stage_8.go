@@ -25,11 +25,26 @@ func testGetFile(stageHarness *testerutils.StageHarness) error {
 		return fmt.Errorf("Failed to create file: %v", err)
 	}
 
+	err = testGetFileResponse(fileName, fileContent)
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	err = os.Remove(DATA_DIR + fileName)
+	if err != nil {
+		logFriendlyError(logger, err)
+		return err
+	}
+
+	return nil
+}
+
+func testGetFileResponse(fileName string, fileContent string) error {
 	httpClient := NewHTTPClient()
 
 	response, err := httpClient.Get(URL + "files" + "/" + fileName)
 	if err != nil {
-		logFriendlyError(logger, err)
 		return fmt.Errorf("Failed to connect to server, err: '%v'", err)
 	}
 
@@ -45,12 +60,5 @@ func testGetFile(stageHarness *testerutils.StageHarness) error {
 	if strings.TrimSpace(string(body)) != fileContent {
 		return fmt.Errorf("Expected the content to be %s got %s", fileContent, body)
 	}
-
-	err = os.Remove(DATA_DIR + fileName)
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
 	return nil
 }

@@ -81,5 +81,13 @@ var testerDefinition = testerutils.TesterDefinition{
 			ShouldRunPreviousStages: true,
 			Timeout:                 15 * time.Second,
 		},
+		{
+			Slug:                    "stage-9",
+			Number:                  9,
+			Title:                   "Post file",
+			TestFunc:                testPostFile,
+			ShouldRunPreviousStages: true,
+			Timeout:                 15 * time.Second,
+		},
 	},
 }
