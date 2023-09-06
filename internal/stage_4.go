@@ -18,8 +18,6 @@ func testRespondWithContent(stageHarness *testerutils.StageHarness) error {
 
 	httpClient := NewHTTPClient()
 
-	logger.Infof("Running stage 4")
-
 	contentLength := rand.Intn(5) + 5
 	content := randSeq(contentLength)
 	url := URL + "echo/" + content

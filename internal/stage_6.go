@@ -15,7 +15,6 @@ func testHandlesMultipleConcurrentConnections(stageHarness *testerutils.StageHar
 	}
 
 	logger := stageHarness.Logger
-	logger.Infof("Running stage 6")
 
 	randomInt := rand.Intn(5) + 5
 

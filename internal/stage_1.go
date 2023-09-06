@@ -15,7 +15,6 @@ func testConnects(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	logger.Infof("Running stage 1")
 
 	// Friendly logs for the first stage - this doesn't have to be done for further stages
 	var conn net.Conn
