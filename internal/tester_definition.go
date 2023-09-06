@@ -18,15 +18,15 @@ var testerDefinition = testerutils.TesterDefinition{
 	ExecutableFileName: "your_server.sh",
 	Stages: []testerutils.Stage{
 		{
-			Slug:                    "stage-1",
+			Slug:                    "connect-to-port",
 			Number:                  1,
-			Title:                   "Can connect to a TCP server",
+			Title:                   "Bind to a port",
 			TestFunc:                testConnects,
 			ShouldRunPreviousStages: true,
 			Timeout:                 15 * time.Second,
 		},
 		{
-			Slug:                    "stage-2",
+			Slug:                    "respond-with-200",
 			Number:                  2,
 			Title:                   "Respond with 200",
 			TestFunc:                test200OK,
@@ -34,7 +34,7 @@ var testerDefinition = testerutils.TesterDefinition{
 			Timeout:                 15 * time.Second,
 		},
 		{
-			Slug:                    "stage-3",
+			Slug:                    "respond-with-404",
 			Number:                  3,
 			Title:                   "Respond with 404",
 			TestFunc:                test404NotFound,
@@ -42,7 +42,7 @@ var testerDefinition = testerutils.TesterDefinition{
 			Timeout:                 15 * time.Second,
 		},
 		{
-			Slug:                    "stage-4",
+			Slug:                    "respond-with-content",
 			Number:                  4,
 			Title:                   "Respond with content",
 			TestFunc:                testRespondWithContent,
@@ -50,23 +50,23 @@ var testerDefinition = testerutils.TesterDefinition{
 			Timeout:                 15 * time.Second,
 		},
 		{
-			Slug:                    "stage-5",
+			Slug:                    "parse-headers",
 			Number:                  5,
-			Title:                   "Header Parsing",
+			Title:                   "Parse Headers",
 			TestFunc:                testRespondWithUserAgent,
 			ShouldRunPreviousStages: true,
 			Timeout:                 15 * time.Second,
 		},
 		{
-			Slug:                    "stage-6",
+			Slug:                    "concurrent-connections",
 			Number:                  6,
-			Title:                   "Handle multiple concurrent connections",
+			Title:                   "Handle concurrent connections",
 			TestFunc:                testHandlesMultipleConcurrentConnections,
 			ShouldRunPreviousStages: true,
 			Timeout:                 15 * time.Second,
 		},
 		{
-			Slug:                    "stage-7",
+			Slug:                    "list-files",
 			Number:                  7,
 			Title:                   "List files",
 			TestFunc:                testFileListing,
@@ -74,7 +74,7 @@ var testerDefinition = testerutils.TesterDefinition{
 			Timeout:                 15 * time.Second,
 		},
 		{
-			Slug:                    "stage-8",
+			Slug:                    "get-file",
 			Number:                  8,
 			Title:                   "Get file",
 			TestFunc:                testGetFile,
@@ -82,7 +82,7 @@ var testerDefinition = testerutils.TesterDefinition{
 			Timeout:                 15 * time.Second,
 		},
 		{
-			Slug:                    "stage-9",
+			Slug:                    "post-file",
 			Number:                  9,
 			Title:                   "Post file",
 			TestFunc:                testPostFile,

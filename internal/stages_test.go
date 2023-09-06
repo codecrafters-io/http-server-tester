@@ -10,21 +10,21 @@ import (
 func TestStages(t *testing.T) {
 	testCases := map[string]tester_utils.TesterOutputTestCase{
 		"init_failure": {
-			StageName:           "init",
+			StageName:           "connect-to-port",
 			CodePath:            "./test_helpers/scenarios/init/failure",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/failure",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"init_timeout": {
-			StageName:           "init",
+			StageName:           "connect-to-port",
 			CodePath:            "./test_helpers/scenarios/init/timeout",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/timeout",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"init_success": {
-			StageName:           "init",
+			StageName:           "connect-to-port",
 			CodePath:            "./test_helpers/scenarios/init/success",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/success",
