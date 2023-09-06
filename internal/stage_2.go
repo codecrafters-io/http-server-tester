@@ -1,12 +1,13 @@
 package internal
 
 import (
+	"fmt"
+	"net/http"
+
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
-const randomUrlLength = 20
-
-func test404NotFound(stageHarness *testerutils.StageHarness) error {
+func test200OK(stageHarness *testerutils.StageHarness) error {
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -17,11 +18,19 @@ func test404NotFound(stageHarness *testerutils.StageHarness) error {
 
 	httpClient := NewHTTPClient()
 
-	// There are no urls that would be this long so there is 0 probability of collison ever
-	var url = URL + randSeq(randomUrlLength)
+	requestWithStatus(httpClient, URL, 200, logger)
 
-	logger.Infof("Calling %s", url)
-	requestWithStatus(httpClient, url, 404, logger)
+	return nil
+}
 
+func requestWithStatus(client *http.Client, url string, statusCode int, logger *testerutils.Logger) error {
+	response, err := client.Get(url)
+	if err != nil {
+		logFriendlyError(logger, err)
+		return fmt.Errorf("Failed to connect to server, err: '%v'", err)
+	}
+	if response.StatusCode != statusCode {
+		return fmt.Errorf("Expected status code %d, got %d", statusCode, response.StatusCode)
+	}
 	return nil
 }

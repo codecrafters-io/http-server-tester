@@ -2,12 +2,13 @@ package internal
 
 import (
 	"fmt"
-	"net/http"
+	"net"
+	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
-func test200OK(stageHarness *testerutils.StageHarness) error {
+func testConnects(stageHarness *testerutils.StageHarness) error {
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
@@ -16,21 +17,34 @@ func test200OK(stageHarness *testerutils.StageHarness) error {
 	logger := stageHarness.Logger
 	logger.Infof("Running stage 1")
 
-	httpClient := NewHTTPClient()
+	// Friendly logs for the first stage - this doesn't have to be done for further stages
+	var conn net.Conn
+	retries := 0
+	var err error
+	for {
+		conn, err = net.Dial("tcp", TCP_DEST)
+		if err != nil && retries > 15 {
+			logger.Infof("All retries failed.")
+			return err
+		}
 
-	requestWithStatus(httpClient, URL, 200, logger)
+		if err != nil {
+			if b.HasExited() {
+				return fmt.Errorf("Looks like your program has terminated. A HTTP server is expected to be a long-running process.")
+			}
 
-	return nil
-}
+			// Don't print errors in the first second
+			if retries > 2 {
+				logger.Infof("Failed to connect to port 4221, retrying in 1s")
+			}
 
-func requestWithStatus(client *http.Client, url string, statusCode int, logger *testerutils.Logger) error {
-	response, err := client.Get(url)
-	if err != nil {
-		logFriendlyError(logger, err)
-		return fmt.Errorf("Failed to connect to server, err: '%v'", err)
+			retries += 1
+			time.Sleep(1000 * time.Millisecond)
+		} else {
+			conn.Close()
+			break
+		}
 	}
-	if response.StatusCode != statusCode {
-		return fmt.Errorf("Expected status code %d, got %d", statusCode, response.StatusCode)
-	}
+
 	return nil
 }

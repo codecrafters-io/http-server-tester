@@ -18,7 +18,7 @@ func testFileListing(stageHarness *testerutils.StageHarness) error {
 
 	httpClient := NewHTTPClient()
 
-	logger.Infof("Running stage 4")
+	logger.Infof("Running stage 7")
 
 	response, err := httpClient.Get("http://localhost:4221/files")
 	if err != nil {
