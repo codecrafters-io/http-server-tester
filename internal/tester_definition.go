@@ -84,7 +84,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		{
 			Slug:                    "post-file",
 			Number:                  9,
-			Title:                   "Post file",
+			Title:                   "Post a file",
 			TestFunc:                testPostFile,
 			ShouldRunPreviousStages: true,
 			Timeout:                 15 * time.Second,
