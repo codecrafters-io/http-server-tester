@@ -76,7 +76,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		{
 			Slug:                    "get-file",
 			Number:                  8,
-			Title:                   "Get file",
+			Title:                   "Get a file",
 			TestFunc:                testGetFile,
 			ShouldRunPreviousStages: true,
 			Timeout:                 15 * time.Second,
