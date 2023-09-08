@@ -17,9 +17,7 @@ func test200OK(stageHarness *testerutils.StageHarness) error {
 
 	httpClient := NewHTTPClient()
 
-	requestWithStatus(httpClient, URL, 200, logger)
-
-	return nil
+	return requestWithStatus(httpClient, URL, 200, logger)
 }
 
 func requestWithStatus(client *http.Client, url string, statusCode int, logger *testerutils.Logger) error {
