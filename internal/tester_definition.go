@@ -52,7 +52,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		{
 			Slug:                    "parse-headers",
 			Number:                  5,
-			Title:                   "Parse Headers",
+			Title:                   "Parse headers",
 			TestFunc:                testRespondWithUserAgent,
 			ShouldRunPreviousStages: true,
 			Timeout:                 15 * time.Second,
@@ -60,7 +60,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		{
 			Slug:                    "concurrent-connections",
 			Number:                  6,
-			Title:                   "Handle concurrent connections",
+			Title:                   "Concurrent connections",
 			TestFunc:                testHandlesMultipleConcurrentConnections,
 			ShouldRunPreviousStages: true,
 			Timeout:                 15 * time.Second,
