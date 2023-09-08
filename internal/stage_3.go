@@ -20,7 +20,5 @@ func test404NotFound(stageHarness *testerutils.StageHarness) error {
 	var url = URL + randSeq(randomUrlLength)
 
 	logger.Infof("Calling %s", url)
-	requestWithStatus(httpClient, url, 404, logger)
-
-	return nil
+	return requestWithStatus(httpClient, url, 404, logger)
 }

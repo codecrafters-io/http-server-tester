@@ -29,9 +29,7 @@ func testHandlesMultipleConcurrentConnections(stageHarness *testerutils.StageHar
 	}
 
 	httpClient := NewHTTPClient()
-	requestWithStatus(httpClient, URL, 200, logger)
-
-	return nil
+	return requestWithStatus(httpClient, URL, 200, logger)
 }
 
 func createTcpConn(destination string) (net.Conn, error) {
