@@ -18,7 +18,7 @@ func testRespondWithUserAgent(stageHarness *testerutils.StageHarness) error {
 	logger := stageHarness.Logger
 	client := NewHTTPClient()
 
-	url := URL + "echo/user-agent"
+	url := URL + "user-agent"
 	userAgent := randSeq(20)
 
 	req, err := http.NewRequest("GET", url, nil)
