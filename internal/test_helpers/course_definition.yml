@@ -147,11 +147,15 @@ stages:
 
       - Accept a TCP connection
       - Read data from the connection (we'll get to parsing it in later stages)
-      - Respond with `HTTP/1.1 200 OK` followed by a blank line
-
-      The `HTTP/1.1 200 OK` is known as the [HTTP Status Line](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#status_line).
+      - Respond with `HTTP/1.1 200 OK\r\n\r\n` (there are two `\r\n`s at the end)
+          - `HTTP/1.1 200 OK` is the [HTTP Status Line](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#status_line).
+          - `\r\n`, also known as [CRLF](https://developer.mozilla.org/en-US/docs/Glossary/CRLF), is the end-of-line marker that HTTP uses.
+          - The first `\r\n` signifies the end of the status line.
+          - The second `\r\n` signifies the end of the response headers section (which is empty in this case).
 
       It's okay to ignore the data received from the connection for now. We'll get to parsing it in later stages.
+
+      For more details on the structure of a HTTP response, view the [MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_responses).
     marketing_md: |
       In this stage, you'll extend your TCP server to respond to a HTTP request with a 200 response.
 
@@ -159,10 +163,27 @@ stages:
     name: "Respond with 404"
     difficulty: easy
     description_md: |
-      In this stage you will respond with a 404 not found on all but the default
-      route
+      In this stage, your program will need to extract the path from the HTTP request.
 
-      Learn more about [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
+      Here's what the contents of a HTTP request look like:
+
+      ```
+      GET /index.html HTTP/1.1
+
+      Host: localhost:4221
+      User-Agent: curl/7.64.1
+      ```
+
+      - `GET /index.html HTTP/1.1` is the [start line](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#start_line).
+          - `GET` is the [HTTP method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).
+          - `/index.html` is the [path](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#path).
+          - `HTTP/1.1` is the [HTTP version](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_versions).
+      - `Host: localhost:4221` and `User-Agent: curl/7.64.1` are [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#headers).
+      - Note that all of these lines are separated by `\r\n`, not just `\n`.
+
+      In this stage, we'll only focus on extracting the path from the request.
+
+      If the path is `/`, you'll need to respond with a 200 OK response. Otherwise, you'll need to respond with a 404 Not Found response.
     marketing_md: |
       In this stage, you'll add support for returning a 404 response if a path isn't valid.
 
@@ -210,21 +231,6 @@ stages:
 
     marketing_md: |
       In this stage, you'll add support for handling multiple concurrent connections.
-
-  - slug: "list-files"
-    name: "List files"
-    difficulty: medium
-    description_md: |
-      In this stage, your server will need to serve a list of files form the
-      directory `/tmp/data/codecrafters.io/http-server-tester/`. The request
-      path will be `/files`.
-
-      Remember the tester expects you to set the [Content-Type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type)
-      to be `text/plain` and [Content-Length](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length) header
-      to be present with appropriate value.
-
-    marketing_md: |
-      In this stage, you'll add support for serving a list of files from a given directory.
 
   - slug: "get-file"
     name: "Get a file"

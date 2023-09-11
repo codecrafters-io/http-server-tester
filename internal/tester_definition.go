@@ -66,16 +66,8 @@ var testerDefinition = testerutils.TesterDefinition{
 			Timeout:                 15 * time.Second,
 		},
 		{
-			Slug:                    "list-files",
-			Number:                  7,
-			Title:                   "List files",
-			TestFunc:                testFileListing,
-			ShouldRunPreviousStages: true,
-			Timeout:                 15 * time.Second,
-		},
-		{
 			Slug:                    "get-file",
-			Number:                  8,
+			Number:                  7,
 			Title:                   "Get a file",
 			TestFunc:                testGetFile,
 			ShouldRunPreviousStages: true,
@@ -83,7 +75,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		},
 		{
 			Slug:                    "post-file",
-			Number:                  9,
+			Number:                  8,
 			Title:                   "Post a file",
 			TestFunc:                testPostFile,
 			ShouldRunPreviousStages: true,
