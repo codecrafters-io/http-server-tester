@@ -9,6 +9,10 @@ import (
 
 func NewHTTPClient() *http.Client {
 	return &http.Client{
+		// Don't follow redirects
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
 		Transport: &http.Transport{
 			// Don't complain if we aren't able to connect at first, for at least 10 seconds.
 			DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
