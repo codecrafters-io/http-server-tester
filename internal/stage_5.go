@@ -35,6 +35,10 @@ func testRespondWithUserAgent(stageHarness *testerutils.StageHarness) error {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("Expected status code 200, got %d", resp.StatusCode)
+	}
+
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		logFriendlyError(logger, err)
