@@ -24,11 +24,7 @@ func randSeq(n int) string {
 	return string(b)
 }
 
-func sendRequest(client *http.Client, url string, logger *testerutils.Logger) (*http.Response, error) {
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
+func sendRequest(client *http.Client, req *http.Request, logger *testerutils.Logger) (*http.Response, error) {
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	if err != nil {
 		return nil, err
@@ -49,7 +45,11 @@ func sendRequest(client *http.Client, url string, logger *testerutils.Logger) (*
 }
 
 func requestWithStatus(client *http.Client, url string, statusCode int, logger *testerutils.Logger) error {
-	resp, err := sendRequest(client, url, logger)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err
+	}
+	resp, err := sendRequest(client, req, logger)
 	if err != nil {
 		return err
 	}

@@ -21,7 +21,12 @@ func testRespondWithContent(stageHarness *testerutils.StageHarness) error {
 	content := randomUrlPath()
 	url := URL + "echo/" + content
 
-	resp, err := sendRequest(httpClient, url, logger)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err
+	}
+
+	resp, err := sendRequest(httpClient, req, logger)
 
 	if err != nil {
 		logFriendlyError(logger, err)
