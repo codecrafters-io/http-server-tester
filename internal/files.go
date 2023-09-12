@@ -43,3 +43,14 @@ func testGetFileResponse(logger *testerutils.Logger, fileName string, fileConten
 
 	return nil
 }
+
+func validateFile(fileName string, fileContent string) error {
+	onDiskContent, err := os.ReadFile(DATA_DIR + fileName)
+	if err != nil {
+		return fmt.Errorf("Error reading file: %v", err)
+	}
+	if fileContent != string(onDiskContent) {
+		return fmt.Errorf("Expected the content to be %s got %s", fileContent, onDiskContent)
+	}
+	return nil
+}
