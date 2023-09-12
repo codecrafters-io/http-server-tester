@@ -105,20 +105,3 @@ func deleteFiles(location string, fileNames []string) error {
 	}
 	return nil
 }
-
-func createFileWith(location string, content string) error {
-
-	fmt.Println(location)
-	f, err := os.Create(location)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	_, err = f.WriteString(content)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}

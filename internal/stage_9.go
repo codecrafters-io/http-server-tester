@@ -25,7 +25,7 @@ func testPostFile(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	err = testGetFileResponse(fileName, fileContent)
+	err = testGetFileResponse(logger, fileName, fileContent)
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err

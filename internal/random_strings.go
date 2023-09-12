@@ -46,3 +46,11 @@ func randomUrlPath() string {
 func randomUserAgent() string {
 	return randomAnything()
 }
+
+func randomFileName() string {
+	return randomString(4, "_")
+}
+
+func randomFileContent() string {
+	return randomString(100, " ")
+}
