@@ -2,9 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"io"
 	"net/http"
-	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -19,7 +17,7 @@ func testRespondWithUserAgent(stageHarness *testerutils.StageHarness) error {
 	client := NewHTTPClient()
 
 	url := URL + "user-agent"
-	userAgent := randSeq(20)
+	userAgent := randomUserAgent()
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -28,27 +26,15 @@ func testRespondWithUserAgent(stageHarness *testerutils.StageHarness) error {
 	}
 	req.Header.Set("User-Agent", userAgent)
 
-	resp, err := client.Do(req)
+	resp, err := sendRequest(client, req, logger)
+	if err != nil {
+		return err
+	}
+
+	err = validateContent(*resp, userAgent)
 	if err != nil {
 		logFriendlyError(logger, err)
-		return fmt.Errorf("Could not send request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		return fmt.Errorf("Expected status code 200, got %d", resp.StatusCode)
-	}
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		logFriendlyError(logger, err)
-		return fmt.Errorf("Could not read response body: %v", err)
-	}
-
-	responseBody := string(body)
-
-	if userAgent != strings.TrimSpace(responseBody) {
-		return fmt.Errorf("Custom User-Agent '%s' not found in the response body.\nResponse body: %s", userAgent, responseBody)
+		return err
 	}
 
 	return nil

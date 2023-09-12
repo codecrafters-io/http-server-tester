@@ -1,9 +1,6 @@
 package internal
 
 import (
-	"fmt"
-	"net/http"
-
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
@@ -18,16 +15,4 @@ func test200OK(stageHarness *testerutils.StageHarness) error {
 	httpClient := NewHTTPClient()
 
 	return requestWithStatus(httpClient, URL, 200, logger)
-}
-
-func requestWithStatus(client *http.Client, url string, statusCode int, logger *testerutils.Logger) error {
-	response, err := client.Get(url)
-	if err != nil {
-		logFriendlyError(logger, err)
-		return fmt.Errorf("Failed to connect to server, err: '%v'", err)
-	}
-	if response.StatusCode != statusCode {
-		return fmt.Errorf("Expected status code %d, got %d", statusCode, response.StatusCode)
-	}
-	return nil
 }

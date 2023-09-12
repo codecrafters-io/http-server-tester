@@ -16,16 +16,17 @@ func testPostFile(stageHarness *testerutils.StageHarness) error {
 
 	logger := stageHarness.Logger
 
-	fileName := randSeq(FILENAME_SIZE)
-	fileContent := randSeq(1000)
+	fileName := randomFileName()
+	fileContent := randomFileContent()
 
 	err := postFile(fileName, fileContent)
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
+	defer os.Remove(DATA_DIR + fileName)
 
-	err = testGetFileResponse(fileName, fileContent)
+	err = testGetFileResponse(logger, fileName, fileContent)
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
@@ -33,13 +34,6 @@ func testPostFile(stageHarness *testerutils.StageHarness) error {
 
 	err = validateFile(fileName, fileContent)
 	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
-	err = os.Remove(DATA_DIR + fileName)
-	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
 
@@ -54,17 +48,6 @@ func postFile(fileName string, fileContent string) error {
 	}
 	if response.StatusCode != 201 {
 		return fmt.Errorf("Expected status code 201, got %d", response.StatusCode)
-	}
-	return nil
-}
-
-func validateFile(fileName string, fileContent string) error {
-	onDiskContent, err := os.ReadFile(DATA_DIR + fileName)
-	if err != nil {
-		return fmt.Errorf("Error reading file: %v", err)
-	}
-	if fileContent != string(onDiskContent) {
-		return fmt.Errorf("Expected the content to be %s got %s", fileContent, onDiskContent)
 	}
 	return nil
 }

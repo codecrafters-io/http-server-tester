@@ -16,9 +16,7 @@ func test404NotFound(stageHarness *testerutils.StageHarness) error {
 
 	httpClient := NewHTTPClient()
 
-	// There are no urls that would be this long so there is 0 probability of collison ever
-	var url = URL + randSeq(randomUrlLength)
+	var url = URL + randomUrlPath()
 
-	logger.Infof("Calling %s", url)
 	return requestWithStatus(httpClient, url, 404, logger)
 }
