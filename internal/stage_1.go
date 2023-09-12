@@ -21,6 +21,7 @@ func testConnects(stageHarness *testerutils.StageHarness) error {
 	retries := 0
 	var err error
 	for {
+		logger.Infof("Connecting to %s using TCP", TCP_DEST)
 		conn, err = net.Dial("tcp", TCP_DEST)
 		if err != nil && retries > 15 {
 			logger.Infof("All retries failed.")
@@ -40,6 +41,7 @@ func testConnects(stageHarness *testerutils.StageHarness) error {
 			retries += 1
 			time.Sleep(1000 * time.Millisecond)
 		} else {
+			logger.Infof("Success! Closing connection")
 			conn.Close()
 			break
 		}

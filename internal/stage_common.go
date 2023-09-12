@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"net/http"
 	"net/http/httputil"
+	"strings"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
@@ -25,12 +26,21 @@ func randSeq(n int) string {
 	return string(b)
 }
 
+func getFirstLine(s string) string {
+	lines := strings.Split(s, "\r\n")
+	if len(lines) == 0 {
+		return ""
+	}
+	return lines[0]
+}
+
 func sendRequest(client *http.Client, req *http.Request, logger *testerutils.Logger) (*http.Response, error) {
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	if err != nil {
 		return nil, err
 	}
-	logger.Debugf("Sending Request:\n%s", string(reqDump))
+	logger.Infof("Sending request (status line): %s", getFirstLine(string(reqDump)))
+	logger.Debugf("Sending request:\n%s", string(reqDump))
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -41,7 +51,8 @@ func sendRequest(client *http.Client, req *http.Request, logger *testerutils.Log
 	if err != nil {
 		return nil, err
 	}
-	logger.Debugf("Received Response:\n%s", string(respDump))
+	logger.Infof("Received response: (status line) %s", getFirstLine(string(respDump)))
+	logger.Debugf("Received response:\n%s", string(respDump))
 	return resp, nil
 }
 
