@@ -38,3 +38,7 @@ func randomUrl() string {
 	size := rand.Intn(2) + 1
 	return randomString(size, "-")
 }
+
+func randomUrlPath() string {
+	return randomUrl()
+}
