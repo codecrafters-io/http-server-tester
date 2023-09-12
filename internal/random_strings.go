@@ -42,3 +42,7 @@ func randomAnything() string {
 func randomUrlPath() string {
 	return randomAnything()
 }
+
+func randomUserAgent() string {
+	return randomAnything()
+}
