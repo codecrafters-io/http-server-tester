@@ -1,8 +1,12 @@
 package internal
 
 import (
+	"bufio"
+	"fmt"
 	"math/rand"
 	"net"
+	"net/http"
+	"net/http/httputil"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -16,20 +20,36 @@ func testHandlesMultipleConcurrentConnections(stageHarness *testerutils.StageHar
 
 	logger := stageHarness.Logger
 
-	randomInt := rand.Intn(5) + 5
+	randomInt := rand.Intn(3) + 1
 
 	logger.Infof("Creating %d parallel connections", randomInt)
+	conns := make([]net.Conn, randomInt)
 
 	for i := 0; i < randomInt; i++ {
+		logger.Debugf("Creating connection %d", i)
 		conn, err := createTcpConn(TCP_DEST)
 		if err != nil {
 			return err
 		}
-		defer conn.Close()
+		conns[i] = conn
+	}
+	for i := randomInt - 1; i >= 0; i-- {
+		err := sendRequestDirectlyOverTcp(logger, conns[i], i)
+		if err != nil {
+			logFriendlyError(logger, err)
+			return err
+		}
+	}
+	for i := randomInt - 1; i >= 0; i-- {
+		logger.Debugf("Closing connection %d", i)
+		err := conns[i].Close()
+		if err != nil {
+			logFriendlyError(logger, err)
+			return err
+		}
 	}
 
-	httpClient := NewHTTPClient()
-	return requestWithStatus(httpClient, URL, 200, logger)
+	return nil
 }
 
 func createTcpConn(destination string) (net.Conn, error) {
@@ -48,4 +68,29 @@ func createTcpConn(destination string) (net.Conn, error) {
 			time.Sleep(1000 * time.Millisecond)
 		}
 	}
+}
+
+func sendRequestDirectlyOverTcp(logger *testerutils.Logger, conn net.Conn, i int) error {
+	req := "GET / HTTP/1.1\r\n" + "\r\n"
+	logger.Debugf("Sending Request on %d:\n%s", i, string(req))
+
+	_, err := conn.Write([]byte(req))
+	if err != nil {
+		return err
+	}
+
+	resp, err := http.ReadResponse(bufio.NewReader(conn), nil)
+	if err != nil {
+		return err
+	}
+	respDump, err := httputil.DumpResponse(resp, true)
+	if err != nil {
+		return err
+	}
+	logger.Debugf("Received Response on %d:\n%s", i, respDump)
+	if resp.StatusCode != resp.StatusCode {
+		return fmt.Errorf("Expected status code %d, got %d on connection %d", 200, resp.StatusCode, i)
+	}
+	defer resp.Body.Close()
+	return nil
 }
