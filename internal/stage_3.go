@@ -16,7 +16,7 @@ func test404NotFound(stageHarness *testerutils.StageHarness) error {
 
 	httpClient := NewHTTPClient()
 
-	var url = URL + randomUrl()
+	var url = URL + randomUrlPath()
 
 	return requestWithStatus(httpClient, url, 404, logger)
 }

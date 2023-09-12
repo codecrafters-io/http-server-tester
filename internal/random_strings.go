@@ -34,11 +34,11 @@ func randomString(n int, joiner string) string {
 	return strings.Join(b, joiner)
 }
 
-func randomUrl() string {
+func randomAnything() string {
 	size := rand.Intn(2) + 1
-	return randomString(size, "-")
+	return randomWord() + "/" + randomString(size, "-")
 }
 
 func randomUrlPath() string {
-	return randomUrl()
+	return randomAnything()
 }
