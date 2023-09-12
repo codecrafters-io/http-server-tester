@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"io"
 	"math/rand"
 	"net/http"
 	"net/http/httputil"
@@ -57,5 +58,42 @@ func requestWithStatus(client *http.Client, url string, statusCode int, logger *
 	if resp.StatusCode != statusCode {
 		return fmt.Errorf("Expected status code %d, got %d", statusCode, resp.StatusCode)
 	}
+	return nil
+}
+
+func validateContent(resp http.Response, expected string) error {
+	contentLength := len(expected)
+
+	// test content-type
+
+	receivedContentType := resp.Header.Get("Content-Type")
+	if receivedContentType == "" {
+		return fmt.Errorf("Content-Type header not present")
+	}
+
+	if receivedContentType != "text/plain" {
+		return fmt.Errorf("Expected content type text/plain, got %s", receivedContentType)
+	}
+
+	// test content-length
+
+	receivedContentLength := resp.Header.Get("Content-Length")
+	if receivedContentLength == "" {
+		return fmt.Errorf("Content-Length header not present")
+	}
+
+	if receivedContentLength != fmt.Sprintf("%d", contentLength) {
+		return fmt.Errorf("Expected content length %d, got %s", contentLength, receivedContentLength)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	if string(body) != expected {
+		return fmt.Errorf("Expected the content to be %s got %s", expected, body)
+	}
+
 	return nil
 }
