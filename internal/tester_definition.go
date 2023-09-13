@@ -11,7 +11,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		{
 			Slug:                    "anti-cheat-1",
 			Title:                   "Anti-cheat 1",
-			TestFunc:                antiCheatTest,
+			TestFunc:                antiCheatBasic,
 			ShouldRunPreviousStages: true,
 		},
 	},
