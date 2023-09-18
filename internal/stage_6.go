@@ -73,7 +73,9 @@ func createTcpConn(destination string) (net.Conn, error) {
 func sendRequestDirectlyOverTcp(logger *testerutils.Logger, conn net.Conn, i int) error {
 	req := "GET / HTTP/1.1\r\n" + "\r\n"
 	logger.Infof("Sending Request on %d (status line): %s", i, getFirstLine(string(req)))
-	logger.Debugf("Sending Request on %d:\n%s", i, string(req))
+	logPrefix := ">>>"
+	logger.Debugf("Sending Request on %d: (Messages with %s prefix are part of this log)", i, logPrefix)
+	logFriendlyHTTPMessage(logger, string(req), logPrefix)
 
 	_, err := conn.Write([]byte(req))
 	if err != nil {
@@ -89,7 +91,9 @@ func sendRequestDirectlyOverTcp(logger *testerutils.Logger, conn net.Conn, i int
 		return err
 	}
 	logger.Infof("Received Response on %d (status line): %s", i, getFirstLine(string(respDump)))
-	logger.Debugf("Received Response on %d:\n%s", i, respDump)
+	logger.Debugf("Received Response on %d: (Messages with %s prefix are part of this log)", i)
+	logFriendlyHTTPMessage(logger, string(respDump), logPrefix)
+
 	if resp.StatusCode != resp.StatusCode {
 		return fmt.Errorf("Expected status code %d, got %d on connection %d", 200, resp.StatusCode, i)
 	}

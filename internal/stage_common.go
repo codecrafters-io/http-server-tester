@@ -34,13 +34,21 @@ func getFirstLine(s string) string {
 	return lines[0]
 }
 
+func logFriendlyHTTPMessage(logger *testerutils.Logger, msg string, logPrefix string) {
+	for _, line := range strings.Split(msg, "\r\n") {
+		logger.Debugf("%s %s", logPrefix, line)
+	}
+}
+
 func sendRequest(client *http.Client, req *http.Request, logger *testerutils.Logger) (*http.Response, error) {
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	if err != nil {
 		return nil, err
 	}
 	logger.Infof("Sending request (status line): %s", getFirstLine(string(reqDump)))
-	logger.Debugf("Sending request:\n%s", string(reqDump))
+	logPrefix := ">>>"
+	logger.Debugf("Sending request: (Message fir %s prefix are part of this log)", logPrefix)
+	logFriendlyHTTPMessage(logger, string(reqDump), logPrefix)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -52,7 +60,8 @@ func sendRequest(client *http.Client, req *http.Request, logger *testerutils.Log
 		return nil, err
 	}
 	logger.Infof("Received response: (status line) %s", getFirstLine(string(respDump)))
-	logger.Debugf("Received response:\n%s", string(respDump))
+	logger.Debugf("Received response: (Message fir %s prefix are part of this log)", logPrefix)
+	logFriendlyHTTPMessage(logger, string(respDump), logPrefix)
 	return resp, nil
 }
 
