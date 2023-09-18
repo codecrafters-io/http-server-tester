@@ -4,11 +4,17 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
 func createFileWith(location string, content string) error {
+	dirPath := filepath.Dir(location)
+	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
+		return err
+	}
+
 	f, err := os.Create(location)
 	if err != nil {
 		return err
@@ -32,6 +38,9 @@ func testGetFileResponse(logger *testerutils.Logger, fileName string, fileConten
 	}
 
 	resp, err := sendRequest(httpClient, req, logger)
+	if err != nil {
+		return err
+	}
 
 	if resp.StatusCode != 200 {
 		return fmt.Errorf("Expected status code 200, got %d", resp.StatusCode)

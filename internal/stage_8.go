@@ -8,7 +8,7 @@ import (
 
 func testGetFile(stageHarness *testerutils.StageHarness) error {
 	b := NewHTTPServerBinary(stageHarness)
-	if err := b.Run(); err != nil {
+	if err := b.Run("--directory", DATA_DIR); err != nil {
 		return err
 	}
 

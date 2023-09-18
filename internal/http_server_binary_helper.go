@@ -20,9 +20,9 @@ func NewHTTPServerBinary(stageHarness *testerutils.StageHarness) *HTTPServerBina
 	return b
 }
 
-func (b *HTTPServerBinary) Run() error {
+func (b *HTTPServerBinary) Run(args ...string) error {
 	b.logger.Debugf("Running program")
-	if err := b.executable.Start(); err != nil {
+	if err := b.executable.Start(args...); err != nil {
 		return err
 	}
 
@@ -34,7 +34,7 @@ func (b *HTTPServerBinary) HasExited() bool {
 }
 
 func (b *HTTPServerBinary) Kill() error {
-	if (b.HasExited()) {
+	if b.HasExited() {
 		return nil
 	}
 
