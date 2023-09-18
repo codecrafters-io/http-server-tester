@@ -13,30 +13,19 @@ func antiCheatBasic(stageHarness *testerutils.StageHarness) error {
 	}
 
 	logger := stageHarness.Logger
-	fmt.Println("Running anti-cheat (ac1).")
 
 	client := NewHTTPClient()
 
 	resp, err := client.Get(URL)
 	if err != nil {
-		fmt.Println(err)
 		return nil
 	}
 
-	fmt.Println("Response Headers:")
-	for key, values := range resp.Header {
-		for _, value := range values {
-			fmt.Printf("%s: %s\n", key, value)
-		}
-	}
-
 	if resp.Proto != "HTTP/1.1" {
-		fmt.Println(resp.Proto)
 		return fail(logger)
 	}
 
 	if date := resp.Header.Get("Date"); date != "" {
-		fmt.Println(date)
 		return fail(logger)
 	}
 

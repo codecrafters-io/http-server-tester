@@ -23,10 +23,17 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/init/timeout",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"init_success_cheat": {
+			StageName:           "connect-to-port",
+			CodePath:            "./test_helpers/scenarios/init/success_cheat",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/init/success_cheat",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 		"init_success": {
 			StageName:           "connect-to-port",
 			CodePath:            "./test_helpers/scenarios/init/success",
-			ExpectedExitCode:    0,
+			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/success",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
