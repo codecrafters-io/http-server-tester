@@ -91,8 +91,8 @@ func validateContent(resp http.Response, expected string) error {
 		return fmt.Errorf("Content-Type header not present")
 	}
 
-	if receivedContentType != "text/plain" {
-		return fmt.Errorf("Expected content type text/plain, got %s", receivedContentType)
+	if receivedContentType != "application/octet-stream" {
+		return fmt.Errorf("Expected content type application/octet-stream, got %s", receivedContentType)
 	}
 
 	// test content-length
