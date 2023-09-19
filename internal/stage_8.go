@@ -1,12 +1,14 @@
 package internal
 
 import (
+	"bytes"
+	"fmt"
 	"os"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
-func testGetFile(stageHarness *testerutils.StageHarness) error {
+func testPostFile(stageHarness *testerutils.StageHarness) error {
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run("--directory", DATA_DIR); err != nil {
 		return err
@@ -17,19 +19,35 @@ func testGetFile(stageHarness *testerutils.StageHarness) error {
 	fileName := randomFileName()
 	fileContent := randomFileContent()
 
-	logger.Debugf("Creating file %s in %s", fileName, DATA_DIR)
-	logger.Debugf("File Content:\n%s", fileContent)
-	err := createFileWith(DATA_DIR+fileName, fileContent)
-	defer os.Remove(DATA_DIR + fileName)
-
+	err := postFile(fileName, fileContent)
 	if err != nil {
+		logFriendlyError(logger, err)
 		return err
 	}
+	defer os.Remove(DATA_DIR + fileName)
 
 	err = testGetFileResponse(logger, fileName, fileContent)
 	if err != nil {
+		logFriendlyError(logger, err)
 		return err
 	}
 
+	err = validateFile(fileName, fileContent)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func postFile(fileName string, fileContent string) error {
+	httpClient := NewHTTPClient()
+	response, err := httpClient.Post(URL+"files/"+fileName, "text/plain", bytes.NewBufferString(fileContent))
+	if err != nil {
+		return fmt.Errorf("Failed to connect to server, err: '%v'", err)
+	}
+	if response.StatusCode != 201 {
+		return fmt.Errorf("Expected status code 201, got %d", response.StatusCode)
+	}
 	return nil
 }
