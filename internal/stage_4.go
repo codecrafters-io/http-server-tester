@@ -36,7 +36,7 @@ func testRespondWithContent(stageHarness *testerutils.StageHarness) error {
 		return fmt.Errorf("Expected status code 200, got %d", resp.StatusCode)
 	}
 
-	if err := validateContent(*resp, content); err != nil {
+	if err := validateContent(*resp, content, "text/plain"); err != nil {
 		return err
 	}
 

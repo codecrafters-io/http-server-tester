@@ -81,8 +81,8 @@ func requestWithStatus(client *http.Client, url string, statusCode int, logger *
 	return nil
 }
 
-func validateContent(resp http.Response, expected string) error {
-	contentLength := len(expected)
+func validateContent(resp http.Response, expectedContent string, expectedContentType string) error {
+	contentLength := len(expectedContent)
 
 	// test content-type
 
@@ -91,8 +91,8 @@ func validateContent(resp http.Response, expected string) error {
 		return fmt.Errorf("Content-Type header not present")
 	}
 
-	if receivedContentType != "application/octet-stream" {
-		return fmt.Errorf("Expected content type application/octet-stream, got %s", receivedContentType)
+	if receivedContentType != expectedContentType {
+		return fmt.Errorf("Expected content type %s, got %s", expectedContentType, receivedContentType)
 	}
 
 	// test content-length
@@ -111,8 +111,8 @@ func validateContent(resp http.Response, expected string) error {
 		return err
 	}
 
-	if string(body) != expected {
-		return fmt.Errorf("Expected the content to be %s got %s", expected, body)
+	if string(body) != expectedContent {
+		return fmt.Errorf("Expected the content to be %s got %s", expectedContent, body)
 	}
 
 	return nil

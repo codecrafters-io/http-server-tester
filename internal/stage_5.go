@@ -31,7 +31,7 @@ func testRespondWithUserAgent(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
-	err = validateContent(*resp, userAgent)
+	err = validateContent(*resp, userAgent, "text/plain")
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err

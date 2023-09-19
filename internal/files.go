@@ -46,7 +46,7 @@ func testGetFileResponse(logger *testerutils.Logger, fileName string, fileConten
 		return fmt.Errorf("Expected status code 200, got %d", resp.StatusCode)
 	}
 
-	if err := validateContent(*resp, fileContent); err != nil {
+	if err := validateContent(*resp, fileContent, "application/octet-stream"); err != nil {
 		return err
 	}
 
