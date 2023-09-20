@@ -91,7 +91,7 @@ func sendRequestDirectlyOverTcp(logger *testerutils.Logger, conn net.Conn, i int
 		return err
 	}
 	logger.Infof("Received Response on %d (status line): %s", i, getFirstLine(string(respDump)))
-	logger.Debugf("Received Response on %d: (Messages with %s prefix are part of this log)", i)
+	logger.Debugf("Received Response on %d: (Messages with %s prefix are part of this log)", i, logPrefix)
 	logFriendlyHTTPMessage(logger, string(respDump), logPrefix)
 
 	if resp.StatusCode != resp.StatusCode {

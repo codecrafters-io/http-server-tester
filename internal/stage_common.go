@@ -47,7 +47,7 @@ func sendRequest(client *http.Client, req *http.Request, logger *testerutils.Log
 	}
 	logger.Infof("Sending request (status line): %s", getFirstLine(string(reqDump)))
 	logPrefix := ">>>"
-	logger.Debugf("Sending request: (Message fir %s prefix are part of this log)", logPrefix)
+	logger.Debugf("Sending request: (Messages with %s prefix are part of this log)", logPrefix)
 	logFriendlyHTTPMessage(logger, string(reqDump), logPrefix)
 
 	resp, err := client.Do(req)
@@ -60,7 +60,7 @@ func sendRequest(client *http.Client, req *http.Request, logger *testerutils.Log
 		return nil, err
 	}
 	logger.Infof("Received response: (status line) %s", getFirstLine(string(respDump)))
-	logger.Debugf("Received response: (Message fir %s prefix are part of this log)", logPrefix)
+	logger.Debugf("Received response: (Messages with %s prefix are part of this log)", logPrefix)
 	logFriendlyHTTPMessage(logger, string(respDump), logPrefix)
 	return resp, nil
 }
