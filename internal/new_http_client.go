@@ -25,7 +25,7 @@ func NewHTTPClient() *http.Client {
 
 					// Used DialTimeout instead of Dial to return an error if the connection is not established within 10 seconds
 					// This is to prevent the program from hanging indefinitely if there are problems with the server
-					conn, err = net.DialTimeout("tcp", addr, clientTimeout/time.Duration(attempts + 1))
+					conn, err = net.DialTimeout("tcp", addr, 10 * time.Second/time.Duration(attempts + 1))
 
 					if err == nil {
 						return conn, nil
