@@ -43,6 +43,21 @@ func testConnects(stageHarness *testerutils.StageHarness) error {
 		} else {
 			logger.Infof("Success! Closing connection")
 			conn.Close()
+
+			// Ensure that server has closed before continuing
+			for i := 0; i < 10; i++ {
+				_, err := net.Dial("tcp", TCP_DEST)
+
+				if err == nil {
+					logger.Infof("Port is still open, retrying in 1s")
+				} else {
+					logger.Infof("Port is closed")
+					break
+				}
+
+				time.Sleep(1000 * time.Millisecond)
+			}
+
 			break
 		}
 	}

@@ -28,6 +28,10 @@ func NewHTTPClient() *http.Client {
 						return conn, nil
 					}
 
+					if netErr, ok := err.(net.Error); ok {
+						return nil, netErr
+					}
+
 					// Already a timeout
 					if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
 						return nil, err
