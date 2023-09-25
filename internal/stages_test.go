@@ -33,7 +33,7 @@ func TestStages(t *testing.T) {
 		"init_success": {
 			StageName:           "connect-to-port",
 			CodePath:            "./test_helpers/scenarios/init/success",
-			ExpectedExitCode:    1,
+			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/success",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},

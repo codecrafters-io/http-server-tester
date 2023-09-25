@@ -13,6 +13,7 @@ var testerDefinition = testerutils.TesterDefinition{
 			Title:                   "Anti-cheat 1",
 			TestFunc:                antiCheatBasic,
 			ShouldRunPreviousStages: true,
+			Timeout:                 15 * time.Second,
 		},
 	},
 	ExecutableFileName: "your_server.sh",
