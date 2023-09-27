@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
+	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
 func createFileWith(location string, content string) error {
@@ -29,7 +29,7 @@ func createFileWith(location string, content string) error {
 	return nil
 }
 
-func testGetFileResponse(logger *testerutils.Logger, fileName string, fileContent string) error {
+func testGetFileResponse(logger *logger.Logger, fileName string, fileContent string) error {
 	httpClient := NewHTTPClient()
 
 	req, err := http.NewRequest("GET", URL+"files/"+fileName, nil)
