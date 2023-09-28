@@ -8,7 +8,7 @@ import (
 	"net/http/httputil"
 	"strings"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
+	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
 const URL = "http://localhost:4221/"
@@ -34,13 +34,13 @@ func getFirstLine(s string) string {
 	return lines[0]
 }
 
-func logFriendlyHTTPMessage(logger *testerutils.Logger, msg string, logPrefix string) {
+func logFriendlyHTTPMessage(logger *logger.Logger, msg string, logPrefix string) {
 	for _, line := range strings.Split(msg, "\r\n") {
 		logger.Debugf("%s %s", logPrefix, line)
 	}
 }
 
-func sendRequest(client *http.Client, req *http.Request, logger *testerutils.Logger) (*http.Response, error) {
+func sendRequest(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func sendRequest(client *http.Client, req *http.Request, logger *testerutils.Log
 	return resp, nil
 }
 
-func requestWithStatus(client *http.Client, url string, statusCode int, logger *testerutils.Logger) error {
+func requestWithStatus(client *http.Client, url string, statusCode int, logger *logger.Logger) error {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err

@@ -9,6 +9,7 @@ import (
 	"net/http/httputil"
 	"time"
 
+	logger "github.com/codecrafters-io/tester-utils/logger"
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
@@ -70,7 +71,7 @@ func createTcpConn(destination string) (net.Conn, error) {
 	}
 }
 
-func sendRequestDirectlyOverTcp(logger *testerutils.Logger, conn net.Conn, i int) error {
+func sendRequestDirectlyOverTcp(logger *logger.Logger, conn net.Conn, i int) error {
 	req := "GET / HTTP/1.1\r\n" + "\r\n"
 	logger.Infof("Sending Request on %d (status line): %s", i, getFirstLine(string(req)))
 	logPrefix := ">>>"

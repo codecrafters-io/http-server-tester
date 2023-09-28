@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 
+	logger "github.com/codecrafters-io/tester-utils/logger"
 	testerutils "github.com/codecrafters-io/tester-utils"
 )
 
@@ -36,7 +37,7 @@ func antiCheatBasic(stageHarness *testerutils.StageHarness) error {
 	return nil
 }
 
-func fail(logger *testerutils.Logger) error {
+func fail(logger *logger.Logger) error {
 	logger.Criticalf("anti-cheat (ac1) failed.")
 	logger.Criticalf("Are you sure you aren't running this against an actual HTTP server?")
 	return fmt.Errorf("anti-cheat (ac1) failed")

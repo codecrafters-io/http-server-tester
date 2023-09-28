@@ -4,42 +4,46 @@ import (
 	"regexp"
 	"testing"
 
-	tester_utils "github.com/codecrafters-io/tester-utils"
+	tester_utils_testing "github.com/codecrafters-io/tester-utils/testing"
 )
 
 func TestStages(t *testing.T) {
-	testCases := map[string]tester_utils.TesterOutputTestCase{
+	testCases := map[string]tester_utils_testing.TesterOutputTestCase{
 		"init_failure": {
-			StageName:           "connect-to-port",
+			UntilStageSlug:      "connect-to-port",
 			CodePath:            "./test_helpers/scenarios/init/failure",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/failure",
 			NormalizeOutputFunc: normalizeTesterOutput,
+			SkipAntiCheat:       true,
 		},
 		"init_timeout": {
-			StageName:           "connect-to-port",
+			UntilStageSlug:      "connect-to-port",
 			CodePath:            "./test_helpers/scenarios/init/timeout",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/timeout",
 			NormalizeOutputFunc: normalizeTesterOutput,
+			SkipAntiCheat:       true,
 		},
 		"init_success_cheat": {
-			StageName:           "connect-to-port",
+			UntilStageSlug:      "connect-to-port",
 			CodePath:            "./test_helpers/scenarios/init/success_cheat",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/success_cheat",
 			NormalizeOutputFunc: normalizeTesterOutput,
+			SkipAntiCheat:       false,
 		},
 		"init_success": {
-			StageName:           "connect-to-port",
+			UntilStageSlug:      "connect-to-port",
 			CodePath:            "./test_helpers/scenarios/init/success",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/success",
 			NormalizeOutputFunc: normalizeTesterOutput,
+			SkipAntiCheat:       true,
 		},
 	}
 
-	tester_utils.TestTesterOutput(t, testerDefinition, testCases)
+	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
 }
 
 func normalizeTesterOutput(testerOutput []byte) []byte {

@@ -1,7 +1,6 @@
 Debug = true
-Stage = connect-to-port
 
-[33m[stage-1] [0m[94m[94mRunning tests for Stage #1: Bind to a port[0m[0m
+[33m[stage-1] [0m[94m[94mRunning tests for Stage #1: connect-to-port[0m[0m
 [33m[stage-1] [0m[36m[36mRunning program[0m[0m
 [33m[stage-1] [0m[94m[94mConnecting to localhost:4221 using TCP[0m[0m
 [33m[stage-1] [0m[94m[94mSuccess! Closing connection[0m[0m
