@@ -1,7 +1,3 @@
-github.com/codecrafters-io/tester-utils v0.2.1 h1:+bdZLJhFMWcf+/E3C4NlGsIvxvsyBWlrrqceXRFyu6E=
-github.com/codecrafters-io/tester-utils v0.2.1/go.mod h1:BeSLyqBpFxUwIm41QlnuRG7ZsabBXWE2Ga3LMFUXAPM=
-github.com/codecrafters-io/tester-utils v0.2.3 h1:OEyi/lxtaTNBXBf4etkMBlNixCmxQ1xpaNLGpidYShU=
-github.com/codecrafters-io/tester-utils v0.2.3/go.mod h1:BeSLyqBpFxUwIm41QlnuRG7ZsabBXWE2Ga3LMFUXAPM=
 github.com/codecrafters-io/tester-utils v0.2.4 h1:7lXg21eTYCckBCRHjpvkMWabJjhdUXQnFBDqXDk1efg=
 github.com/codecrafters-io/tester-utils v0.2.4/go.mod h1:BeSLyqBpFxUwIm41QlnuRG7ZsabBXWE2Ga3LMFUXAPM=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

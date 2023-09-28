@@ -15,6 +15,7 @@ func TestStages(t *testing.T) {
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/failure",
 			NormalizeOutputFunc: normalizeTesterOutput,
+			SkipAntiCheat:       true,
 		},
 		"init_timeout": {
 			UntilStageSlug:      "connect-to-port",
@@ -22,6 +23,7 @@ func TestStages(t *testing.T) {
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/timeout",
 			NormalizeOutputFunc: normalizeTesterOutput,
+			SkipAntiCheat:       true,
 		},
 		"init_success_cheat": {
 			UntilStageSlug:      "connect-to-port",
@@ -29,6 +31,7 @@ func TestStages(t *testing.T) {
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/success_cheat",
 			NormalizeOutputFunc: normalizeTesterOutput,
+			SkipAntiCheat:       false,
 		},
 		"init_success": {
 			UntilStageSlug:      "connect-to-port",
@@ -36,6 +39,7 @@ func TestStages(t *testing.T) {
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/success",
 			NormalizeOutputFunc: normalizeTesterOutput,
+			SkipAntiCheat:       true,
 		},
 	}
 
