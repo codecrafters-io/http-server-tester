@@ -51,6 +51,10 @@ func randomFileName() string {
 	return randomString(4, "_")
 }
 
+func randomFileNameWithPrefix(prefix string) string {
+	return prefix + randomFileName()
+}
+
 func randomFileContent() string {
 	return randomString(100, " ")
 }
