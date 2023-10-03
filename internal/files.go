@@ -53,13 +53,15 @@ func testGetFileResponse(logger *logger.Logger, fileName string, fileContent str
 	return nil
 }
 
-func validateFile(fileName string, fileContent string) error {
+func validateFile(logger *logger.Logger, fileName string, fileContent string) error {
+	logger.Debugf("Validating file `%s` exists on disk", fileName)
 	onDiskContent, err := os.ReadFile(DATA_DIR + fileName)
 	if err != nil {
 		return fmt.Errorf("Error reading file: %v", err)
 	}
+	logger.Debugf("Validating file `%s` content", fileName)
 	if fileContent != string(onDiskContent) {
-		return fmt.Errorf("Expected the content to be %s got %s", fileContent, onDiskContent)
+		return fmt.Errorf("Expected content: %s, Received content: %s", fileContent, onDiskContent)
 	}
 	return nil
 }

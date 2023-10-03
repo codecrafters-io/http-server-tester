@@ -3,9 +3,11 @@ package internal
 import (
 	"bytes"
 	"fmt"
+	"net/http"
 	"os"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
+	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
 func testPostFile(stageHarness *testerutils.StageHarness) error {
@@ -19,20 +21,14 @@ func testPostFile(stageHarness *testerutils.StageHarness) error {
 	fileName := randomFileName()
 	fileContent := randomFileContent()
 
-	err := postFile(fileName, fileContent)
+	err := postFile(logger, fileName, fileContent)
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
 	}
 	defer os.Remove(DATA_DIR + fileName)
 
-	err = testGetFileResponse(logger, fileName, fileContent)
-	if err != nil {
-		logFriendlyError(logger, err)
-		return err
-	}
-
-	err = validateFile(fileName, fileContent)
+	err = validateFile(logger, fileName, fileContent)
 	if err != nil {
 		return err
 	}
@@ -40,14 +36,31 @@ func testPostFile(stageHarness *testerutils.StageHarness) error {
 	return nil
 }
 
-func postFile(fileName string, fileContent string) error {
+func postFile(logger *logger.Logger, fileName string, fileContent string) error {
 	httpClient := NewHTTPClient()
-	response, err := httpClient.Post(URL+"files/"+fileName, "text/plain", bytes.NewBufferString(fileContent))
+
+	req, err := http.NewRequest("POST", URL+"files/"+fileName, bytes.NewBufferString(fileContent))
 	if err != nil {
+		return err
+	}
+	err = dumpRequest(logger, req)
+	if err != nil {
+		return err
+	}
+
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		logFriendlyError(logger, err)
 		return fmt.Errorf("Failed to connect to server, err: '%v'", err)
 	}
-	if response.StatusCode != 201 {
-		return fmt.Errorf("Expected status code 201, got %d", response.StatusCode)
+	err = dumpResponse(logger, resp)
+	if err != nil {
+		return err
 	}
+
+	if resp.StatusCode != 201 {
+		return fmt.Errorf("Expected status code 201, got %d", resp.StatusCode)
+	}
+
 	return nil
 }
