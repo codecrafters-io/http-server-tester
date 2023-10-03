@@ -6,7 +6,6 @@ import (
 	"math/rand"
 	"net"
 	"net/http"
-	"net/http/httputil"
 	"time"
 
 	testerutils "github.com/codecrafters-io/tester-utils"
@@ -73,9 +72,9 @@ func createTcpConn(destination string) (net.Conn, error) {
 
 func sendRequestDirectlyOverTcp(logger *logger.Logger, conn net.Conn, i int) error {
 	req := "GET / HTTP/1.1\r\n" + "\r\n\r\n"
-	logger.Infof("Sending Request on %d (status line): %s", i, getFirstLine(string(req)))
+	logger.Infof("Sending request on %d (status line): %s", i, getFirstLine(string(req)))
 	logPrefix := ">>>"
-	logger.Debugf("Sending Request on %d: (Messages with %s prefix are part of this log)", i, logPrefix)
+	logger.Debugf("Sending request on %d: (Messages with %s prefix are part of this log)", i, logPrefix)
 	logFriendlyHTTPMessage(logger, string(req), logPrefix)
 
 	_, err := conn.Write([]byte(req))
@@ -87,13 +86,10 @@ func sendRequestDirectlyOverTcp(logger *logger.Logger, conn net.Conn, i int) err
 	if err != nil {
 		return err
 	}
-	respDump, err := httputil.DumpResponse(resp, true)
+	err = dumpResponse(logger, resp)
 	if err != nil {
 		return err
 	}
-	logger.Infof("Received Response on %d (status line): %s", i, getFirstLine(string(respDump)))
-	logger.Debugf("Received Response on %d: (Messages with %s prefix are part of this log)", i, logPrefix)
-	logFriendlyHTTPMessage(logger, string(respDump), logPrefix)
 
 	if resp.StatusCode != resp.StatusCode {
 		return fmt.Errorf("Expected status code %d, got %d on connection %d", 200, resp.StatusCode, i)

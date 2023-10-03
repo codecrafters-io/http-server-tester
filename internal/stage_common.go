@@ -40,28 +40,48 @@ func logFriendlyHTTPMessage(logger *logger.Logger, msg string, logPrefix string)
 	}
 }
 
-func sendRequest(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {
+func dumpRequest(logger *logger.Logger, req *http.Request) error {
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	if err != nil {
-		return nil, err
+		return fmt.Errorf("Failed to dump request: '%v'", err)
 	}
 	logger.Infof("Sending request (status line): %s", getFirstLine(string(reqDump)))
 	logPrefix := ">>>"
 	logger.Debugf("Sending request: (Messages with %s prefix are part of this log)", logPrefix)
 	logFriendlyHTTPMessage(logger, string(reqDump), logPrefix)
 
+	return nil
+}
+
+func dumpResponse(logger *logger.Logger, resp *http.Response) error {
+	respDump, err := httputil.DumpResponse(resp, true)
+	if err != nil {
+		return fmt.Errorf("Failed to dump rsponse: '%v'", err)
+	}
+	logger.Infof("Received response: (status line) %s", getFirstLine(string(respDump)))
+	logPrefix := ">>>"
+	logger.Debugf("Received response: (Messages with %s prefix are part of this log)", logPrefix)
+	logFriendlyHTTPMessage(logger, string(respDump), logPrefix)
+
+	return nil
+}
+
+func sendRequest(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {
+	err := dumpRequest(logger, req)
+	if err != nil {
+		return nil, err
+	}
+
 	resp, err := client.Do(req)
 	if err != nil {
 		logFriendlyError(logger, err)
 		return nil, fmt.Errorf("Failed to connect to server, err: '%v'", err)
 	}
-	respDump, err := httputil.DumpResponse(resp, true)
+	err = dumpResponse(logger, resp)
 	if err != nil {
 		return nil, err
 	}
-	logger.Infof("Received response: (status line) %s", getFirstLine(string(respDump)))
-	logger.Debugf("Received response: (Messages with %s prefix are part of this log)", logPrefix)
-	logFriendlyHTTPMessage(logger, string(respDump), logPrefix)
+
 	return resp, nil
 }
 
