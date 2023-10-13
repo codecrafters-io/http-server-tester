@@ -20,7 +20,7 @@ func testHandlesMultipleConcurrentConnections(stageHarness *testerutils.StageHar
 
 	logger := stageHarness.Logger
 
-	randomInt := rand.Intn(3) + 1
+	randomInt := rand.Intn(2) + 2
 
 	logger.Infof("Creating %d parallel connections", randomInt)
 	conns := make([]net.Conn, randomInt)
