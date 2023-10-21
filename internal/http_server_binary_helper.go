@@ -36,10 +36,6 @@ func (b *HTTPServerBinary) HasExited() bool {
 }
 
 func (b *HTTPServerBinary) Kill() error {
-	if b.HasExited() {
-		return nil
-	}
-
 	b.logger.Debugf("Terminating program")
 	if err := b.executable.Kill(); err != nil {
 		b.logger.Debugf("Error terminating program: '%v'", err)
