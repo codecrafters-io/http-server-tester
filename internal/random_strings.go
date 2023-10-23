@@ -56,5 +56,5 @@ func randomFileNameWithPrefix(prefix string) string {
 }
 
 func randomFileContent() string {
-	return randomString(16, " ")
+	return randomString(8, " ")
 }
