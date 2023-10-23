@@ -20,7 +20,7 @@ func testConnects(stageHarness *testerutils.StageHarness) error {
 	var conn net.Conn
 	retries := 0
 	var err error
-	logger.Infof("Connecting to %s using TCP", TCP_DEST)
+	logger.Infof("Connecting to %q using TCP", TCP_DEST)
 	for {
 		conn, err = net.Dial("tcp", TCP_DEST)
 		if err != nil && retries > 15 {

@@ -36,7 +36,7 @@ func getFirstLine(s string) string {
 
 func logFriendlyHTTPMessage(logger *logger.Logger, msg string, logPrefix string) {
 	for _, line := range strings.Split(msg, "\r\n") {
-		logger.Debugf("%s %s", logPrefix, line)
+		logger.Debugf("%q %q", logPrefix, line)
 	}
 }
 
@@ -45,9 +45,9 @@ func dumpRequest(logger *logger.Logger, req *http.Request) error {
 	if err != nil {
 		return fmt.Errorf("Failed to dump request: '%v'", err)
 	}
-	logger.Infof("Sending request (status line): %s", getFirstLine(string(reqDump)))
+	logger.Infof("Sending request (status line): %q", getFirstLine(string(reqDump)))
 	logPrefix := ">>>"
-	logger.Debugf("Sending request: (Messages with %s prefix are part of this log)", logPrefix)
+	logger.Debugf("Sending request: (Messages with %q prefix are part of this log)", logPrefix)
 	logFriendlyHTTPMessage(logger, string(reqDump), logPrefix)
 
 	return nil
@@ -58,9 +58,9 @@ func dumpResponse(logger *logger.Logger, resp *http.Response) error {
 	if err != nil {
 		return fmt.Errorf("Failed to dump rsponse: '%v'", err)
 	}
-	logger.Infof("Received response: (status line) %s", getFirstLine(string(respDump)))
+	logger.Infof("Received response: (status line) %q", getFirstLine(string(respDump)))
 	logPrefix := ">>>"
-	logger.Debugf("Received response: (Messages with %s prefix are part of this log)", logPrefix)
+	logger.Debugf("Received response: (Messages with %q prefix are part of this log)", logPrefix)
 	logFriendlyHTTPMessage(logger, string(respDump), logPrefix)
 
 	return nil
@@ -112,7 +112,7 @@ func validateContent(resp http.Response, expectedContent string, expectedContent
 	}
 
 	if receivedContentType != expectedContentType {
-		return fmt.Errorf("Expected content type %s, got %s", expectedContentType, receivedContentType)
+		return fmt.Errorf("Expected content type %q, got %q", expectedContentType, receivedContentType)
 	}
 
 	// test content-length
@@ -123,7 +123,7 @@ func validateContent(resp http.Response, expectedContent string, expectedContent
 	}
 
 	if receivedContentLength != fmt.Sprintf("%d", contentLength) {
-		return fmt.Errorf("Expected content length %d, got %s", contentLength, receivedContentLength)
+		return fmt.Errorf("Expected content length %d, got %q", contentLength, receivedContentLength)
 	}
 
 	body, err := io.ReadAll(resp.Body)
@@ -132,7 +132,7 @@ func validateContent(resp http.Response, expectedContent string, expectedContent
 	}
 
 	if string(body) != expectedContent {
-		return fmt.Errorf("Expected the content to be %s got %s", expectedContent, body)
+		return fmt.Errorf("Expected the content to be %q got %q", expectedContent, body)
 	}
 
 	return nil
