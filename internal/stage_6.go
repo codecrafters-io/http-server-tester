@@ -72,9 +72,9 @@ func createTcpConn(destination string) (net.Conn, error) {
 
 func sendRequestDirectlyOverTcp(logger *logger.Logger, conn net.Conn, i int) error {
 	req := "GET / HTTP/1.1\r\n" + "\r\n\r\n"
-	logger.Infof("Sending request on %d (status line): %q", i, getFirstLine(string(req)))
+	logger.Infof("Sending request on %d (status line): %s", i, getFirstLine(string(req)))
 	logPrefix := ">>>"
-	logger.Debugf("Sending request on %d: (Messages with %q prefix are part of this log)", i, logPrefix)
+	logger.Debugf("Sending request on %d: (Messages with %s prefix are part of this log)", i, logPrefix)
 	logFriendlyHTTPMessage(logger, string(req), logPrefix)
 
 	_, err := conn.Write([]byte(req))
