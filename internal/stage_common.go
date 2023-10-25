@@ -36,7 +36,7 @@ func getFirstLine(s string) string {
 
 func logFriendlyHTTPMessage(logger *logger.Logger, msg string, logPrefix string) {
 	for _, line := range strings.Split(msg, "\r\n") {
-		logger.Debugf("%s %s", logPrefix, line)
+		logger.Debugf("%q %q", logPrefix, line)
 	}
 }
 
@@ -112,7 +112,7 @@ func validateContent(resp http.Response, expectedContent string, expectedContent
 	}
 
 	if receivedContentType != expectedContentType {
-		return fmt.Errorf("Expected content type %s, got %s", expectedContentType, receivedContentType)
+		return fmt.Errorf("Expected content type %q, got %q", expectedContentType, receivedContentType)
 	}
 
 	// test content-length
@@ -132,7 +132,7 @@ func validateContent(resp http.Response, expectedContent string, expectedContent
 	}
 
 	if string(body) != expectedContent {
-		return fmt.Errorf("Expected the content to be %s got %s", expectedContent, body)
+		return fmt.Errorf("Expected the content to be %q got %q", expectedContent, body)
 	}
 
 	return nil

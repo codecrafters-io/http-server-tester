@@ -21,7 +21,7 @@ func testGetFile(stageHarness *testerutils.StageHarness) error {
 	fileContent := randomFileContent()
 
 	logger.Debugf("Creating file %s in %s", fileName, DATA_DIR)
-	logger.Debugf("File Content:\n%s", fileContent)
+	logger.Debugf("File Content:\n%q", fileContent)
 	err := createFileWith(DATA_DIR+fileName, fileContent)
 	defer os.Remove(DATA_DIR + fileName)
 

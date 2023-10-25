@@ -61,8 +61,8 @@ func validateFile(logger *logger.Logger, fileName string, fileContent string) er
 	}
 	logger.Debugf("Validating file `%s` content", fileName)
 	if fileContent != string(onDiskContent) {
-		logger.Errorf("Expected file content: %s", fileContent)
-		logger.Errorf("Received file content: %s", onDiskContent)
+		logger.Errorf("Expected file content: %q", fileContent)
+		logger.Errorf("Received file content: %q", onDiskContent)
 		return fmt.Errorf("File content does not match")
 	}
 	return nil
