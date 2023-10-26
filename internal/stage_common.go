@@ -36,7 +36,7 @@ func getFirstLine(s string) string {
 
 func logFriendlyHTTPMessage(logger *logger.Logger, msg string, logPrefix string) {
 	for _, line := range strings.Split(msg, "\r\n") {
-		logger.Debugf("%q %q", logPrefix, line)
+		logger.Debugf("%s %s", logPrefix, line)
 	}
 }
 
