@@ -68,7 +68,7 @@ func dumpResponse(logger *logger.Logger, resp *http.Response) error {
 
 func logCurl(logger *logger.Logger, req *http.Request) {
 	logger.Infof("You can use the following curl command to test this locally")
-	logger.Infof("> %s", httpRequestToCurlString(req))
+	logger.Infof("$ %s", httpRequestToCurlString(req))
 }
 
 func sendRequest(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {
