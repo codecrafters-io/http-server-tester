@@ -20,6 +20,7 @@ func testGetFile(stageHarness *testerutils.StageHarness) error {
 	fileName := randomFileName()
 	fileContent := randomFileContent()
 
+	logger.Infof("Testing existing file")
 	logger.Debugf("Creating file %s in %s", fileName, DATA_DIR)
 	logger.Debugf("File Content: %q", fileContent)
 	err := createFileWith(DATA_DIR+fileName, fileContent)
@@ -34,6 +35,7 @@ func testGetFile(stageHarness *testerutils.StageHarness) error {
 		return err
 	}
 
+	logger.Infof("Testing non existent file returns 404")
 	nonExistentFileName := randomFileNameWithPrefix("non-existent")
 	err = testNonExistentFileResponseIs404(logger, nonExistentFileName)
 	if err != nil {

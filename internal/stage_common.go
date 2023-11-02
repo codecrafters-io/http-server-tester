@@ -41,6 +41,7 @@ func logFriendlyHTTPMessage(logger *logger.Logger, msg string, logPrefix string)
 }
 
 func dumpRequest(logger *logger.Logger, req *http.Request) error {
+	logCurl(logger, req)
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	if err != nil {
 		return fmt.Errorf("Failed to dump request: '%v'", err)
@@ -58,12 +59,16 @@ func dumpResponse(logger *logger.Logger, resp *http.Response) error {
 	if err != nil {
 		return fmt.Errorf("Failed to dump rsponse: '%v'", err)
 	}
-	logger.Infof("Received response: (status line) %s", getFirstLine(string(respDump)))
 	logPrefix := ">>>"
 	logger.Debugf("Received response: (Messages with %s prefix are part of this log)", logPrefix)
 	logFriendlyHTTPMessage(logger, string(respDump), logPrefix)
 
 	return nil
+}
+
+func logCurl(logger *logger.Logger, req *http.Request) {
+	logger.Infof("You can use the following curl command to test this locally")
+	logger.Infof("$ %s", httpRequestToCurlString(req))
 }
 
 func sendRequest(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {
