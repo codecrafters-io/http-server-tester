@@ -1,5 +1,5 @@
-[33m[stage-1] [0m[94m[94mRunning tests for Stage #1: connect-to-port[0m[0m
-[33m[stage-1] [0m[94m[94mConnecting to localhost:4221 using TCP[0m[0m
+[33m[stage-1] [0m[94mRunning tests for Stage #1: connect-to-port[0m
+[33m[stage-1] [0m[94mConnecting to localhost:4221 using TCP[0m
 [33m[your_program] [0mhey, i exit immediately!
-[33m[stage-1] [0m[91m[91mLooks like your program has terminated. A HTTP server is expected to be a long-running process.[0m[0m
-[33m[stage-1] [0m[91m[91mTest failed (try setting 'debug: true' in your codecrafters.yml to see more details)[0m[0m
+[33m[stage-1] [0m[91mLooks like your program has terminated. A HTTP server is expected to be a long-running process.[0m
+[33m[stage-1] [0m[91mTest failed (try setting 'debug: true' in your codecrafters.yml to see more details)[0m
