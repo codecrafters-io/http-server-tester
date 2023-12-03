@@ -55,9 +55,21 @@ func dumpRequest(logger *logger.Logger, req *http.Request) error {
 }
 
 func dumpResponse(logger *logger.Logger, resp *http.Response) error {
+	respDump, err := httputil.DumpResponse(resp, false)
+	if err != nil {
+		return fmt.Errorf("Failed to dump response: '%v'", err)
+	}
+	logPrefix := ">>>"
+	logger.Debugf("Received response: (Messages with %s prefix are part of this log)", logPrefix)
+	logFriendlyHTTPMessage(logger, string(respDump), logPrefix)
+
+	return nil
+}
+
+func dumpResponseWithBody(logger *logger.Logger, resp *http.Response) error {
 	respDump, err := httputil.DumpResponse(resp, true)
 	if err != nil {
-		return fmt.Errorf("Failed to dump rsponse: '%v'", err)
+		return fmt.Errorf("Failed to dump response: '%v'", err)
 	}
 	logPrefix := ">>>"
 	logger.Debugf("Received response: (Messages with %s prefix are part of this log)", logPrefix)
@@ -71,7 +83,7 @@ func logCurl(logger *logger.Logger, req *http.Request) {
 	logger.Infof("$ %s", httpRequestToCurlString(req))
 }
 
-func sendRequest(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {
+func executeHTTPRequestWithLogging(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {
 	err := dumpRequest(logger, req)
 	if err != nil {
 		return nil, err
@@ -82,7 +94,7 @@ func sendRequest(client *http.Client, req *http.Request, logger *logger.Logger) 
 		logFriendlyError(logger, err)
 		return nil, fmt.Errorf("Failed to connect to server, err: '%v'", err)
 	}
-	err = dumpResponse(logger, resp)
+	err = dumpResponseWithBody(logger, resp)
 	if err != nil {
 		return nil, err
 	}
@@ -90,12 +102,23 @@ func sendRequest(client *http.Client, req *http.Request, logger *logger.Logger) 
 	return resp, nil
 }
 
-func requestWithStatus(client *http.Client, url string, statusCode int, logger *logger.Logger) error {
+func requestResponseWithoutBody(client *http.Client, url string, statusCode int, logger *logger.Logger) error {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err
 	}
-	resp, err := sendRequest(client, req, logger)
+
+	err = dumpRequest(logger, req)
+	if err != nil {
+		return err
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		logFriendlyError(logger, err)
+		return fmt.Errorf("Failed to connect to server, err: '%v'", err)
+	}
+	err = dumpResponse(logger, resp)
 	if err != nil {
 		return err
 	}

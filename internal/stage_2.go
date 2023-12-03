@@ -14,5 +14,5 @@ func test200OK(stageHarness *testerutils.StageHarness) error {
 
 	httpClient := NewHTTPClient()
 
-	return requestWithStatus(httpClient, URL, 200, logger)
+	return requestResponseWithoutBody(httpClient, URL, 200, logger)
 }
