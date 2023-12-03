@@ -55,9 +55,9 @@ func dumpRequest(logger *logger.Logger, req *http.Request) error {
 }
 
 func dumpResponse(logger *logger.Logger, resp *http.Response) error {
-	respDump, err := httputil.DumpResponse(resp, true)
+	respDump, err := httputil.DumpResponse(resp, false)
 	if err != nil {
-		return fmt.Errorf("Failed to dump rsponse: '%v'", err)
+		return fmt.Errorf("Failed to dump response: '%v'", err)
 	}
 	logPrefix := ">>>"
 	logger.Debugf("Received response: (Messages with %s prefix are part of this log)", logPrefix)
@@ -71,7 +71,7 @@ func logCurl(logger *logger.Logger, req *http.Request) {
 	logger.Infof("$ %s", httpRequestToCurlString(req))
 }
 
-func sendRequest(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {
+func executeHTTPRequestWithLogging(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {
 	err := dumpRequest(logger, req)
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func requestWithStatus(client *http.Client, url string, statusCode int, logger *
 	if err != nil {
 		return err
 	}
-	resp, err := sendRequest(client, req, logger)
+	resp, err := executeHTTPRequestWithLogging(client, req, logger)
 	if err != nil {
 		return err
 	}

@@ -53,7 +53,7 @@ func testNonExistentFileResponseIs404(logger *logger.Logger, fileName string) er
 		return err
 	}
 
-	resp, err := sendRequest(httpClient, req, logger)
+	resp, err := executeHTTPRequestWithLogging(httpClient, req, logger)
 	if err != nil {
 		return err
 	}

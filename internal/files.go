@@ -37,7 +37,7 @@ func testGetFileResponse(logger *logger.Logger, fileName string, fileContent str
 		return err
 	}
 
-	resp, err := sendRequest(httpClient, req, logger)
+	resp, err := executeHTTPRequestWithLogging(httpClient, req, logger)
 	if err != nil {
 		return err
 	}

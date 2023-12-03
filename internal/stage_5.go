@@ -26,7 +26,7 @@ func testRespondWithUserAgent(stageHarness *testerutils.StageHarness) error {
 	}
 	req.Header.Set("User-Agent", userAgent)
 
-	resp, err := sendRequest(client, req, logger)
+	resp, err := executeHTTPRequestWithLogging(client, req, logger)
 	if err != nil {
 		return err
 	}
