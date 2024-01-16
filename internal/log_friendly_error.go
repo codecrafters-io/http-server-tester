@@ -6,7 +6,7 @@ import (
 )
 
 func logFriendlyError(logger *logger.Logger, err error) {
-	if err.Error() == "EOF" {
+	if strings.Contains(err.Error(), "EOF") {
 		logger.Infof("Hint: EOF is short for 'end of file'. This usually means that your program either:")
 		logger.Infof(" (a) didn't send a complete response, or")
 		logger.Infof(" (b) closed the connection early")
