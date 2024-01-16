@@ -21,7 +21,6 @@ func testRespondWithUserAgent(stageHarness *testerutils.StageHarness) error {
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		logFriendlyError(logger, err)
 		return fmt.Errorf("Could not create request: %v", err)
 	}
 	req.Header.Set("User-Agent", userAgent)
@@ -33,7 +32,6 @@ func testRespondWithUserAgent(stageHarness *testerutils.StageHarness) error {
 
 	err = validateContent(*resp, userAgent, "text/plain")
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
 
