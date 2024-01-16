@@ -23,7 +23,6 @@ func testPostFile(stageHarness *testerutils.StageHarness) error {
 
 	err := postFile(logger, fileName, fileContent)
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
 	defer os.Remove(DATA_DIR + fileName)

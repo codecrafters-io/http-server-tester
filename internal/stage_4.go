@@ -28,7 +28,6 @@ func testRespondWithContent(stageHarness *testerutils.StageHarness) error {
 	resp, err := executeHTTPRequestWithLogging(httpClient, req, logger)
 
 	if err != nil {
-		logFriendlyError(logger, err)
 		return err
 	}
 
