@@ -3,7 +3,7 @@ package internal
 import (
 	executable "github.com/codecrafters-io/tester-utils/executable"
 	logger "github.com/codecrafters-io/tester-utils/logger"
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 type HTTPServerBinary struct {
@@ -11,7 +11,7 @@ type HTTPServerBinary struct {
 	logger     *logger.Logger
 }
 
-func NewHTTPServerBinary(stageHarness *testerutils.StageHarness) *HTTPServerBinary {
+func NewHTTPServerBinary(stageHarness *test_case_harness.TestCaseHarness) *HTTPServerBinary {
 	b := &HTTPServerBinary{
 		executable: stageHarness.Executable,
 		logger:     stageHarness.Logger,

@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"os"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testPostFile(stageHarness *testerutils.StageHarness) error {
+func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run("--directory", DATA_DIR); err != nil {
 		return err

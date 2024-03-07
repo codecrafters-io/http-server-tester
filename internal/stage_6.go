@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"time"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
 	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testHandlesMultipleConcurrentConnections(stageHarness *testerutils.StageHarness) error {
+func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err

@@ -1,12 +1,12 @@
 package internal
 
 import (
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 const randomUrlLength = 20
 
-func test404NotFound(stageHarness *testerutils.StageHarness) error {
+func test404NotFound(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
