@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	logger "github.com/codecrafters-io/tester-utils/logger"
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func antiCheatBasic(stageHarness *testerutils.StageHarness) error {
+func antiCheatBasic(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err

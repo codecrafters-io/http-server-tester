@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testRespondWithContent(stageHarness *testerutils.StageHarness) error {
+func testRespondWithContent(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run(); err != nil {
 		return err
