@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"strings"
+
 	executable "github.com/codecrafters-io/tester-utils/executable"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -24,6 +26,11 @@ func NewHTTPServerBinary(stageHarness *test_case_harness.TestCaseHarness) *HTTPS
 
 func (b *HTTPServerBinary) Run(args ...string) error {
 	b.logger.Debugf("Running program")
+    if args == nil || len(args) == 0 {
+        b.logger.Infof("$ ./your_server.sh")
+    } else {
+        b.logger.Infof("$ ./your_server.sh %s", strings.Join(args, " "))
+    }
 	if err := b.executable.Start(args...); err != nil {
 		return err
 	}
