@@ -39,6 +39,6 @@ func antiCheatBasic(stageHarness *test_case_harness.TestCaseHarness) error {
 
 func fail(logger *logger.Logger) error {
 	logger.Criticalf("anti-cheat (ac1) failed.")
-	logger.Criticalf("Are you sure you aren't running this against an actual HTTP server?")
+	logger.Criticalf("Please contact us at hello@codecrafters.io if you think is a mistake.")
 	return fmt.Errorf("anti-cheat (ac1) failed")
 }
