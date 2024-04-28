@@ -40,6 +40,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/init/success",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"pass_all": {
+			UntilStageSlug:      "post-file",
+			CodePath:            "./test_helpers/scenarios/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/pass_all",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
