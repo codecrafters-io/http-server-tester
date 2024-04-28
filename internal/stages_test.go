@@ -11,36 +11,38 @@ import (
 func TestStages(t *testing.T) {
 	os.Setenv("CODECRAFTERS_RANDOM_SEED", "1234567890")
 
+	falseVar := false
+
 	testCases := map[string]tester_utils_testing.TesterOutputTestCase{
-		// "init_failure": {
-		// 	UntilStageSlug:      "connect-to-port",
-		// 	CodePath:            "./test_helpers/scenarios/init/failure",
-		// 	ExpectedExitCode:    1,
-		// 	StdoutFixturePath:   "./test_helpers/fixtures/init/failure",
-		// 	NormalizeOutputFunc: normalizeTesterOutput,
-		// },
-		// "init_timeout": {
-		// 	UntilStageSlug:      "connect-to-port",
-		// 	CodePath:            "./test_helpers/scenarios/init/timeout",
-		// 	ExpectedExitCode:    1,
-		// 	StdoutFixturePath:   "./test_helpers/fixtures/init/timeout",
-		// 	NormalizeOutputFunc: normalizeTesterOutput,
-		// },
-		// "init_success_cheat": {
-		// 	UntilStageSlug:      "connect-to-port",
-		// 	CodePath:            "./test_helpers/scenarios/init/success_cheat",
-		// 	ExpectedExitCode:    1,
-		// 	StdoutFixturePath:   "./test_helpers/fixtures/init/success_cheat",
-		// 	NormalizeOutputFunc: normalizeTesterOutput,
-		// 	SkipAntiCheat:       &falseVar,
-		// },
-		// "init_success": {
-		// 	UntilStageSlug:      "connect-to-port",
-		// 	CodePath:            "./test_helpers/scenarios/init/success",
-		// 	ExpectedExitCode:    0,
-		// 	StdoutFixturePath:   "./test_helpers/fixtures/init/success",
-		// 	NormalizeOutputFunc: normalizeTesterOutput,
-		// },
+		"init_failure": {
+			UntilStageSlug:      "connect-to-port",
+			CodePath:            "./test_helpers/scenarios/init/failure",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/init/failure",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"init_timeout": {
+			UntilStageSlug:      "connect-to-port",
+			CodePath:            "./test_helpers/scenarios/init/timeout",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/init/timeout",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"init_success_cheat": {
+			UntilStageSlug:      "connect-to-port",
+			CodePath:            "./test_helpers/scenarios/init/success_cheat",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/init/success_cheat",
+			NormalizeOutputFunc: normalizeTesterOutput,
+			SkipAntiCheat:       &falseVar,
+		},
+		"init_success": {
+			UntilStageSlug:      "connect-to-port",
+			CodePath:            "./test_helpers/scenarios/init/success",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/init/success",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 		"pass_all": {
 			UntilStageSlug:      "post-file",
 			CodePath:            "./test_helpers/scenarios/pass_all",
