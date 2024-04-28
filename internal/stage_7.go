@@ -10,7 +10,10 @@ import (
 )
 
 func testGetFile(stageHarness *test_case_harness.TestCaseHarness) error {
-	os.Mkdir(DATA_DIR, 0755)
+	err := os.MkdirAll(DATA_DIR, 0755)
+	if err != nil {
+		panic(err)
+	}
 	defer os.RemoveAll(DATA_DIR)
 
 	b := NewHTTPServerBinary(stageHarness)
@@ -26,7 +29,7 @@ func testGetFile(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger.Infof("Testing existing file")
 	logger.Debugf("Creating file %s in %s", fileName, DATA_DIR)
 	logger.Debugf("File Content: %q", fileContent)
-	err := createFileWith(DATA_DIR+fileName, fileContent)
+	err = createFileWith(DATA_DIR+fileName, fileContent)
 
 	if err != nil {
 		return err
