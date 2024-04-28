@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"os"
 	"regexp"
 	"testing"
 
@@ -8,6 +9,8 @@ import (
 )
 
 func TestStages(t *testing.T) {
+	os.Setenv("CODECRAFTERS_RANDOM_SEED", "1234567890")
+
 	falseVar := false
 
 	testCases := map[string]tester_utils_testing.TesterOutputTestCase{
@@ -38,6 +41,13 @@ func TestStages(t *testing.T) {
 			CodePath:            "./test_helpers/scenarios/init/success",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/success",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"pass_all": {
+			UntilStageSlug:      "post-file",
+			CodePath:            "./test_helpers/scenarios/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/pass_all",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 	}

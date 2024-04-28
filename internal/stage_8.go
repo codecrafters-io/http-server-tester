@@ -11,6 +11,9 @@ import (
 )
 
 func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
+	os.Mkdir(DATA_DIR, 0755)
+	defer os.RemoveAll(DATA_DIR)
+
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run("--directory", DATA_DIR); err != nil {
 		return err
@@ -25,7 +28,6 @@ func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
 	if err != nil {
 		return err
 	}
-	defer os.Remove(DATA_DIR + fileName)
 
 	err = validateFile(logger, fileName, fileContent)
 	if err != nil {
