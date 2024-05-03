@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	http_request "github.com/codecrafters-io/http-server-tester/internal/http/request"
+	http_response "github.com/codecrafters-io/http-server-tester/internal/http/parser/response"
 )
 
 type HttpConnectionCallbacks struct {
@@ -24,7 +24,7 @@ type HttpConnectionCallbacks struct {
 
 	// AfterReadResponse is called when a RESP value is decoded from bytes read from the server.
 	// This can be useful for success logs.
-	AfterReadResponse func(value string)
+	AfterReadResponse func(value http_response.HTTPResponse)
 }
 
 type HttpConnection struct {
@@ -82,8 +82,7 @@ func (c *HttpConnection) SendBytes(bytes []byte) error {
 	return nil
 }
 
-// FIXME: Implement parsing response
-func (c *HttpConnection) ReadResponse() (http_request.HTTPRequest, error) {
+func (c *HttpConnection) ReadResponse() (http_response.HTTPResponse, error) {
 	return c.ReadResponseWithTimeout(2 * time.Second)
 }
 
@@ -101,43 +100,34 @@ func (c *HttpConnection) ReadIntoBuffer() error {
 	return err
 }
 
-// FIXME: Implement parsing response, update return type here
-func (c *HttpConnection) ReadResponseWithTimeout(timeout time.Duration) (http_request.HTTPRequest, error) {
+func (c *HttpConnection) ReadResponseWithTimeout(timeout time.Duration) (http_response.HTTPResponse, error) {
 	shouldStopReadingIntoBuffer := func(buf []byte) bool {
 		// FIXME: Implement decode function, return value, read_bytes, error
-		_, _, err := http_request.Parse(buf)
+		_, _, err := http_response.Parse(buf)
 
-		if err == nil {
-			return true // We were able to read a value!
-		}
-
-		// if _, ok := err.(resp_decoder.InvalidInputError); ok {
-		// 	return true // We've read an invalid value, we can stop reading immediately
-		// }
-
-		return false
+		return err == nil
 	}
 
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, timeout)
 
-	value, readBytesCount, err := http_request.Parse(c.UnreadBuffer.Bytes())
+	response, readBytesCount, err := http_response.Parse(c.UnreadBuffer.Bytes())
 
 	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
 		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
 	}
 
 	if err != nil {
-		return http_request.HTTPRequest{}, err
+		return http_response.HTTPResponse{}, err
 	}
 
-	// We've read a value! Let's remove the bytes we've read from the buffer
+	// We've read a response! Let's remove the bytes we've read from the buffer
 	c.UnreadBuffer = *bytes.NewBuffer(c.UnreadBuffer.Bytes()[readBytesCount:])
 
-	// if c.Callbacks.AfterReadResponse != nil {
-	// 	c.Callbacks.AfterReadResponse(value)
-	// }
+	if c.Callbacks.AfterReadResponse != nil {
+		c.Callbacks.AfterReadResponse(response)
+	}
 
-	return value, nil
+	return response, nil
 }
 
 func (c *HttpConnection) readIntoBufferUntil(condition func([]byte) bool, timeout time.Duration) {

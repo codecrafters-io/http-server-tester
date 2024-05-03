@@ -3,10 +3,11 @@ package http
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"net/http"
 	"testing"
 
-	http_request "github.com/codecrafters-io/http-server-tester/internal/http/request"
+	http_request "github.com/codecrafters-io/http-server-tester/internal/http/parser/request"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -14,11 +15,10 @@ import (
 var simple = []byte("GET / HTTP/1.0\r\n\r\n")
 
 func TestParseSimple(t *testing.T) {
-	request, _, err := http_request.Parse(simple)
+	request, n, err := http_request.Parse(simple)
 
 	require.NoError(t, err)
-	// FIXME
-	// assert.Equal(t, n, len(simple))
+	assert.Equal(t, n, len(simple))
 
 	assert.Equal(t, ("HTTP/1.0"), request.RequestLine.Version)
 
@@ -80,12 +80,11 @@ func BenchmarkNetHTTP3(b *testing.B) {
 
 var short = []byte("GET / HT")
 
-// FIXME
-// func TestParseMissingData(t *testing.T) {
-// 	_, _, err := http_request.Parse(short)
-// 	fmt.Println(err.Error())
-// 	assert.Equal(t, err, http_request.ErrMissingData)
-// }
+func TestParseMissingData(t *testing.T) {
+	_, _, err := http_request.Parse(short)
+	fmt.Println(err.Error())
+	assert.Equal(t, err, http_request.ErrMissingData)
+}
 
 var multiline = []byte("GET / HTTP/1.0\r\nHost: cookie.com\nmore host\r\n\r\n")
 

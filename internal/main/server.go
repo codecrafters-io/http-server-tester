@@ -8,8 +8,7 @@ import (
 	"net/http/httputil"
 
 	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
-	http_request "github.com/codecrafters-io/http-server-tester/internal/http/request"
-	http_response "github.com/codecrafters-io/http-server-tester/internal/http/response"
+	http_request "github.com/codecrafters-io/http-server-tester/internal/http/parser/request"
 )
 
 type Server struct {
@@ -77,15 +76,9 @@ func main() {
 
 	conn.SendRequest(reqDump)
 
-	data := make([]byte, 1024)
-	n, err := conn.Conn.Read(data)
+	response, err := conn.ReadResponse()
 	if err != nil {
 		panic(err)
 	}
-	response_bytes := (data[:n])
-	r, _, err := http_response.Parse(response_bytes)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(r)
+	fmt.Println(response)
 }

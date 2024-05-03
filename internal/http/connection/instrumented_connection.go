@@ -2,6 +2,8 @@ package http_connection
 
 import (
 	"fmt"
+
+	http_response "github.com/codecrafters-io/http-server-tester/internal/http/parser/response"
 )
 
 func defaultCallbacks(logPrefix string) HttpConnectionCallbacks {
@@ -15,8 +17,8 @@ func defaultCallbacks(logPrefix string) HttpConnectionCallbacks {
 		AfterBytesReceived: func(bytes []byte) {
 			fmt.Printf("%sReceived bytes: %q", logPrefix, string(bytes))
 		},
-		AfterReadResponse: func(value string) {
-			fmt.Printf("%sReceived response: %s", logPrefix, value)
+		AfterReadResponse: func(value http_response.HTTPResponse) {
+			fmt.Printf("%sReceived response: %v", logPrefix, value)
 		},
 	}
 }
