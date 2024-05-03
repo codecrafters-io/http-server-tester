@@ -1,4 +1,4 @@
-package http_parser
+package http_utils
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ type IncompleteInputError struct {
 	Message string
 }
 
-type InvalidInputError struct {
+type BadProtocolError struct {
 	Reader  *bytes.Reader
 	Message string
 }
@@ -20,14 +20,14 @@ func (e IncompleteInputError) Error() string {
 	return formatDetailedError(e.Reader, e.Message)
 }
 
-func (e InvalidInputError) Error() string {
+func (e BadProtocolError) Error() string {
 	return formatDetailedError(e.Reader, e.Message)
 }
 
 func formatDetailedError(reader *bytes.Reader, message string) string {
 	lines := []string{}
 
-	offset := getReaderOffset(reader)
+	offset := GetReaderOffset(reader)
 	receivedBytes := readBytesFromReader(reader)
 	receivedByteString := NewInspectableByteString(receivedBytes)
 
@@ -43,12 +43,12 @@ func formatDetailedError(reader *bytes.Reader, message string) string {
 	return strings.Join(lines, "\n")
 }
 
-func getReaderOffset(reader *bytes.Reader) int {
+func GetReaderOffset(reader *bytes.Reader) int {
 	return int(reader.Size()) - reader.Len()
 }
 
 func readBytesFromReader(reader *bytes.Reader) []byte {
-	previousOffset := getReaderOffset(reader)
+	previousOffset := GetReaderOffset(reader)
 	defer reader.Seek(int64(previousOffset), 0)
 
 	reader.Seek(0, 0)

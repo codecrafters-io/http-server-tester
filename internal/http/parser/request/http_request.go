@@ -2,10 +2,12 @@ package http_request
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
+	"io"
 	"strconv"
 	"strings"
+
+	http_utils "github.com/codecrafters-io/http-server-tester/internal/http/utils"
 )
 
 type Header struct {
@@ -22,188 +24,154 @@ type RequestLine struct {
 type HTTPRequest struct {
 	RequestLine RequestLine
 
-	Headers      []Header
-	TotalHeaders int
+	Headers []Header
 
-	contentLength int
-
-	Content []byte
-}
-
-var CRLF = ([]byte)("\r\n")
-
-var (
-	ErrBadProto    = errors.New("bad protocol")
-	ErrMissingData = errors.New("missing data")
-)
-
-func parseRequestLine(requestLine []byte) (RequestLine, int, error) {
-	var pathIndex int
-	var versionIndex int
-	var RL RequestLine
-	// XXX: Update as required
-	A := []string{"OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT"}
-
-	for i := 0; i < len(requestLine); i++ {
-		char := requestLine[i]
-		if char == ' ' || char == '\t' {
-			method := string(requestLine[:i])
-			if method == "" || !contains(A, method) {
-				return RequestLine{}, 0, ErrBadProto
-			}
-
-			RL.Method = string(requestLine[:i])
-			pathIndex = i + 1
-			break
-		}
-	}
-
-	// FIXME: Extract to method
-	for i := pathIndex; i < len(requestLine); i++ {
-		char := requestLine[i]
-		if char == ' ' || char == '\t' {
-			path := string(requestLine[pathIndex:i])
-			if path == "" {
-				return RequestLine{}, 0, ErrBadProto
-			}
-			RL.Path = path
-			versionIndex = i + 1
-			break
-		}
-	}
-
-	// Return detailed error
-	// HTTP / DIGIT . DIGIT
-	version := (requestLine[versionIndex:])
-	if len(version) != 8 {
-		return RequestLine{}, 0, ErrBadProto
-	}
-	RL.Version = string(version)
-
-	fmt.Println("Parsed request line: ", RL.Method, RL.Path, RL.Version)
-
-	return RL, len(requestLine), nil
-}
-
-func parseHeaderLine(headerLine []byte) (Header, int, error) {
-	var key, value string
-	var valueIdx int
-	var seperatorFound bool = false
-	var H Header
-
-	for i := 0; i < len(headerLine); i++ {
-		char := headerLine[i]
-		if char == ':' {
-			seperatorFound = true
-			// No WS before seperator
-			if headerLine[i-1] == ' ' {
-				return H, 0, ErrBadProto
-			}
-			key = string(headerLine[:i])
-			valueIdx = i + 1
-			break
-		}
-	}
-	if !seperatorFound {
-		return H, 0, ErrBadProto
-	}
-
-	for i := valueIdx; i < len(headerLine); i++ {
-		// 9110: 5.5-5: Replace CR, LF or NUL with SP
-		if headerLine[i] == '\r' || headerLine[i] == '\n' || headerLine[i] == 0 {
-			headerLine[i] = ' '
-		}
-	}
-	value = string(headerLine[valueIdx:])
-	value = strings.TrimSpace(value)
-
-	fmt.Printf("%s:%s\n", key, value)
-
-	H.Key = key
-	H.Value = value
-	return H, 0, nil
+	Body []byte
 }
 
 func Parse(data []byte) (httpRequest HTTPRequest, readBytesCount int, err error) {
-	// reader := bytes.NewReader(data)
+	reader := bytes.NewReader(data)
 
-	request, _, err := doParseRequest(data)
+	request, err := doParseRequest(reader)
 	if err != nil {
 		return HTTPRequest{}, 0, err
 	}
 
-	return request, len(data), nil
+	return request, len(data) - reader.Len(), nil
 }
 
-func doParseRequest(request []byte) (HTTPRequest, int, error) {
-	var requestLine []byte
-	var headerIdx int
-	var content []byte
-	var requestLineFound, allHeadersFound bool
+func doParseRequest(reader *bytes.Reader) (HTTPRequest, error) {
+	var allHeadersFound = false
+	var sectionsFound int
 	var R HTTPRequest
+	var RL RequestLine
 
-	for i := 0; i < len(request); i++ {
-		if i+1 < len(request) && bytes.Equal(request[i:i+2], CRLF) {
-			requestLine = request[:i]
-			headerIdx = i + 2
-			requestLineFound = true
-			break
+	methodB, err := http_utils.ReadUntilAnyDelimiter(reader, [][]byte{http_utils.SPACE, http_utils.TAB})
+	if err == io.EOF {
+		return HTTPRequest{}, http_utils.IncompleteInputError{
+			Reader:  reader,
+			Message: "Expected SP between elements of the status line",
 		}
 	}
-
-	if !requestLineFound {
-		return R, 0, ErrBadProto
+	method := string(methodB)
+	if !contains(http_utils.RequestTypes, method) {
+		return HTTPRequest{}, http_utils.BadProtocolError{
+			Reader:  reader,
+			Message: fmt.Sprintf("Invalid method: %s", method),
+		}
 	}
+	RL.Method = method
+	sectionsFound++
 
-	fmt.Println("Request Line: ", string(requestLine))
-	RL, _, err := parseRequestLine(requestLine)
-	if err != nil {
-		return R, 0, err
+	pathB, err := http_utils.ReadUntilAnyDelimiter(reader, [][]byte{http_utils.SPACE, http_utils.TAB})
+	if err == io.EOF {
+		return HTTPRequest{}, http_utils.IncompleteInputError{
+			Reader:  reader,
+			Message: "Expected SP between elements of the status line",
+		}
 	}
+	path := string(pathB)
+	RL.Path = path
+	sectionsFound++
+
+	versionB, err := http_utils.ReadUntilCRLF(reader)
+	if err == io.EOF {
+		return HTTPRequest{}, http_utils.IncompleteInputError{
+			Reader:  reader,
+			Message: "Expected CRLF after status line",
+		}
+	}
+	version := string(versionB)
+	// HTTP/1.X
+	if len(version) != 8 {
+		return HTTPRequest{}, http_utils.BadProtocolError{
+			Reader:  reader,
+			Message: "Invalid HTTP-version field length",
+		}
+	}
+	// ToDo: Assert if version is 1.1 ?
+	RL.Version = version
 	R.RequestLine = RL
+	sectionsFound++
 
-	for i := headerIdx; i < len(request); i++ {
-		if i+1 < len(request) && bytes.Equal(request[i:i+2], CRLF) {
-			header := request[headerIdx:i]
-			if len(header) == 0 {
-				allHeadersFound = true
-				break
+	// FIXME: Identical for Request and Response, extract out
+	for !allHeadersFound {
+		offsetBeforeCRLF := http_utils.GetReaderOffset(reader)
+		possibleHeaderLine, err := http_utils.ReadUntilCRLF(reader)
+		if err == io.EOF {
+			return R, http_utils.IncompleteInputError{
+				Reader:  reader,
+				Message: "Expected empty line after header section",
 			}
-
-			H, _, err := parseHeaderLine(header)
-			if err != nil {
-				return R, 0, err
+		}
+		if len(possibleHeaderLine) == 0 {
+			// Headers finished
+			allHeadersFound = true
+			sectionsFound++
+		} else {
+			// We know header is present
+			reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
+			key, err := http_utils.ReadUntil(reader, []byte(":"))
+			if err == io.EOF {
+				return R, http_utils.IncompleteInputError{
+					Reader:  reader,
+					Message: "Expected ':' after header key",
+				}
+			}
+			if key[len(key)-1] == ' ' {
+				// No WS before separator
+				return R, http_utils.BadProtocolError{
+					Reader:  reader,
+					Message: "No whitespace allowed before header separator",
+				}
+			}
+			value, err := http_utils.ReadUntilCRLF(reader)
+			if err == io.EOF {
+				return R, http_utils.IncompleteInputError{
+					Reader:  reader,
+					Message: "Expected CRLF after header value",
+				}
+			}
+			H := Header{
+				// 9110: 5.5-5: Replace CR, LF or NUL with SP
+				Key:   string(key),
+				Value: strings.TrimSpace(string(http_utils.ReplaceCharsWithSpace(value, [][]byte{http_utils.CR, http_utils.LF, http_utils.NUL}))),
 			}
 			R.Headers = append(R.Headers, H)
-			R.TotalHeaders++
-			// We always point to the next header's starting index
-			headerIdx = i + 2
 		}
 	}
 
-	if !allHeadersFound {
-		return R, 0, ErrBadProto
-	}
-
-	R.contentLength = R.ContentLength()
-	bodyIdx := headerIdx // + 2 ?
 	// Content is present
-	if R.contentLength != -1 {
-		content = request[bodyIdx:]
-		if R.contentLength != len(content) {
-			return R, 0, ErrMissingData
+	if R.ContentLength() != -1 {
+		content, err := http_utils.ReadBytes(reader, R.ContentLength())
+		if err == io.EOF {
+			return R, http_utils.IncompleteInputError{
+				Reader:  reader,
+				Message: "Expected content of length " + strconv.Itoa(R.ContentLength()),
+			}
 		}
-	} else {
-		// No Content-Length header
-		content = request[bodyIdx:]
-		if len(content) != 0 {
-			return R, 0, ErrBadProto
+		fmt.Println("Content Length: ", R.ContentLength())
+		R.Body = content
+	}
+	sectionsFound++
+
+	// UnreadDataCheck ?
+	if reader.Len() != 0 {
+		return R, http_utils.BadProtocolError{
+			Reader:  reader,
+			Message: "Unexpected data after content",
 		}
 	}
 
-	R.Content = content
+	// XXX: Required ?
+	if sectionsFound != 5 {
+		return R, http_utils.BadProtocolError{
+			Reader:  reader,
+			Message: "Expected 5 sections in response",
+		}
+	}
 
-	return R, 0, nil
+	return R, nil
 }
 
 // Return a value of a header matching name.
