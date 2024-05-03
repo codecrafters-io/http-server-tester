@@ -10,19 +10,19 @@ import (
 )
 
 type HttpConnectionCallbacks struct {
-	// BeforeSendRequest is called when a command is sent to the server.
+	// BeforeSendRequest is called when a Request is sent.
 	// This can be useful for info logs.
 	BeforeSendRequest func(string)
 
-	// BeforeSendBytes is called when raw bytes are sent to the server.
+	// BeforeSendBytes is called when raw bytes are sent.
 	// This can be useful for debug logs.
 	BeforeSendBytes func(bytes []byte)
 
-	// AfterBytesReceived is called when raw bytes are read from the server.
+	// AfterBytesReceived is called when raw bytes are read.
 	// This can be useful for debug logs.
 	AfterBytesReceived func(bytes []byte)
 
-	// AfterReadResponse is called when a RESP value is decoded from bytes read from the server.
+	// AfterReadResponse is called when a Response is decoded from bytes read.
 	// This can be useful for success logs.
 	AfterReadResponse func(value http_response.HTTPResponse)
 }
@@ -102,7 +102,6 @@ func (c *HttpConnection) ReadIntoBuffer() error {
 
 func (c *HttpConnection) ReadResponseWithTimeout(timeout time.Duration) (http_response.HTTPResponse, error) {
 	shouldStopReadingIntoBuffer := func(buf []byte) bool {
-		// FIXME: Implement decode function, return value, read_bytes, error
 		_, _, err := http_response.Parse(buf)
 
 		return err == nil
@@ -133,11 +132,7 @@ func (c *HttpConnection) ReadResponseWithTimeout(timeout time.Duration) (http_re
 func (c *HttpConnection) readIntoBufferUntil(condition func([]byte) bool, timeout time.Duration) {
 	deadline := time.Now().Add(timeout)
 
-	for {
-		if time.Now().After(deadline) {
-			break
-		}
-
+	for !time.Now().After(deadline) {
 		// We'll swallow these errors and try reading again anyway
 		_ = c.ReadIntoBuffer()
 

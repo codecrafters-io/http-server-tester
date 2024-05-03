@@ -6,6 +6,7 @@ import (
 	http_response "github.com/codecrafters-io/http-server-tester/internal/http/parser/response"
 )
 
+// ToDo: logPrefix is required ?
 func defaultCallbacks(logPrefix string) HttpConnectionCallbacks {
 	return HttpConnectionCallbacks{
 		BeforeSendRequest: func(command string) {

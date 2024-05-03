@@ -1,5 +1,7 @@
 package http_utils
 
+// FIXME: Also put this inside tester-utils ?
+// A lot of the functions are reused from the Redis tester
 import (
 	"bytes"
 	"io"
@@ -119,11 +121,3 @@ func ReplaceCharsWithSpace(data []byte, chars [][]byte) []byte {
 	}
 	return newData
 }
-
-// for i := 0; i < len(data); i++ {
-// 	for _, char := range chars {
-// 		if data[i] == char {
-// 			data[i] = ' '
-// 		}
-// 	}
-// }

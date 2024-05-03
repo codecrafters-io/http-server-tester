@@ -1,5 +1,6 @@
 package http_utils
 
+// FIXME: Will be refactored as a seperate package inside tester-utils
 import (
 	"fmt"
 	"strings"
