@@ -2,7 +2,6 @@ package http_response
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"strconv"
 	"strings"
@@ -160,7 +159,6 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 				Message: "Expected content of length " + strconv.Itoa(R.ContentLength()),
 			}
 		}
-		fmt.Println("Content Length: ", R.ContentLength())
 		R.Body = content
 	}
 	sectionsFound++

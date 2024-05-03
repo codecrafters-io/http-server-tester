@@ -150,7 +150,6 @@ func doParseRequest(reader *bytes.Reader) (HTTPRequest, error) {
 				Message: "Expected content of length " + strconv.Itoa(R.ContentLength()),
 			}
 		}
-		fmt.Println("Content Length: ", R.ContentLength())
 		R.Body = content
 	}
 	sectionsFound++

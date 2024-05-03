@@ -65,19 +65,25 @@ func (s *Server) handle(c net.Conn) {
 // }
 
 func main() {
-	conn, err := http_connection.NewInstrumentedHttpConnection("localhost:5000", "client")
+	conn, err := http_connection.NewInstrumentedHttpConnection("localhost:8080", "client")
 	if err != nil {
 		panic(err)
 	}
 	defer conn.Close()
 
-	req, _ := http.NewRequest("GET", "http://127.0.0.1:5000/text", bytes.NewBuffer([]byte("")))
+	req, _ := http.NewRequest("GET", "http://127.0.0.1:8080/", bytes.NewBuffer([]byte("")))
 	reqDump, _ := httputil.DumpRequestOut(req, true)
-
+	request, _, err := http_request.Parse(reqDump)
+	if err != nil {
+		fmt.Println(err.Error())
+		panic(err)
+	}
+	fmt.Println(request)
 	conn.SendRequest(reqDump)
 
 	response, err := conn.ReadResponse()
 	if err != nil {
+		fmt.Println(err.Error())
 		panic(err)
 	}
 	fmt.Println(response)

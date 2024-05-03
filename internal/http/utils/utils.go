@@ -113,9 +113,9 @@ func ReadBytes(r *bytes.Reader, n int) ([]byte, error) {
 }
 
 func ReplaceCharsWithSpace(data []byte, chars [][]byte) []byte {
-	var newData []byte
+	newData := data
 	for _, char := range chars {
-		newData = bytes.ReplaceAll(data, char, []byte{' '})
+		newData = bytes.ReplaceAll(newData, char, []byte{' '})
 	}
 	return newData
 }
