@@ -43,19 +43,21 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	var sectionsFound int
 	var R HTTPResponse
 	var SL StatusLine
-	// var offsetBeforeCurrentSection int
+	var offsetBeforeCurrentSection int
 
+	offsetBeforeCurrentSection = GetReaderOffset(reader)
 	versionB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
 	if err == io.EOF {
 		return HTTPResponse{}, IncompleteInputError{
 			Reader:  reader,
-			Message: fmt.Sprintf("Expected: HTTP-version, Received: %d", versionB),
+			Message: fmt.Sprintf("Expected: HTTP-version, Received: %q", versionB),
 		}
 	}
 	version := string(versionB)
 	// HTTP/1.X
 	if len(version) != 8 {
-		reader.Seek(int64(-1), io.SeekCurrent)
+		// Seek to ending point of last sub-section
+		reader.Seek(int64(-2), io.SeekCurrent)
 		return HTTPResponse{}, BadProtocolError{
 			Reader:  reader,
 			Message: "Invalid HTTP-version field length",
@@ -63,7 +65,8 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	}
 	// HTTP/
 	if version[0:5] != "HTTP/" {
-		reader.Seek(int64(-4), io.SeekCurrent)
+		// Seek to starting position for current sub-section
+		reader.Seek(int64(offsetBeforeCurrentSection+4), io.SeekStart)
 		return HTTPResponse{}, BadProtocolError{
 			Reader:  reader,
 			Message: "Expected HTTP-version field to start with 'HTTP/'",
@@ -71,7 +74,7 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	}
 	// 1.X
 	if version[5] != '1' || version[6] != '.' {
-		reader.Seek(int64(-1), io.SeekCurrent)
+		reader.Seek(int64(offsetBeforeCurrentSection+5), io.SeekStart)
 		return HTTPResponse{}, BadProtocolError{
 			Reader:  reader,
 			Message: "Expected HTTP-version 1.X, Received: " + version[5:],
@@ -86,23 +89,23 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	if err == io.EOF {
 		return HTTPResponse{}, IncompleteInputError{
 			Reader:  reader,
-			Message: "Expected SP between elements of the status line",
+			Message: "Status line has missing sections, Expected: HTTP-version status-code reason-phrase",
 		}
 	}
 	statusCode := string(statusB)
 	if len(statusCode) != 3 {
-		reader.Seek(int64(-1), io.SeekCurrent)
+		reader.Seek(int64(-2), io.SeekCurrent)
 		return HTTPResponse{}, BadProtocolError{
 			Reader:  reader,
-			Message: "Invalid status-code field length",
+			Message: "Invalid status-code field length, Expected: 3 digits, Received: " + strconv.Itoa(len(statusCode)),
 		}
 	}
 	intStatusCode, err := strconv.Atoi(statusCode)
 	if err != nil {
-		reader.Seek(int64(-1), io.SeekCurrent)
+		reader.Seek(int64(-2), io.SeekCurrent)
 		return HTTPResponse{}, BadProtocolError{
 			Reader:  reader,
-			Message: "Invalid status-code field",
+			Message: "Invalid status-code field, Expected integer value, Received: " + statusCode,
 		}
 	}
 	SL.StatusCode = intStatusCode
@@ -180,17 +183,6 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	}
 	sectionsFound++
 
-	// UnreadDataCheck ?
-	// Outside Parse, for pipelining support
-	// BUG
-	if reader.Len() != 0 {
-		return R, BadProtocolError{
-			Reader:  reader,
-			Message: "Unexpected data after content",
-		}
-	}
-
-	// XXX: Required ?
 	if sectionsFound != 5 {
 		return R, BadProtocolError{
 			Reader:  reader,

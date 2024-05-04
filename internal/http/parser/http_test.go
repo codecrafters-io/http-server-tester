@@ -62,7 +62,7 @@ func TestParseMissingData(t *testing.T) {
 
 	expected := strings.TrimSpace(`
 Received: "HTTP/1 200 OK"
-                 ^ error
+                ^ error
 Error: Invalid HTTP-version field length`)
 
 	assert.Error(t, err)
@@ -94,7 +94,7 @@ func TestParseResponseMissingData(t *testing.T) {
 	expected := strings.TrimSpace(`
 Received: "HTTP/1.1 200\r\n"
                            ^ error
-Error: Expected SP between elements of the status line`)
+Error: Status line has missing sections, Expected: HTTP-version status-code reason-phrase`)
 
 	assert.Error(t, err)
 	assert.IsType(t, IncompleteInputError{}, err)
@@ -136,20 +136,67 @@ func TestParseResponseProperContent(t *testing.T) {
 	assert.Equal(t, "This is a plain text response", string(response.Body))
 }
 
-var wrongVersion = []byte("HTTP/3.0 200 OK")
+var wrongHTTP0 = []byte("HTTP/3.0 200 OK")
 var wrongHTTP1 = []byte("HTPP/1.0 200 OK")
 var wrongHTTP2 = []byte("HTTP|1.0 200 OK")
 var wrongHTTP3 = []byte("HTTP//1.0 200 OK")
 var wrongHTTP4 = []byte("HTTP/1 200 OK")
 var wrongHTTP5 = []byte("HTTP/1.0 ZOO OK")
 var wrongHTTP6 = []byte("HTTP/1.0 2000 OK")
+var wrongHTTP7 = []byte("HTTP/1.0_200_OK")
+var wrongHTTP8 = []byte("HTTP/1.0 200 OK")
+
+var wrongHTTP = map[string]string{`
+Received: "HTTP/3.0 200 OK"
+                ^ error
+Error: Expected HTTP-version 1.X, Received: 3.0`: "HTTP/3.0 200 OK", `
+Received: "HTPP/1.0 200 OK"
+               ^ error
+Error: Expected HTTP-version field to start with 'HTTP/'`: "HTPP/1.0 200 OK",
+}
+
+var wrong = map[string]string{
+	"HTTP/3.0 200 OK": `
+Received: "HTTP/3.0 200 OK"
+                ^ error
+Error: Expected HTTP-version 1.X, Received: 3.0`,
+	"HTPP/1.0 200 OK": `
+Received: "HTPP/1.0 200 OK"
+               ^ error
+Error: Expected HTTP-version field to start with 'HTTP/'`,
+	"HTTP|1.0 200 OK": `
+    `,
+	"HTTP//1.0 200 OK": `
+    `,
+	"HTTP/1 200 OK": `
+    `,
+	"HTTP/1.0 ZOO OK": `
+    `,
+	"HTTP/1.0 2000 OK": `
+    `,
+	"HTTP/1.0_200_OK": `
+    `,
+	"HTTP/1.0 200 OK": `
+    `,
+}
+
+func TestParseVersion(t *testing.T) {
+	for response, error := range wrong {
+		t.Run(response, func(t *testing.T) {
+			_, _, err := Parse([]byte(response))
+			assert.Error(t, err)
+			assert.IsType(t, BadProtocolError{}, err)
+			assert.EqualError(t, err, strings.TrimSpace(error))
+		})
+	}
+}
 
 func TestParseVersion1(t *testing.T) {
-	_, _, err := Parse(wrongVersion)
+	_, _, err := Parse(wrongHTTP0)
 
 	expected := strings.TrimSpace(`
 Received: "HTTP/3.0 200 OK"
-                   ^ error
+                ^ error
 Error: Expected HTTP-version 1.X, Received: 3.0`)
 
 	assert.Error(t, err)
@@ -161,7 +208,7 @@ func TestParseVersion2(t *testing.T) {
 	_, _, err := Parse(wrongHTTP1)
 	expected := strings.TrimSpace(`
 Received: "HTPP/1.0 200 OK"
-                ^ error
+               ^ error
 Error: Expected HTTP-version field to start with 'HTTP/'`)
 	assert.Error(t, err)
 	assert.IsType(t, BadProtocolError{}, err)
@@ -172,7 +219,7 @@ func TestParseVersion3(t *testing.T) {
 	_, _, err := Parse(wrongHTTP2)
 	expected := strings.TrimSpace(`
 Received: "HTTP|1.0 200 OK"
-                ^ error
+               ^ error
 Error: Expected HTTP-version field to start with 'HTTP/'`)
 	assert.Error(t, err)
 	assert.IsType(t, BadProtocolError{}, err)
@@ -183,7 +230,7 @@ func TestParseVersion4(t *testing.T) {
 	_, _, err := Parse(wrongHTTP3)
 	expected := strings.TrimSpace(`
 Received: "HTTP//1.0 200 OK"
-                    ^ error
+                   ^ error
 Error: Invalid HTTP-version field length`)
 	assert.Error(t, err)
 	assert.IsType(t, BadProtocolError{}, err)
@@ -194,7 +241,7 @@ func TestParseVersion5(t *testing.T) {
 	_, _, err := Parse(wrongHTTP4)
 	expected := strings.TrimSpace(`
 Received: "HTTP/1 200 OK"
-                 ^ error
+                ^ error
 Error: Invalid HTTP-version field length`)
 	assert.Error(t, err)
 	assert.IsType(t, BadProtocolError{}, err)
@@ -205,8 +252,8 @@ func TestParseVersion6(t *testing.T) {
 	_, _, err := Parse(wrongHTTP5)
 	expected := strings.TrimSpace(`
 Received: "HTTP/1.0 ZOO OK"
-                       ^ error
-Error: Invalid status-code field`)
+                      ^ error
+Error: Invalid status-code field, Expected integer value, Received: ZOO`)
 	assert.Error(t, err)
 	assert.IsType(t, BadProtocolError{}, err)
 	assert.EqualError(t, err, expected)
@@ -216,13 +263,34 @@ func TestParseVersion7(t *testing.T) {
 	_, _, err := Parse(wrongHTTP6)
 	expected := strings.TrimSpace(`
 Received: "HTTP/1.0 2000 OK"
-                        ^ error
-Error: Invalid status-code field length`)
+                       ^ error
+Error: Invalid status-code field length, Expected: 3 digits, Received: 4`)
 	assert.Error(t, err)
 	assert.IsType(t, BadProtocolError{}, err)
 	assert.EqualError(t, err, expected)
 }
 
+func TestParseVersion8(t *testing.T) {
+	_, _, err := Parse(wrongHTTP7)
+	expected := strings.TrimSpace(`
+Received: "HTTP/1.0_200_OK"
+                          ^ error
+Error: Expected: HTTP-version, Received: "HTTP/1.0_200_OK"`)
+	assert.Error(t, err)
+	assert.IsType(t, IncompleteInputError{}, err)
+	assert.EqualError(t, err, expected)
+}
+
+func TestParseVersion9(t *testing.T) {
+	_, _, err := Parse(wrongHTTP8)
+	expected := strings.TrimSpace(`
+Received: "HTTP/1.0 200 OK"
+                          ^ error
+Error: Expected CRLF after status line`)
+	assert.Error(t, err)
+	assert.IsType(t, IncompleteInputError{}, err)
+	assert.EqualError(t, err, expected)
+}
 func BenchmarkParseSimple(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := Parse(simpleResponse)

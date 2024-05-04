@@ -3,6 +3,7 @@ package http_connection
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"net"
 	"time"
 
@@ -169,5 +170,13 @@ func newConn(address string) (net.Conn, error) {
 
 		attempts += 1
 		time.Sleep(100 * time.Millisecond)
+	}
+}
+
+func (c *HttpConnection) EnsureNoUnreadData() {
+	c.ReadIntoBuffer() // Make sure there is no unread data
+
+	if c.UnreadBuffer.Len() > 0 {
+		panic(fmt.Sprintf("Found extra data: %q", c.UnreadBuffer.String()))
 	}
 }
