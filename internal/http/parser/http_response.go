@@ -1,12 +1,10 @@
-package http_response
+package http_parser
 
 import (
 	"bytes"
 	"io"
 	"strconv"
 	"strings"
-
-	http_utils "github.com/codecrafters-io/http-server-tester/internal/http/utils"
 )
 
 type Header struct {
@@ -45,9 +43,9 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	var R HTTPResponse
 	var SL StatusLine
 
-	versionB, err := http_utils.ReadUntilAnyDelimiter(reader, [][]byte{http_utils.SPACE, http_utils.TAB})
+	versionB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
 	if err == io.EOF {
-		return HTTPResponse{}, http_utils.IncompleteInputError{
+		return HTTPResponse{}, IncompleteInputError{
 			Reader:  reader,
 			Message: "Expected SP between elements of the status line",
 		}
@@ -55,7 +53,7 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	version := string(versionB)
 	// HTTP/1.X
 	if len(version) != 8 {
-		return HTTPResponse{}, http_utils.BadProtocolError{
+		return HTTPResponse{}, BadProtocolError{
 			Reader:  reader,
 			Message: "Invalid HTTP-version field length",
 		}
@@ -64,35 +62,34 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	SL.Version = version
 	sectionsFound++
 
-	statusB, err := http_utils.ReadUntilAnyDelimiter(reader, [][]byte{http_utils.SPACE, http_utils.TAB})
+	statusB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
 	if err == io.EOF {
-		return HTTPResponse{}, http_utils.IncompleteInputError{
+		return HTTPResponse{}, IncompleteInputError{
 			Reader:  reader,
 			Message: "Expected SP between elements of the status line",
 		}
 	}
 	statusCode := string(statusB)
 	if len(statusCode) != 3 {
-		return HTTPResponse{}, http_utils.BadProtocolError{
+		return HTTPResponse{}, BadProtocolError{
 			Reader:  reader,
 			Message: "Invalid status-code field length",
 		}
 	}
 	intStatusCode, err := strconv.Atoi(statusCode)
 	if err != nil {
-		return HTTPResponse{}, http_utils.BadProtocolError{
+		return HTTPResponse{}, BadProtocolError{
 			Reader:  reader,
 			Message: "Invalid status-code field",
 		}
 	}
-	// ToDo: Assert if version is 1.1 ?
 	SL.StatusCode = intStatusCode
 	sectionsFound++
 
 	// Intentionally lax. rfc9112.html#section-4-8
-	reasonB, err := http_utils.ReadUntilCRLF(reader)
+	reasonB, err := ReadUntilCRLF(reader)
 	if err == io.EOF {
-		return HTTPResponse{}, http_utils.IncompleteInputError{
+		return HTTPResponse{}, IncompleteInputError{
 			Reader:  reader,
 			Message: "Expected CRLF after status line",
 		}
@@ -102,13 +99,11 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	R.StatusLine = SL
 	sectionsFound++
 
-	// XXX: Review with Paul
-	// FIXME: Identical for Request and Response, extract out
 	for !allHeadersFound {
-		offsetBeforeCRLF := http_utils.GetReaderOffset(reader)
-		possibleHeaderLine, err := http_utils.ReadUntilCRLF(reader)
+		offsetBeforeCRLF := GetReaderOffset(reader)
+		possibleHeaderLine, err := ReadUntilCRLF(reader)
 		if err == io.EOF {
-			return R, http_utils.IncompleteInputError{
+			return R, IncompleteInputError{
 				Reader:  reader,
 				Message: "Expected empty line after header section",
 			}
@@ -120,23 +115,23 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 		} else {
 			// We know header is present
 			reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
-			key, err := http_utils.ReadUntil(reader, []byte(":"))
+			key, err := ReadUntil(reader, []byte(":"))
 			if err == io.EOF {
-				return R, http_utils.IncompleteInputError{
+				return R, IncompleteInputError{
 					Reader:  reader,
 					Message: "Expected ':' after header key",
 				}
 			}
 			if key[len(key)-1] == ' ' {
 				// No WS before separator
-				return R, http_utils.BadProtocolError{
+				return R, BadProtocolError{
 					Reader:  reader,
 					Message: "No whitespace allowed before header separator",
 				}
 			}
-			value, err := http_utils.ReadUntilCRLF(reader)
+			value, err := ReadUntilCRLF(reader)
 			if err == io.EOF {
-				return R, http_utils.IncompleteInputError{
+				return R, IncompleteInputError{
 					Reader:  reader,
 					Message: "Expected CRLF after header value",
 				}
@@ -144,7 +139,7 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 			H := Header{
 				// 9110: 5.5-5: Replace CR, LF or NUL with SP
 				Key:   string(key),
-				Value: strings.TrimSpace(string(http_utils.ReplaceCharsWithSpace(value, [][]byte{http_utils.CR, http_utils.LF, http_utils.NUL}))),
+				Value: strings.TrimSpace(string(ReplaceCharsWithSpace(value, [][]byte{CR, LF, NUL}))),
 			}
 			R.Headers = append(R.Headers, H)
 		}
@@ -152,9 +147,9 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 
 	// Content is present
 	if R.ContentLength() != -1 {
-		content, err := http_utils.ReadBytes(reader, R.ContentLength())
+		content, err := ReadBytes(reader, R.ContentLength())
 		if err == io.EOF {
-			return R, http_utils.IncompleteInputError{
+			return R, IncompleteInputError{
 				Reader:  reader,
 				Message: "Expected content of length " + strconv.Itoa(R.ContentLength()),
 			}
@@ -164,8 +159,9 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	sectionsFound++
 
 	// UnreadDataCheck ?
+	// Outside Parse, for pipelining support
 	if reader.Len() != 0 {
-		return R, http_utils.BadProtocolError{
+		return R, BadProtocolError{
 			Reader:  reader,
 			Message: "Unexpected data after content",
 		}
@@ -173,7 +169,7 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 
 	// XXX: Required ?
 	if sectionsFound != 5 {
-		return R, http_utils.BadProtocolError{
+		return R, BadProtocolError{
 			Reader:  reader,
 			Message: "Expected 5 sections in response",
 		}
@@ -190,11 +186,6 @@ func (response *HTTPResponse) FindHeader(key string) string {
 		}
 	}
 	return ""
-}
-
-// Host returns the value of the Host header
-func (response *HTTPResponse) Host() string {
-	return response.FindHeader("Host")
 }
 
 // ContentLength returns the value of the Content-Length header.

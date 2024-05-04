@@ -1,4 +1,4 @@
-package http_utils
+package inspectable_byte_string
 
 // FIXME: Will be refactored as a seperate package inside tester-utils
 import (

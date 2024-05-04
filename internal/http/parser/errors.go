@@ -1,9 +1,11 @@
-package http_utils
+package http_parser
 
 import (
 	"bytes"
 	"fmt"
 	"strings"
+
+	"github.com/codecrafters-io/http-server-tester/internal/http/inspectable_byte_string"
 )
 
 type IncompleteInputError struct {
@@ -29,7 +31,7 @@ func formatDetailedError(reader *bytes.Reader, message string) string {
 
 	offset := GetReaderOffset(reader)
 	receivedBytes := readBytesFromReader(reader)
-	receivedByteString := NewInspectableByteString(receivedBytes)
+	receivedByteString := inspectable_byte_string.NewInspectableByteString(receivedBytes)
 
 	suffix := ""
 

@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	http_response "github.com/codecrafters-io/http-server-tester/internal/http/parser/response"
+	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 )
 
 type HttpConnectionCallbacks struct {
@@ -24,7 +24,7 @@ type HttpConnectionCallbacks struct {
 
 	// AfterReadResponse is called when a Response is decoded from bytes read.
 	// This can be useful for success logs.
-	AfterReadResponse func(value http_response.HTTPResponse)
+	AfterReadResponse func(value http_parser.HTTPResponse)
 }
 
 type HttpConnection struct {
@@ -82,7 +82,7 @@ func (c *HttpConnection) SendBytes(bytes []byte) error {
 	return nil
 }
 
-func (c *HttpConnection) ReadResponse() (http_response.HTTPResponse, error) {
+func (c *HttpConnection) ReadResponse() (http_parser.HTTPResponse, error) {
 	return c.ReadResponseWithTimeout(2 * time.Second)
 }
 
@@ -100,23 +100,23 @@ func (c *HttpConnection) ReadIntoBuffer() error {
 	return err
 }
 
-func (c *HttpConnection) ReadResponseWithTimeout(timeout time.Duration) (http_response.HTTPResponse, error) {
+func (c *HttpConnection) ReadResponseWithTimeout(timeout time.Duration) (http_parser.HTTPResponse, error) {
 	shouldStopReadingIntoBuffer := func(buf []byte) bool {
-		_, _, err := http_response.Parse(buf)
+		_, _, err := http_parser.Parse(buf)
 
 		return err == nil
 	}
 
 	c.readIntoBufferUntil(shouldStopReadingIntoBuffer, timeout)
 
-	response, readBytesCount, err := http_response.Parse(c.UnreadBuffer.Bytes())
+	response, readBytesCount, err := http_parser.Parse(c.UnreadBuffer.Bytes())
 
 	if c.Callbacks.AfterBytesReceived != nil && readBytesCount > 0 {
 		c.Callbacks.AfterBytesReceived(c.UnreadBuffer.Bytes()[:readBytesCount])
 	}
 
 	if err != nil {
-		return http_response.HTTPResponse{}, err
+		return http_parser.HTTPResponse{}, err
 	}
 
 	// We've read a response! Let's remove the bytes we've read from the buffer

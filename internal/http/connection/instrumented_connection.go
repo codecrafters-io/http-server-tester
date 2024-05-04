@@ -3,7 +3,7 @@ package http_connection
 import (
 	"fmt"
 
-	http_response "github.com/codecrafters-io/http-server-tester/internal/http/parser/response"
+	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 )
 
 // ToDo: logPrefix is required ?
@@ -18,7 +18,7 @@ func defaultCallbacks(logPrefix string) HttpConnectionCallbacks {
 		AfterBytesReceived: func(bytes []byte) {
 			fmt.Printf("%sReceived bytes: %q", logPrefix, string(bytes))
 		},
-		AfterReadResponse: func(value http_response.HTTPResponse) {
+		AfterReadResponse: func(value http_parser.HTTPResponse) {
 			fmt.Printf("%sReceived response: %v", logPrefix, value)
 		},
 	}
