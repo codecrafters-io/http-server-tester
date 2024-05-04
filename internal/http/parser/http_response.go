@@ -2,6 +2,7 @@ package http_parser
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"strconv"
 	"strings"
@@ -42,26 +43,45 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	var sectionsFound int
 	var R HTTPResponse
 	var SL StatusLine
+	// var offsetBeforeCurrentSection int
 
 	versionB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
 	if err == io.EOF {
 		return HTTPResponse{}, IncompleteInputError{
 			Reader:  reader,
-			Message: "Expected SP between elements of the status line",
+			Message: fmt.Sprintf("Expected: HTTP-version, Received: %d", versionB),
 		}
 	}
 	version := string(versionB)
 	// HTTP/1.X
 	if len(version) != 8 {
+		reader.Seek(int64(-1), io.SeekCurrent)
 		return HTTPResponse{}, BadProtocolError{
 			Reader:  reader,
 			Message: "Invalid HTTP-version field length",
 		}
 	}
-	// ToDo: Assert if version is 1.1 ?
+	// HTTP/
+	if version[0:5] != "HTTP/" {
+		reader.Seek(int64(-4), io.SeekCurrent)
+		return HTTPResponse{}, BadProtocolError{
+			Reader:  reader,
+			Message: "Expected HTTP-version field to start with 'HTTP/'",
+		}
+	}
+	// 1.X
+	if version[5] != '1' || version[6] != '.' {
+		reader.Seek(int64(-1), io.SeekCurrent)
+		return HTTPResponse{}, BadProtocolError{
+			Reader:  reader,
+			Message: "Expected HTTP-version 1.X, Received: " + version[5:],
+		}
+	}
+
 	SL.Version = version
 	sectionsFound++
 
+	// offsetBeforeCurrentSection = GetReaderOffset(reader)
 	statusB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
 	if err == io.EOF {
 		return HTTPResponse{}, IncompleteInputError{
@@ -71,6 +91,7 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	}
 	statusCode := string(statusB)
 	if len(statusCode) != 3 {
+		reader.Seek(int64(-1), io.SeekCurrent)
 		return HTTPResponse{}, BadProtocolError{
 			Reader:  reader,
 			Message: "Invalid status-code field length",
@@ -78,6 +99,7 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	}
 	intStatusCode, err := strconv.Atoi(statusCode)
 	if err != nil {
+		reader.Seek(int64(-1), io.SeekCurrent)
 		return HTTPResponse{}, BadProtocolError{
 			Reader:  reader,
 			Message: "Invalid status-code field",
@@ -160,6 +182,7 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 
 	// UnreadDataCheck ?
 	// Outside Parse, for pipelining support
+	// BUG
 	if reader.Len() != 0 {
 		return R, BadProtocolError{
 			Reader:  reader,
