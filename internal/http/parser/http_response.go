@@ -43,9 +43,8 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	var sectionsFound int
 	var R HTTPResponse
 	var SL StatusLine
-	var offsetBeforeCurrentSection int
 
-	offsetBeforeCurrentSection = GetReaderOffset(reader)
+	offsetBeforeCurrentSection := GetReaderOffset(reader)
 	versionB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
 	if err == io.EOF {
 		return HTTPResponse{}, IncompleteInputError{
@@ -128,9 +127,16 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 		offsetBeforeCRLF := GetReaderOffset(reader)
 		possibleHeaderLine, err := ReadUntilCRLF(reader)
 		if err == io.EOF {
-			return R, IncompleteInputError{
-				Reader:  reader,
-				Message: "Expected empty line after header section",
+			if len(possibleHeaderLine) == 0 {
+				return R, IncompleteInputError{
+					Reader:  reader,
+					Message: "Expected empty line after header section",
+				}
+			} else {
+				return R, IncompleteInputError{
+					Reader:  reader,
+					Message: "Expected CRLF after header value",
+				}
 			}
 		}
 		if len(possibleHeaderLine) == 0 {
@@ -176,7 +182,7 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 		if err == io.EOF {
 			return R, IncompleteInputError{
 				Reader:  reader,
-				Message: "Expected content of length " + strconv.Itoa(R.ContentLength()),
+				Message: fmt.Sprintf("Expected content of length %d, Received content of length %d", R.ContentLength(), len(content)),
 			}
 		}
 		R.Body = content

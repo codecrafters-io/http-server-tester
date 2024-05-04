@@ -1,6 +1,5 @@
 package http_parser
 
-// FIXME: Also put this inside tester-utils ?
 // A lot of the functions are reused from the Redis tester
 import (
 	"bytes"
