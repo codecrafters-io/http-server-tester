@@ -4,11 +4,13 @@ import (
 	"bufio"
 	"bytes"
 	"net/http"
+	"os"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gopkg.in/yaml.v2"
 )
 
 var simpleResponse = []byte("HTTP/1.0 200 OK\r\n\r\n")
@@ -82,7 +84,7 @@ Received: "his is a plain text "
 Error: Expected content of length 29, Received content of length 21`)
 
 	assert.Error(t, err)
-	assert.IsType(t, IncompleteInputError{}, err)
+	assert.IsType(t, IncompleteHTTPResponseError{}, err)
 	assert.EqualError(t, err, expected)
 }
 
@@ -105,86 +107,45 @@ func TestParseResponseProperContent(t *testing.T) {
 	assert.Equal(t, "This is a plain text response", string(response.Body))
 }
 
-var protocolErrors = map[string]string{
-	"HTTP/3.0 200 OK": `
-Received: "HTTP/3.0 200 OK"
-                ^ error
-Error: Expected HTTP-version 1.X, Received: 3.0`,
-	"HTPP/1.0 200 OK": `
-Received: "HTPP/1.0 200 OK"
-               ^ error
-Error: Expected HTTP-version field to start with 'HTTP/'`,
-	"HTTP|1.0 200 OK": `
-Received: "HTTP|1.0 200 OK"
-               ^ error
-Error: Expected HTTP-version field to start with 'HTTP/'`,
-	"HTTP//1.0 200 OK": `
-Received: "HTTP//1.0 200 OK"
-                   ^ error
-Error: Invalid HTTP-version field length`,
-	"HTTP/1 200 OK": `
-Received: "HTTP/1 200 OK"
-                ^ error
-Error: Invalid HTTP-version field length`,
-	"HTTP/1.0 ZOO OK": `
-Received: "HTTP/1.0 ZOO OK"
-                      ^ error
-Error: Invalid status-code field, Expected integer value, Received: ZOO`,
-	"HTTP/1.0 2000 OK": `
-Received: "HTTP/1.0 2000 OK"
-                       ^ error
-Error: Invalid status-code field length, Expected: 3 digits, Received: 4`,
-	"HTTP/1.1 200 OK\r\nConnection : close\r\n": `
-Received: "200 OK\r\nConnection : close\r\n"
-                                 ^ error
-Error: No whitespace allowed before header separator`,
+type ParseErrorTestCase struct {
+	Input string `yaml:"input"`
+	Error string `yaml:"error"`
 }
 
-func TestParseVersion(t *testing.T) {
-	for response, error := range protocolErrors {
-		t.Run(response, func(t *testing.T) {
-			_, _, err := Parse([]byte(response))
+func TestDecodeInvalidHTTPResponseErrors(t *testing.T) {
+	testCases := []ParseErrorTestCase{}
+
+	yamlContents, err := os.ReadFile("invalid_errors.yaml")
+	assert.Nil(t, err)
+
+	err = yaml.Unmarshal(yamlContents, &testCases)
+	assert.Nil(t, err)
+
+	for _, testCase := range testCases {
+		t.Run(testCase.Input, func(t *testing.T) {
+			_, _, err := Parse([]byte(testCase.Input))
 			assert.Error(t, err)
-			assert.IsType(t, BadProtocolError{}, err)
-			assert.EqualError(t, err, strings.TrimSpace(error))
+			assert.IsType(t, InvalidHTTPResponseError{}, err)
+			assert.EqualError(t, err, strings.TrimSpace(testCase.Error))
 		})
 	}
 }
 
-var incompleteErrors = map[string]string{
-	"HTTP/1.0_200_OK": `
-Received: "HTTP/1.0_200_OK"
-                          ^ error
-Error: Expected: HTTP-version, Received: "HTTP/1.0_200_OK"`,
-	"HTTP/1.0 200 OK": `
-Received: "HTTP/1.0 200 OK"
-                          ^ error
-Error: Expected CRLF after status line`,
-	"HTTP/1.1 200 OK\r\nConnection: close": `
-Received: "K\r\nConnection: close"
-                                 ^ error
-Error: Expected CRLF after header value`,
-	"HTTP/1.1 200 OK\r\nConnection: close\r\n": `
-Received: "\nConnection: close\r\n"
-                                  ^ error
-Error: Expected empty line after header section`,
-	"HTTP/1.1 200 OK\r\nConnection\r\n": `
-Received: "200 OK\r\nConnection\r\n"
-                                   ^ error
-Error: Expected ':' after header key`,
-	"HTTP/1.1 200\r\n": `
-Received: "HTTP/1.1 200\r\n"
-                           ^ error
-Error: Status line has missing sections, Expected: HTTP-version status-code reason-phrase`,
-}
+func TestDecodeIncompleteErrors(t *testing.T) {
+	testCases := []ParseErrorTestCase{}
 
-func TestParseVersion2(t *testing.T) {
-	for response, error := range incompleteErrors {
-		t.Run(response, func(t *testing.T) {
-			_, _, err := Parse([]byte(response))
+	yamlContents, err := os.ReadFile("incomplete_errors.yaml")
+	assert.Nil(t, err)
+
+	err = yaml.Unmarshal(yamlContents, &testCases)
+	assert.Nil(t, err)
+
+	for _, testCase := range testCases {
+		t.Run(testCase.Input, func(t *testing.T) {
+			_, _, err := Parse([]byte(testCase.Input))
 			assert.Error(t, err)
-			assert.IsType(t, IncompleteInputError{}, err)
-			assert.EqualError(t, err, strings.TrimSpace(error))
+			assert.IsType(t, IncompleteHTTPResponseError{}, err)
+			assert.EqualError(t, err, strings.TrimSpace(testCase.Error))
 		})
 	}
 }

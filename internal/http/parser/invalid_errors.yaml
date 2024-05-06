@@ -1,0 +1,51 @@
+# Protocol Errors
+
+- input: "HTTP/3.0 200 OK"
+  error: |
+    Received: "HTTP/3.0 200 OK"
+                    ^ error
+    Error: Expected HTTP-version 1.X, Received: 3.0
+
+- input: "HTPP/1.0 200 OK"
+  error: |
+    Received: "HTPP/1.0 200 OK"
+                   ^ error
+    Error: Expected HTTP-version field to start with 'HTTP/'
+
+- input: "HTTP|1.0 200 OK"
+  error: |
+    Received: "HTTP|1.0 200 OK"
+                   ^ error
+    Error: Expected HTTP-version field to start with 'HTTP/'
+
+- input: "HTTP//1.0 200 OK"
+  error: |
+    Received: "HTTP//1.0 200 OK"
+                       ^ error
+    Error: Invalid HTTP-version field length
+
+- input: "HTTP/1 200 OK"
+  error: |
+    Received: "HTTP/1 200 OK"
+                    ^ error
+    Error: Invalid HTTP-version field length
+
+- input: "HTTP/1.0 ZOO OK"
+  error: |
+    Received: "HTTP/1.0 ZOO OK"
+                          ^ error
+    Error: Invalid status-code field, Expected integer value, Received: ZOO
+
+- input: "HTTP/1.0 2000 OK"
+  error: |
+    Received: "HTTP/1.0 2000 OK"
+                           ^ error
+    Error: Invalid status-code field length, Expected: 3 digits, Received: 4
+
+- input: "HTTP/1.1 200 OK\r\nConnection : close\r\n"
+  error: |
+    Received: "200 OK\r\nConnection : close\r\n"
+                                     ^ error
+    Error: No whitespace allowed before header separator
+
+# Incomplete Error

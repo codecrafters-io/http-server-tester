@@ -1,0 +1,37 @@
+# Incomplete Errors
+
+- input: "HTTP/1.0_200_OK"
+  error: |
+    Received: "HTTP/1.0_200_OK"
+                              ^ error
+    Error: Expected: HTTP-version, Received: "HTTP/1.0_200_OK"
+
+- input: "HTTP/1.0 200 OK"
+  error: |
+    Received: "HTTP/1.0 200 OK"
+                              ^ error
+    Error: Expected CRLF after status line
+
+- input: "HTTP/1.1 200 OK\r\nConnection: close"
+  error: |
+    Received: "K\r\nConnection: close"
+                                     ^ error
+    Error: Expected CRLF after header value
+
+- input: "HTTP/1.1 200 OK\r\nConnection: close\r\n"
+  error: |
+    Received: "\nConnection: close\r\n"
+                                      ^ error
+    Error: Expected empty line after header section
+
+- input: "HTTP/1.1 200 OK\r\nConnection\r\n"
+  error: |
+    Received: "200 OK\r\nConnection\r\n"
+                                       ^ error
+    Error: Expected ':' after header key
+
+- input: "HTTP/1.1 200\r\n"
+  error: |
+    Received: "HTTP/1.1 200\r\n"
+                               ^ error
+    Error: Status line has missing sections, Expected: HTTP-version status-code reason-phrase
