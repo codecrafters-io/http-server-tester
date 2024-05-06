@@ -15,7 +15,7 @@ func ReadCRLF(reader *bytes.Reader, errorMessage string) (err error) {
 
 	b, err := reader.ReadByte()
 	if err == io.EOF {
-		return IncompleteInputError{
+		return IncompleteHTTPResponseError{
 			Reader:  reader,
 			Message: errorMessage,
 		}
@@ -24,7 +24,7 @@ func ReadCRLF(reader *bytes.Reader, errorMessage string) (err error) {
 	if b != '\r' {
 		reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
 
-		return BadProtocolError{
+		return InvalidHTTPResponseError{
 			Reader:  reader,
 			Message: errorMessage,
 		}
@@ -32,7 +32,7 @@ func ReadCRLF(reader *bytes.Reader, errorMessage string) (err error) {
 
 	b, err = reader.ReadByte()
 	if err == io.EOF {
-		return IncompleteInputError{
+		return IncompleteHTTPResponseError{
 			Reader:  reader,
 			Message: errorMessage,
 		}
@@ -41,7 +41,7 @@ func ReadCRLF(reader *bytes.Reader, errorMessage string) (err error) {
 	if b != '\n' {
 		reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
 
-		return BadProtocolError{
+		return InvalidHTTPResponseError{
 			Reader:  reader,
 			Message: errorMessage,
 		}

@@ -38,16 +38,13 @@ func Parse(data []byte) (httpResponse HTTPResponse, readBytesCount int, err erro
 	return response, len(data) - reader.Len(), nil
 }
 
-func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
-	var allHeadersFound = false
-	var sectionsFound int
-	var R HTTPResponse
-	var SL StatusLine
+func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
+	var statusLine StatusLine
 
 	offsetBeforeCurrentSection := GetReaderOffset(reader)
 	versionB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
 	if err == io.EOF {
-		return HTTPResponse{}, IncompleteInputError{
+		return StatusLine{}, IncompleteHTTPResponseError{
 			Reader:  reader,
 			Message: fmt.Sprintf("Expected: HTTP-version, Received: %q", versionB),
 		}
@@ -57,7 +54,7 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	if len(version) != 8 {
 		// Seek to ending point of last sub-section
 		reader.Seek(int64(-2), io.SeekCurrent)
-		return HTTPResponse{}, BadProtocolError{
+		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
 			Message: "Invalid HTTP-version field length",
 		}
@@ -66,7 +63,7 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	if version[0:5] != "HTTP/" {
 		// Seek to starting position for current sub-section
 		reader.Seek(int64(offsetBeforeCurrentSection+4), io.SeekStart)
-		return HTTPResponse{}, BadProtocolError{
+		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
 			Message: "Expected HTTP-version field to start with 'HTTP/'",
 		}
@@ -74,19 +71,17 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	// 1.X
 	if version[5] != '1' || version[6] != '.' {
 		reader.Seek(int64(offsetBeforeCurrentSection+5), io.SeekStart)
-		return HTTPResponse{}, BadProtocolError{
+		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
 			Message: "Expected HTTP-version 1.X, Received: " + version[5:],
 		}
 	}
 
-	SL.Version = version
-	sectionsFound++
+	statusLine.Version = version
 
-	// offsetBeforeCurrentSection = GetReaderOffset(reader)
 	statusB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
 	if err == io.EOF {
-		return HTTPResponse{}, IncompleteInputError{
+		return StatusLine{}, IncompleteHTTPResponseError{
 			Reader:  reader,
 			Message: "Status line has missing sections, Expected: HTTP-version status-code reason-phrase",
 		}
@@ -94,7 +89,7 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	statusCode := string(statusB)
 	if len(statusCode) != 3 {
 		reader.Seek(int64(-2), io.SeekCurrent)
-		return HTTPResponse{}, BadProtocolError{
+		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
 			Message: "Invalid status-code field length, Expected: 3 digits, Received: " + strconv.Itoa(len(statusCode)),
 		}
@@ -102,38 +97,41 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 	intStatusCode, err := strconv.Atoi(statusCode)
 	if err != nil {
 		reader.Seek(int64(-2), io.SeekCurrent)
-		return HTTPResponse{}, BadProtocolError{
+		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
 			Message: "Invalid status-code field, Expected integer value, Received: " + statusCode,
 		}
 	}
-	SL.StatusCode = intStatusCode
-	sectionsFound++
+	statusLine.StatusCode = intStatusCode
 
 	// Intentionally lax. rfc9112.html#section-4-8
 	reasonB, err := ReadUntilCRLF(reader)
 	if err == io.EOF {
-		return HTTPResponse{}, IncompleteInputError{
+		return StatusLine{}, IncompleteHTTPResponseError{
 			Reader:  reader,
 			Message: "Expected CRLF after status line",
 		}
 	}
 	reason := string(reasonB)
-	SL.Reason = reason
-	R.StatusLine = SL
-	sectionsFound++
+	statusLine.Reason = reason
+	return statusLine, nil
+}
+
+func parseHeaders(reader *bytes.Reader) ([]Header, error) {
+	allHeadersFound := false
+	headers := []Header{}
 
 	for !allHeadersFound {
 		offsetBeforeCRLF := GetReaderOffset(reader)
 		possibleHeaderLine, err := ReadUntilCRLF(reader)
 		if err == io.EOF {
 			if len(possibleHeaderLine) == 0 {
-				return R, IncompleteInputError{
+				return []Header{}, IncompleteHTTPResponseError{
 					Reader:  reader,
 					Message: "Expected empty line after header section",
 				}
 			} else {
-				return R, IncompleteInputError{
+				return []Header{}, IncompleteHTTPResponseError{
 					Reader:  reader,
 					Message: "Expected CRLF after header value",
 				}
@@ -142,61 +140,79 @@ func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
 		if len(possibleHeaderLine) == 0 {
 			// Headers finished
 			allHeadersFound = true
-			sectionsFound++
 		} else {
 			// We know header is present
 			reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
 			key, err := ReadUntil(reader, []byte(":"))
 			if err == io.EOF {
-				return R, IncompleteInputError{
+				return []Header{}, IncompleteHTTPResponseError{
 					Reader:  reader,
 					Message: "Expected ':' after header key",
 				}
 			}
 			if key[len(key)-1] == ' ' {
-				// No WS before separator
-				return R, BadProtocolError{
+				// No WhiteSpace before separator
+				return []Header{}, InvalidHTTPResponseError{
 					Reader:  reader,
 					Message: "No whitespace allowed before header separator",
 				}
 			}
 			value, err := ReadUntilCRLF(reader)
 			if err == io.EOF {
-				return R, IncompleteInputError{
+				return []Header{}, IncompleteHTTPResponseError{
 					Reader:  reader,
 					Message: "Expected CRLF after header value",
 				}
 			}
-			H := Header{
+			header := Header{
 				// 9110: 5.5-5: Replace CR, LF or NUL with SP
 				Key:   string(key),
 				Value: strings.TrimSpace(string(ReplaceCharsWithSpace(value, [][]byte{CR, LF, NUL}))),
 			}
-			R.Headers = append(R.Headers, H)
+			headers = append(headers, header)
 		}
 	}
 
-	// Content is present
-	if R.ContentLength() != -1 {
-		content, err := ReadBytes(reader, R.ContentLength())
+	return headers, nil
+}
+
+func parseContent(reader *bytes.Reader, contentLength int) ([]byte, error) {
+	// If content is present
+	if contentLength != -1 {
+		content, err := ReadBytes(reader, contentLength)
 		if err == io.EOF {
-			return R, IncompleteInputError{
+			return []byte{}, IncompleteHTTPResponseError{
 				Reader:  reader,
-				Message: fmt.Sprintf("Expected content of length %d, Received content of length %d", R.ContentLength(), len(content)),
+				Message: fmt.Sprintf("Expected content of length %d, Received content of length %d", contentLength, len(content)),
 			}
 		}
-		R.Body = content
+		return content, nil
 	}
-	sectionsFound++
+	return []byte{}, nil
+}
 
-	if sectionsFound != 5 {
-		return R, BadProtocolError{
-			Reader:  reader,
-			Message: "Expected 5 sections in response",
-		}
+func doParseResponse(reader *bytes.Reader) (HTTPResponse, error) {
+	var httpResponse HTTPResponse
+
+	statusLine, err := parseStatusLine(reader)
+	if err != nil {
+		return HTTPResponse{}, err
 	}
+	httpResponse.StatusLine = statusLine
 
-	return R, nil
+	headers, err := parseHeaders(reader)
+	if err != nil {
+		return HTTPResponse{}, err
+	}
+	httpResponse.Headers = headers
+
+	body, err := parseContent(reader, httpResponse.ContentLength())
+	if err != nil {
+		return HTTPResponse{}, err
+	}
+	httpResponse.Body = body
+
+	return httpResponse, nil
 }
 
 // FindHeader returns a value of a header matching name.

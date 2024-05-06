@@ -8,21 +8,21 @@ import (
 	"github.com/codecrafters-io/http-server-tester/internal/http/inspectable_byte_string"
 )
 
-type IncompleteInputError struct {
+type IncompleteHTTPResponseError struct {
 	Reader  *bytes.Reader
 	Message string
 }
 
-type BadProtocolError struct {
+type InvalidHTTPResponseError struct {
 	Reader  *bytes.Reader
 	Message string
 }
 
-func (e IncompleteInputError) Error() string {
+func (e IncompleteHTTPResponseError) Error() string {
 	return formatDetailedError(e.Reader, e.Message)
 }
 
-func (e BadProtocolError) Error() string {
+func (e InvalidHTTPResponseError) Error() string {
 	return formatDetailedError(e.Reader, e.Message)
 }
 
