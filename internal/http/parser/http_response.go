@@ -53,42 +53,44 @@ func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
 	// HTTP/1.X
 	if len(version) != 8 {
 		// Seek to ending point of last sub-section
-		reader.Seek(int64(-2), io.SeekCurrent)
+		// HTTP-version field length error
+		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
-			Message: "Invalid HTTP-version field length",
+			Message: "Expected HTTP/1.1, Received: " + version,
 		}
 	}
 	// HTTP/
 	if version[0:5] != "HTTP/" {
 		// Seek to starting position for current sub-section
-		reader.Seek(int64(offsetBeforeCurrentSection+4), io.SeekStart)
+		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
-			Message: "Expected HTTP-version field to start with 'HTTP/'",
+			Message: "Expected HTTP/1.1, Received: " + version,
 		}
 	}
-	// 1.X
-	if version[5] != '1' || version[6] != '.' {
+	// Assert for HTTP version = 1.1
+	if version[5:8] != "1.1" {
 		reader.Seek(int64(offsetBeforeCurrentSection+5), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
-			Message: "Expected HTTP-version 1.X, Received: " + version[5:],
+			Message: "Expected HTTP-version 1.1, Received: " + version[5:],
 		}
 	}
 
 	statusLine.Version = version
 
+	offsetBeforeCurrentSection = GetReaderOffset(reader)
 	statusB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
 	if err == io.EOF {
 		return StatusLine{}, IncompleteHTTPResponseError{
 			Reader:  reader,
-			Message: "Status line has missing sections, Expected: HTTP-version status-code reason-phrase",
+			Message: "Expected reason phrase (example: 'OK' for 200 response) at end of status line",
 		}
 	}
 	statusCode := string(statusB)
 	if len(statusCode) != 3 {
-		reader.Seek(int64(-2), io.SeekCurrent)
+		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
 			Message: "Invalid status-code field length, Expected: 3 digits, Received: " + strconv.Itoa(len(statusCode)),
@@ -96,7 +98,7 @@ func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
 	}
 	intStatusCode, err := strconv.Atoi(statusCode)
 	if err != nil {
-		reader.Seek(int64(-2), io.SeekCurrent)
+		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
 			Message: "Invalid status-code field, Expected integer value, Received: " + statusCode,
@@ -128,7 +130,7 @@ func parseHeaders(reader *bytes.Reader) ([]Header, error) {
 			if len(possibleHeaderLine) == 0 {
 				return []Header{}, IncompleteHTTPResponseError{
 					Reader:  reader,
-					Message: "Expected empty line after header section",
+					Message: "Expected CRLF after header section",
 				}
 			} else {
 				return []Header{}, IncompleteHTTPResponseError{
@@ -145,6 +147,7 @@ func parseHeaders(reader *bytes.Reader) ([]Header, error) {
 			reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
 			key, err := ReadUntil(reader, []byte(":"))
 			if err == io.EOF {
+				reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
 				return []Header{}, IncompleteHTTPResponseError{
 					Reader:  reader,
 					Message: "Expected ':' after header key",

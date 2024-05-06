@@ -173,10 +173,11 @@ func newConn(address string) (net.Conn, error) {
 	}
 }
 
-func (c *HttpConnection) EnsureNoUnreadData() {
+func (c *HttpConnection) EnsureNoUnreadData() error {
 	c.ReadIntoBuffer() // Make sure there is no unread data
 
 	if c.UnreadBuffer.Len() > 0 {
-		panic(fmt.Sprintf("Found extra data: %q", c.UnreadBuffer.String()))
+		return fmt.Errorf("Found extra data: %q", c.UnreadBuffer.String())
 	}
+	return nil
 }

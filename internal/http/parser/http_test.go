@@ -13,7 +13,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var simpleResponse = []byte("HTTP/1.0 200 OK\r\n\r\n")
+var simpleResponse = []byte("HTTP/1.1 200 OK\r\n\r\n")
 
 func TestParseSimpleResponse(t *testing.T) {
 	response, n, err := Parse(simpleResponse)
@@ -21,13 +21,13 @@ func TestParseSimpleResponse(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, n, len(simpleResponse))
 
-	assert.Equal(t, "HTTP/1.0", response.StatusLine.Version)
+	assert.Equal(t, "HTTP/1.1", response.StatusLine.Version)
 
 	assert.Equal(t, 200, response.StatusLine.StatusCode)
 	assert.Equal(t, "OK", response.StatusLine.Reason)
 }
 
-var simpleHeaders = []byte("HTTP/1.0 200 OK\r\nServer: Werkzeug/3.0.2 Python/3.10.13\r\n\r\n")
+var simpleHeaders = []byte("HTTP/1.1 200 OK\r\nServer: Werkzeug/3.0.2 Python/3.10.13\r\n\r\n")
 
 func TestParseSimpleHeaders(t *testing.T) {
 	response, _, err := Parse(simpleHeaders)
@@ -36,7 +36,7 @@ func TestParseSimpleHeaders(t *testing.T) {
 	assert.Equal(t, "Werkzeug/3.0.2 Python/3.10.13", response.FindHeader("Server"))
 }
 
-var multipleHeaders = []byte("HTTP/1.0 200 OK\r\nServer: Werkzeug/3.0.2 Python/3.10.13\r\nDate: Tue, 30 Apr 2024 06:16:31 GMT\r\n\r\n")
+var multipleHeaders = []byte("HTTP/1.1 200 OK\r\nServer: Werkzeug/3.0.2 Python/3.10.13\r\nDate: Tue, 30 Apr 2024 06:16:31 GMT\r\n\r\n")
 
 func TestParseMultiHeaders(t *testing.T) {
 	response, _, err := Parse(multipleHeaders)
@@ -46,7 +46,7 @@ func TestParseMultiHeaders(t *testing.T) {
 	assert.Equal(t, "Tue, 30 Apr 2024 06:16:31 GMT", response.FindHeader("Date"))
 }
 
-var specialHeaders = []byte("HTTP/1.0 200 OK\r\nServer: Werkzeug/3.0.2 Python/3.10.13\r\nDate: Tue, 30 Apr 2024 06:16:31 GMT\r\nContent-Length: 0\r\n\r\n")
+var specialHeaders = []byte("HTTP/1.1 200 OK\r\nServer: Werkzeug/3.0.2 Python/3.10.13\r\nDate: Tue, 30 Apr 2024 06:16:31 GMT\r\nContent-Length: 0\r\n\r\n")
 
 func TestParseSpecialHeaders(t *testing.T) {
 	response, _, err := Parse(specialHeaders)
@@ -57,7 +57,7 @@ func TestParseSpecialHeaders(t *testing.T) {
 	assert.Equal(t, 0, response.ContentLength())
 }
 
-var multiline = []byte("HTTP/1.0 200 OK\r\nHost: cookie.com\nmore host\r\n\r\n")
+var multiline = []byte("HTTP/1.1 200 OK\r\nHost: cookie.com\nmore host\r\n\r\n")
 
 func TestParseMultilineHeader(t *testing.T) {
 	response, _, err := Parse(multiline)
