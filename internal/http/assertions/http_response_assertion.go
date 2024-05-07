@@ -7,25 +7,25 @@ import (
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 )
 
-type HTPResponseAssertion struct {
+type HTTPResponseAssertion struct {
 	StatusCode int    // ALWAYS REQUIRED
 	Reason     string // ALWAYS REQUIRED
 	Headers    []http_parser.Header
 	Body       []byte
 }
 
-func NewHTTPResponseAssertion(expectedResponse http_parser.HTTPResponse) HTTPAssertion {
-	return HTPResponseAssertion{StatusCode: expectedResponse.StatusLine.StatusCode, Reason: expectedResponse.StatusLine.Reason, Headers: expectedResponse.Headers, Body: expectedResponse.Body}
+func NewHTTPResponseAssertion(expectedResponse http_parser.HTTPResponse) HTTPResponseAssertion {
+	return HTTPResponseAssertion{StatusCode: expectedResponse.StatusLine.StatusCode, Reason: expectedResponse.StatusLine.Reason, Headers: expectedResponse.Headers, Body: expectedResponse.Body}
 }
 
-func (a HTPResponseAssertion) Run(response http_parser.HTTPResponse) error {
+func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse) error {
 	actualStatusLine := response.StatusLine
 	if actualStatusLine.StatusCode != a.StatusCode {
 		return fmt.Errorf("Expected status code %d, got %d", a.StatusCode, actualStatusLine.StatusCode)
 	}
 
 	if actualStatusLine.Reason != a.Reason {
-		return fmt.Errorf("Expected reason %s, got %s", a.Reason, actualStatusLine.Reason)
+		return fmt.Errorf("Expected reason to be %q, got %q", a.Reason, actualStatusLine.Reason)
 	}
 
 	if response.Headers != nil {

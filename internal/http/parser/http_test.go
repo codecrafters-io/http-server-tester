@@ -81,7 +81,7 @@ func TestParseResponseMissingContent(t *testing.T) {
 	expected := strings.TrimSpace(`
 Received: "his is a plain text "
                                ^ error
-Error: Expected content of length 29, Received content of length 21`)
+Error: Expected content of length 29 bytes, Received 21 bytes`)
 
 	assert.Error(t, err)
 	assert.IsType(t, IncompleteHTTPResponseError{}, err)

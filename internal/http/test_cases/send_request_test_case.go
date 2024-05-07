@@ -12,7 +12,7 @@ import (
 
 type SendRequestTestCase struct {
 	Request                   *http.Request
-	Assertion                 http_assertions.HTTPAssertion
+	Assertion                 http_assertions.HTTPResponseAssertion
 	ShouldSkipUnreadDataCheck bool
 
 	// ReceivedResponse is set after the test case is run
@@ -39,6 +39,6 @@ func (t *SendRequestTestCase) Run(conn *http_connection.HttpConnection, logger *
 		conn.EnsureNoUnreadData()
 	}
 
-	// logger.Successf("Received %s", value.FormattedString())
+	logger.Successf("Received %s", response.FormattedString())
 	return nil
 }

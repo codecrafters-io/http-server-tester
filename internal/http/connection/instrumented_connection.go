@@ -10,7 +10,7 @@ import (
 func defaultCallbacks(stageHarness *test_case_harness.TestCaseHarness, logPrefix string) HttpConnectionCallbacks {
 	return HttpConnectionCallbacks{
 		BeforeSendRequest: func(request *http.Request) {
-			stageHarness.Logger.Infof("%s$ %s", logPrefix, HttpRequestToCurlString(request))
+			stageHarness.Logger.Infof("%s$ %s", logPrefix, httpRequestToCurlString(request))
 		},
 		BeforeSendBytes: func(bytes []byte) {
 			stageHarness.Logger.Debugf("%sSent bytes: %q", logPrefix, string(bytes))

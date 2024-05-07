@@ -8,7 +8,6 @@ import (
 	"net/http/httputil"
 	"strings"
 
-	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
@@ -42,7 +41,7 @@ func logFriendlyHTTPMessage(logger *logger.Logger, msg string, logPrefix string)
 }
 
 func dumpRequest(logger *logger.Logger, req *http.Request) error {
-	logCurl(logger, req)
+	// logCurl(logger, req)
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	if err != nil {
 		return fmt.Errorf("Failed to dump request: '%v'", err)
@@ -79,10 +78,10 @@ func dumpResponseWithBody(logger *logger.Logger, resp *http.Response) error {
 	return nil
 }
 
-func logCurl(logger *logger.Logger, req *http.Request) {
-	logger.Infof("You can use the following curl command to test this locally")
-	logger.Infof("$ %s", http_connection.HttpRequestToCurlString(req))
-}
+// func logCurl(logger *logger.Logger, req *http.Request) {
+// 	logger.Infof("You can use the following curl command to test this locally")
+// 	logger.Infof("$ %s", http_connection.httpRequestToCurlString(req))
+// }
 
 func executeHTTPRequestWithLogging(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {
 	err := dumpRequest(logger, req)

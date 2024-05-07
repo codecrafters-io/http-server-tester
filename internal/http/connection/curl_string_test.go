@@ -1,11 +1,10 @@
-package internal
+// XXX : This package okay ?
+package http_connection
 
 import (
 	"net/http"
 	"strings"
 	"testing"
-
-	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 )
 
 func TestCurlCommandGeneration(t *testing.T) {
@@ -62,7 +61,7 @@ func TestCurlCommandGeneration(t *testing.T) {
 				req.Header.Set(key, value)
 			}
 
-			curlCommand := http_connection.HttpRequestToCurlString(req)
+			curlCommand := httpRequestToCurlString(req)
 
 			if curlCommand != tc.curlOutput {
 				t.Errorf("Expected: %s\nActual: %s", tc.curlOutput, curlCommand)

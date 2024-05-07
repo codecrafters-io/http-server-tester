@@ -11,7 +11,7 @@ import (
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
-func HttpRequestToCurlString(req *http.Request) string {
+func httpRequestToCurlString(req *http.Request) string {
 	curlCommand := fmt.Sprintf("curl -v -X %s %s%s%s",
 		req.Method, req.URL.String(), formatHeaders(req.Header), formatBody(req))
 

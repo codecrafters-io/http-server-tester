@@ -64,6 +64,7 @@ func (c *HttpConnection) SendRequest(request *http.Request) error {
 	if c.Callbacks.BeforeSendRequest != nil {
 		c.Callbacks.BeforeSendRequest(request)
 	}
+
 	requestBytes, err := httputil.DumpRequest(request, true)
 	if err != nil {
 		// Can't recover.

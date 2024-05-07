@@ -28,10 +28,8 @@ type StatusLine struct {
 
 type HTTPResponse struct {
 	StatusLine StatusLine
-
-	Headers []Header
-
-	Body []byte
+	Headers    []Header
+	Body       []byte
 }
 
 func Parse(data []byte) (httpResponse HTTPResponse, readBytesCount int, err error) {
@@ -49,14 +47,14 @@ func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
 	var statusLine StatusLine
 
 	offsetBeforeCurrentSection := GetReaderOffset(reader)
-	versionB, err := ReadBytes(reader, 9)
+	versionBytes, err := ReadBytes(reader, 9)
 	if err == io.EOF {
 		return StatusLine{}, IncompleteHTTPResponseError{
 			Reader:  reader,
-			Message: fmt.Sprintf("Expected: HTTP-version, Received: %q", versionB),
+			Message: fmt.Sprintf("Expected: HTTP-version, Received: %q", versionBytes),
 		}
 	}
-	version := string(versionB)
+	version := string(versionBytes)
 	// HTTP/1.X
 	if version[:8] != "HTTP/1.1" {
 		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
@@ -76,7 +74,7 @@ func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
 	statusLine.Version = version
 
 	offsetBeforeCurrentSection = GetReaderOffset(reader)
-	statusB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
+	statusBytes, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
 	if err == io.EOF {
 		reader.Seek(int64(-2), io.SeekCurrent)
 		return StatusLine{}, IncompleteHTTPResponseError{
@@ -84,12 +82,12 @@ func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
 			Message: "Expected reason phrase (example: 'OK' for 200 response) at end of status line",
 		}
 	}
-	statusCode := string(statusB)
+	statusCode := string(statusBytes)
 	if len(statusCode) != 3 {
 		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
-			Message: "Invalid status-code field length, Expected: 3 digits, Received: " + strconv.Itoa(len(statusCode)),
+			Message: fmt.Sprintf("Expected 3-digit status code, received %v digits", strconv.Itoa(len(statusCode))),
 		}
 	}
 	intStatusCode, err := strconv.Atoi(statusCode)
@@ -97,29 +95,28 @@ func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
 		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
-			Message: "Invalid status-code field, Expected integer value, Received: " + statusCode,
+			Message: fmt.Sprintf("Expected integer status-code, received %q", statusCode),
 		}
 	}
 	statusLine.StatusCode = intStatusCode
 
 	// Intentionally lax. rfc9112.html#section-4-8
-	reasonB, err := ReadUntilCRLF(reader)
+	reasonBytes, err := ReadUntilCRLF(reader)
 	if err == io.EOF {
 		return StatusLine{}, IncompleteHTTPResponseError{
 			Reader:  reader,
 			Message: "Expected CRLF after status line",
 		}
 	}
-	reason := string(reasonB)
+	reason := string(reasonBytes)
 	statusLine.Reason = reason
 	return statusLine, nil
 }
 
 func parseHeaders(reader *bytes.Reader) ([]Header, error) {
-	allHeadersFound := false
 	headers := []Header{}
 
-	for !allHeadersFound {
+	for {
 		offsetBeforeCRLF := GetReaderOffset(reader)
 		possibleHeaderLine, err := ReadUntilCRLF(reader)
 		if err == io.EOF {
@@ -137,7 +134,7 @@ func parseHeaders(reader *bytes.Reader) ([]Header, error) {
 		}
 		if len(possibleHeaderLine) == 0 {
 			// Headers finished
-			allHeadersFound = true
+			return headers, nil
 		} else {
 			// We know header is present
 			reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
@@ -151,9 +148,10 @@ func parseHeaders(reader *bytes.Reader) ([]Header, error) {
 			}
 			if key[len(key)-1] == ' ' {
 				// No WhiteSpace before separator
+				reader.Seek(int64(-2), io.SeekCurrent)
 				return []Header{}, InvalidHTTPResponseError{
 					Reader:  reader,
-					Message: "No whitespace allowed before header separator",
+					Message: "No whitespace allowed before colon (:)",
 				}
 			}
 			value, err := ReadUntilCRLF(reader)
@@ -171,8 +169,6 @@ func parseHeaders(reader *bytes.Reader) ([]Header, error) {
 			headers = append(headers, header)
 		}
 	}
-
-	return headers, nil
 }
 
 func parseContent(reader *bytes.Reader, contentLength int) ([]byte, error) {
@@ -182,7 +178,7 @@ func parseContent(reader *bytes.Reader, contentLength int) ([]byte, error) {
 		if err == io.EOF {
 			return []byte{}, IncompleteHTTPResponseError{
 				Reader:  reader,
-				Message: fmt.Sprintf("Expected content of length %d, Received content of length %d", contentLength, len(content)),
+				Message: fmt.Sprintf("Expected content of length %d bytes, Received %d bytes", contentLength, len(content)),
 			}
 		}
 		return content, nil
