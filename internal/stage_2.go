@@ -1,6 +1,13 @@
 package internal
 
 import (
+	"fmt"
+	"net/http"
+
+	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
+	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
+	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
+	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -12,7 +19,23 @@ func test200OK(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	httpClient := NewHTTPClient()
+	conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "client")
+	if err != nil {
+		return fmt.Errorf("Failed to create connection: %v", err)
+	}
+	defer conn.Close()
+	logger.Debugln("Connection established, sending request...")
 
-	return requestResponseWithoutBody(httpClient, URL, 200, logger)
+	req, _ := http.NewRequest("GET", URL, nil)
+
+	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
+	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine}
+
+	test_case := test_cases.SendRequestTestCase{
+		Request:                   req,
+		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
+		ShouldSkipUnreadDataCheck: false,
+	}
+
+	return test_case.Run(conn, logger)
 }

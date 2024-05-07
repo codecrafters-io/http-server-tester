@@ -11,7 +11,7 @@ import (
 	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
-const URL = "http://localhost:4221/"
+const URL = "http://127.0.0.1:4221/"
 const TCP_DEST = "localhost:4221"
 const DATA_DIR = "/tmp/data/codecrafters.io/http-server-tester/"
 const FILENAME_SIZE = 40
