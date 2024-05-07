@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"net/http"
+	"net/http/httputil"
 	"time"
 
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
@@ -13,7 +15,7 @@ import (
 type HttpConnectionCallbacks struct {
 	// BeforeSendRequest is called when a Request is sent.
 	// This can be useful for info logs.
-	BeforeSendRequest func(string)
+	BeforeSendRequest func(*http.Request)
 
 	// BeforeSendBytes is called when raw bytes are sent.
 	// This can be useful for debug logs.
@@ -58,12 +60,17 @@ func (c *HttpConnection) Close() error {
 	return c.Conn.Close()
 }
 
-func (c *HttpConnection) SendRequest(request []byte) error {
+func (c *HttpConnection) SendRequest(request *http.Request) error {
 	if c.Callbacks.BeforeSendRequest != nil {
-		c.Callbacks.BeforeSendRequest(string(request))
+		c.Callbacks.BeforeSendRequest(request)
+	}
+	requestBytes, err := httputil.DumpRequest(request, true)
+	if err != nil {
+		// Can't recover.
+		return fmt.Errorf("Failed to dump request: %v", err)
 	}
 
-	return c.SendBytes(request)
+	return c.SendBytes(requestBytes)
 }
 
 func (c *HttpConnection) SendBytes(bytes []byte) error {

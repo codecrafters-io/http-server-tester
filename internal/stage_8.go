@@ -6,7 +6,10 @@ import (
 	"net/http"
 	"os"
 
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
+	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
+	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
+	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -27,43 +30,34 @@ func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
 	fileName := randomFileName()
 	fileContent := randomFileContent()
 
-	err = postFile(logger, fileName, fileContent)
+	conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "client")
 	if err != nil {
+		logFriendlyError(logger, err)
+		return fmt.Errorf("Failed to create connection: %v", err)
+	}
+	defer conn.Close()
+	logger.Debugln("Connection established, sending request...")
+
+	request, err := http.NewRequest("POST", URL+"files/"+fileName, bytes.NewBufferString(fileContent))
+	if err != nil {
+		return err
+	}
+	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 201, Reason: "Created"}
+	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine}
+
+	test_case := test_cases.SendRequestTestCase{
+		Request:                   request,
+		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
+		ShouldSkipUnreadDataCheck: false,
+	}
+
+	if err := test_case.Run(conn, logger); err != nil {
 		return err
 	}
 
 	err = validateFile(logger, fileName, fileContent)
 	if err != nil {
 		return err
-	}
-
-	return nil
-}
-
-func postFile(logger *logger.Logger, fileName string, fileContent string) error {
-	httpClient := NewHTTPClient()
-
-	req, err := http.NewRequest("POST", URL+"files/"+fileName, bytes.NewBufferString(fileContent))
-	if err != nil {
-		return err
-	}
-	err = dumpRequest(logger, req)
-	if err != nil {
-		return err
-	}
-
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		logFriendlyError(logger, err)
-		return fmt.Errorf("Failed to connect to server, err: '%v'", err)
-	}
-	err = dumpResponse(logger, resp)
-	if err != nil {
-		return err
-	}
-
-	if resp.StatusCode != 201 {
-		return fmt.Errorf("Expected status code 201, got %d", resp.StatusCode)
 	}
 
 	return nil

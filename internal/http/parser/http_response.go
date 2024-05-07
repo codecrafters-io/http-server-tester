@@ -242,3 +242,26 @@ func (response *HTTPResponse) ContentLength() int {
 
 	return -1
 }
+
+func (response *HTTPResponse) FormattedString() string {
+	var builder strings.Builder
+
+	builder.WriteString(response.StatusLine.Version)
+	builder.WriteString(" ")
+	builder.WriteString(strconv.Itoa(response.StatusLine.StatusCode))
+	builder.WriteString(" ")
+	builder.WriteString(response.StatusLine.Reason)
+	builder.WriteString("\r\n")
+
+	for _, header := range response.Headers {
+		builder.WriteString(header.Key)
+		builder.WriteString(": ")
+		builder.WriteString(header.Value)
+		builder.WriteString("\r\n")
+	}
+
+	builder.WriteString("\r\n")
+	builder.Write(response.Body)
+
+	return builder.String()
+}

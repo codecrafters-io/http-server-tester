@@ -8,6 +8,7 @@ import (
 	"net/http/httputil"
 	"strings"
 
+	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
@@ -80,7 +81,7 @@ func dumpResponseWithBody(logger *logger.Logger, resp *http.Response) error {
 
 func logCurl(logger *logger.Logger, req *http.Request) {
 	logger.Infof("You can use the following curl command to test this locally")
-	logger.Infof("$ %s", httpRequestToCurlString(req))
+	logger.Infof("$ %s", http_connection.HttpRequestToCurlString(req))
 }
 
 func executeHTTPRequestWithLogging(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {

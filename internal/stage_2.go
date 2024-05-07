@@ -21,18 +21,22 @@ func test200OK(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "client")
 	if err != nil {
+		logFriendlyError(logger, err)
 		return fmt.Errorf("Failed to create connection: %v", err)
 	}
 	defer conn.Close()
 	logger.Debugln("Connection established, sending request...")
 
-	req, _ := http.NewRequest("GET", URL, nil)
+	request, err := http.NewRequest("GET", URL, nil)
+	if err != nil {
+		return err
+	}
 
 	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
 	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine}
 
 	test_case := test_cases.SendRequestTestCase{
-		Request:                   req,
+		Request:                   request,
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
