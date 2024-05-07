@@ -58,26 +58,18 @@ func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
 	}
 	version := string(versionB)
 	// HTTP/1.X
-	// Assert for HTTP version = 1.1
-	if version[:5] == "HTTP/" && version[5:8] != "1.1" {
-		reader.Seek(int64(offsetBeforeCurrentSection+5), io.SeekStart)
-		return StatusLine{}, InvalidHTTPResponseError{
-			Reader:  reader,
-			Message: "Expected HTTP-version 1.1, Received: " + version[5:8],
-		}
-	}
 	if version[:8] != "HTTP/1.1" {
 		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
-			Message: "Expected HTTP/1.1, Received: " + version[:8],
+			Message: fmt.Sprintf("Expected 'HTTP/1.1', Received: %q", version[:8]),
 		}
 	}
 	if version[len(version)-1] != ' ' {
 		reader.Seek(int64(offsetBeforeCurrentSection+9), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
-			Message: "Expected white-space after HTTP/1.1",
+			Message: "Expected white-space after 'HTTP/1.1'",
 		}
 	}
 	version = version[:8]
