@@ -1,11 +1,5 @@
 # Incomplete Errors
 
-- input: "HTTP/1.0_200_OK"
-  error: |
-    Received: "HTTP/1.0_200_OK"
-                              ^ error
-    Error: Expected: HTTP-version, Received: "HTTP/1.0_200_OK"
-
 - input: "HTTP/1.1 200 OK"
   error: |
     Received: "HTTP/1.1 200 OK"
@@ -22,16 +16,16 @@
   error: |
     Received: "\nConnection: close\r\n"
                                       ^ error
-    Error: Expected CRLF after header section
+    Error: Expected CRLF after all headers
 
 - input: "HTTP/1.1 200 OK\r\nConnection\r\n"
   error: |
-    Received: "HTTP/1.1 200 OK\r\nConnection\r\n"
-                                  ^ error
+    Received: "1 200 OK\r\nConnection\r\n"
+                                     ^ error
     Error: Expected ':' after header key
 
 - input: "HTTP/1.1 200\r\n"
   error: |
     Received: "HTTP/1.1 200\r\n"
-                               ^ error
+                           ^ error
     Error: Expected reason phrase (example: 'OK' for 200 response) at end of status line

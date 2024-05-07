@@ -8,6 +8,13 @@ import (
 	"strings"
 )
 
+var CRLF = ([]byte)("\r\n")
+var SPACE = []byte{' '}
+var TAB = []byte{'\t'}
+var CR = []byte{'\r'}
+var LF = []byte{'\n'}
+var NUL = []byte{0}
+
 type Header struct {
 	Key   string
 	Value string
@@ -42,7 +49,7 @@ func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
 	var statusLine StatusLine
 
 	offsetBeforeCurrentSection := GetReaderOffset(reader)
-	versionB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
+	versionB, err := ReadBytes(reader, 9)
 	if err == io.EOF {
 		return StatusLine{}, IncompleteHTTPResponseError{
 			Reader:  reader,
@@ -51,38 +58,35 @@ func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
 	}
 	version := string(versionB)
 	// HTTP/1.X
-	if len(version) != 8 {
-		// Seek to ending point of last sub-section
-		// HTTP-version field length error
-		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
-		return StatusLine{}, InvalidHTTPResponseError{
-			Reader:  reader,
-			Message: "Expected HTTP/1.1, Received: " + version,
-		}
-	}
-	// HTTP/
-	if version[0:5] != "HTTP/" {
-		// Seek to starting position for current sub-section
-		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
-		return StatusLine{}, InvalidHTTPResponseError{
-			Reader:  reader,
-			Message: "Expected HTTP/1.1, Received: " + version,
-		}
-	}
 	// Assert for HTTP version = 1.1
-	if version[5:8] != "1.1" {
+	if version[:5] == "HTTP/" && version[5:8] != "1.1" {
 		reader.Seek(int64(offsetBeforeCurrentSection+5), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
-			Message: "Expected HTTP-version 1.1, Received: " + version[5:],
+			Message: "Expected HTTP-version 1.1, Received: " + version[5:8],
 		}
 	}
-
+	if version[:8] != "HTTP/1.1" {
+		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
+		return StatusLine{}, InvalidHTTPResponseError{
+			Reader:  reader,
+			Message: "Expected HTTP/1.1, Received: " + version[:8],
+		}
+	}
+	if version[len(version)-1] != ' ' {
+		reader.Seek(int64(offsetBeforeCurrentSection+9), io.SeekStart)
+		return StatusLine{}, InvalidHTTPResponseError{
+			Reader:  reader,
+			Message: "Expected white-space after HTTP/1.1",
+		}
+	}
+	version = version[:8]
 	statusLine.Version = version
 
 	offsetBeforeCurrentSection = GetReaderOffset(reader)
 	statusB, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
 	if err == io.EOF {
+		reader.Seek(int64(-2), io.SeekCurrent)
 		return StatusLine{}, IncompleteHTTPResponseError{
 			Reader:  reader,
 			Message: "Expected reason phrase (example: 'OK' for 200 response) at end of status line",
@@ -130,7 +134,7 @@ func parseHeaders(reader *bytes.Reader) ([]Header, error) {
 			if len(possibleHeaderLine) == 0 {
 				return []Header{}, IncompleteHTTPResponseError{
 					Reader:  reader,
-					Message: "Expected CRLF after header section",
+					Message: "Expected CRLF after all headers",
 				}
 			} else {
 				return []Header{}, IncompleteHTTPResponseError{
@@ -147,7 +151,7 @@ func parseHeaders(reader *bytes.Reader) ([]Header, error) {
 			reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
 			key, err := ReadUntil(reader, []byte(":"))
 			if err == io.EOF {
-				reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
+				reader.Seek(int64(-2), io.SeekCurrent)
 				return []Header{}, IncompleteHTTPResponseError{
 					Reader:  reader,
 					Message: "Expected ':' after header key",
