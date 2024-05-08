@@ -29,7 +29,6 @@ func testRespondWithEncodedData(stageHarness *test_case_harness.TestCaseHarness)
 
 	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
 	header := http_parser.Header{Key: "Content-Encoding", Value: "gzip"}
-	headerFormattedAsString := fmt.Sprintf("%s: %s", header.Key, header.Value)
 	expectedHeaders := []http_parser.Header{header}
 	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine, Headers: expectedHeaders}
 
@@ -38,25 +37,26 @@ func testRespondWithEncodedData(stageHarness *test_case_harness.TestCaseHarness)
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	if err := test_case.Run(stageHarness, TCP_DEST, logger, " "+headerFormattedAsString); err != nil {
+	if err := test_case.Run(stageHarness, TCP_DEST, logger); err != nil {
 		return err
 	}
 
 	if test_case.ReceivedResponse.FindHeader("Content-Length") != fmt.Sprintf("%d", len(test_case.ReceivedResponse.Body)) {
 		return fmt.Errorf("Content-Length header does not match the length of the body")
 	}
+	logger.Successf("✓ Content-Length header is present")
 
 	gzipString := test_case.ReceivedResponse.Body
 	decodedString, err := decodeGZIP(gzipString)
 	if err != nil {
 		return fmt.Errorf("Failed to decode gzip: %v", err)
 	}
-	logger.Successf("Successfully decoded gzip encoded data: %s", decodedString)
+	logger.Successf("✓ Body is gzip encoded")
 
 	if decodedString != content {
 		return fmt.Errorf("Expected %s, got %s", content, decodedString)
 	}
-	logger.Successf("Received expected response: %s", decodedString)
+	logger.Successf("✓ Body is correct")
 
 	return nil
 }

@@ -38,5 +38,5 @@ func testRespondWithContent(stageHarness *test_case_harness.TestCaseHarness) err
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	return test_case.Run(stageHarness, TCP_DEST, logger, " "+content)
+	return test_case.Run(stageHarness, TCP_DEST, logger)
 }

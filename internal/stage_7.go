@@ -52,10 +52,11 @@ func testGetFile(stageHarness *test_case_harness.TestCaseHarness) error {
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	if err := test_case.Run(stageHarness, TCP_DEST, logger, " "+fileName); err != nil {
+	if err := test_case.Run(stageHarness, TCP_DEST, logger); err != nil {
 		return err
 	}
 
+	logger.Successf("First test passed.")
 	logger.Infof("Testing non existent file returns 404")
 
 	nonExistentFileName := randomFileNameWithPrefix("non-existent")
@@ -71,5 +72,5 @@ func testGetFile(stageHarness *test_case_harness.TestCaseHarness) error {
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	return test_case.Run(stageHarness, TCP_DEST, logger, " ")
+	return test_case.Run(stageHarness, TCP_DEST, logger)
 }

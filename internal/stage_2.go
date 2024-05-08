@@ -31,5 +31,5 @@ func test200OK(stageHarness *test_case_harness.TestCaseHarness) error {
 		ShouldSkipUnreadDataCheck: false,
 	}
 
-	return test_case.Run(stageHarness, TCP_DEST, logger, "")
+	return test_case.Run(stageHarness, TCP_DEST, logger)
 }

@@ -30,7 +30,6 @@ func testRespondWithContentEncoding(stageHarness *test_case_harness.TestCaseHarn
 
 	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
 	header := http_parser.Header{Key: "Content-Encoding", Value: "gzip"}
-	headerFormattedAsString := fmt.Sprintf("%s: %s", header.Key, header.Value)
 	expectedHeaders := []http_parser.Header{header}
 	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine, Headers: expectedHeaders}
 
@@ -39,9 +38,10 @@ func testRespondWithContentEncoding(stageHarness *test_case_harness.TestCaseHarn
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	if err := test_case.Run(stageHarness, TCP_DEST, logger, " "+headerFormattedAsString); err != nil {
+	if err := test_case.Run(stageHarness, TCP_DEST, logger); err != nil {
 		return err
 	}
+	logger.Successf("First test passed.")
 
 	// Failure case : 200 OK without Content-Encoding: gzip
 	request, err = http.NewRequest("GET", url, nil)
@@ -58,13 +58,14 @@ func testRespondWithContentEncoding(stageHarness *test_case_harness.TestCaseHarn
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	if err := test_case.Run(stageHarness, TCP_DEST, logger, " "); err != nil {
+	if err := test_case.Run(stageHarness, TCP_DEST, logger); err != nil {
 		return err
 	}
 
 	if test_case.ReceivedResponse.FindHeader("Content-Encoding") != "" {
 		return fmt.Errorf("Content-Encoding header should not be present")
 	}
+	logger.Successf("✓ Content-Encoding header is not present")
 
 	return nil
 }

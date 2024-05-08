@@ -39,5 +39,5 @@ func testRespondWithUserAgent(stageHarness *test_case_harness.TestCaseHarness) e
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	return test_case.Run(stageHarness, TCP_DEST, logger, " "+userAgent)
+	return test_case.Run(stageHarness, TCP_DEST, logger)
 }

@@ -29,7 +29,7 @@ func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse, logger *lo
 		return fmt.Errorf("Expected reason to be %q, got %q", a.Reason, actualStatusLine.Reason)
 	}
 
-	logger.Successf("Received status line: %s", actualStatusLine.FormattedString())
+	logger.Successf("Received response with %d status code", actualStatusLine.StatusCode)
 
 	if a.Headers != nil {
 		// Only if we pass Headers in the HTTPResponseAssertion, we will check the headers
@@ -41,8 +41,9 @@ func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse, logger *lo
 			}
 		}
 
-		logger.Successf("Received headers: %s", strings.TrimSpace(a.Headers.FormattedString()))
-
+		for _, header := range a.Headers {
+			logger.Successf("✓ %s header is present", header.Key)
+		}
 	}
 
 	if a.Body != nil {
@@ -54,7 +55,7 @@ func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse, logger *lo
 			return fmt.Errorf("Expected body %s, got %s", a.Body, response.Body)
 		}
 
-		logger.Successf("Received body: %s", a.Body)
+		logger.Successf("✓ Body is correct")
 	}
 
 	return nil

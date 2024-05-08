@@ -21,7 +21,7 @@ type SendRequestTestCase struct {
 	ReceivedResponse http_parser.HTTPResponse
 }
 
-func (t *SendRequestTestCase) Run(stageHarness *test_case_harness.TestCaseHarness, address string, logger *logger.Logger, successLog string) error {
+func (t *SendRequestTestCase) Run(stageHarness *test_case_harness.TestCaseHarness, address string, logger *logger.Logger) error {
 	conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, address, "")
 	if err != nil {
 		return fmt.Errorf("Failed to create connection: %v", err)
@@ -51,11 +51,10 @@ func (t *SendRequestTestCase) Run(stageHarness *test_case_harness.TestCaseHarnes
 		conn.EnsureNoUnreadData()
 	}
 
-	logger.Successf("Received %s", response.MinimalFormattedString()+successLog)
 	return nil
 }
 
-func (t *SendRequestTestCase) RunWithConn(conn *http_connection.HttpConnection, logger *logger.Logger, successLog string) error {
+func (t *SendRequestTestCase) RunWithConn(conn *http_connection.HttpConnection, logger *logger.Logger) error {
 	err := conn.SendRequest(t.Request)
 	if err != nil {
 		return fmt.Errorf("Failed to send request: %v", err)
@@ -75,6 +74,5 @@ func (t *SendRequestTestCase) RunWithConn(conn *http_connection.HttpConnection, 
 		conn.EnsureNoUnreadData()
 	}
 
-	logger.Successf("Received %s", response.MinimalFormattedString()+successLog)
 	return nil
 }

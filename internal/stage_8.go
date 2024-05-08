@@ -41,7 +41,7 @@ func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
 		ShouldSkipUnreadDataCheck: false,
 	}
 
-	if err := test_case.Run(stageHarness, TCP_DEST, logger, ""); err != nil {
+	if err := test_case.Run(stageHarness, TCP_DEST, logger); err != nil {
 		return err
 	}
 
