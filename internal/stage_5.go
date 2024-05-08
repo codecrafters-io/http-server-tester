@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
-	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -18,14 +17,6 @@ func testRespondWithUserAgent(stageHarness *test_case_harness.TestCaseHarness) e
 	}
 
 	logger := stageHarness.Logger
-
-	conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "client")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return fmt.Errorf("Failed to create connection: %v", err)
-	}
-	defer conn.Close()
-	logger.Debugln("Connection established, sending request...")
 
 	url := URL + "user-agent"
 	userAgent := randomUserAgent()
@@ -48,5 +39,5 @@ func testRespondWithUserAgent(stageHarness *test_case_harness.TestCaseHarness) e
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	return test_case.Run(conn, logger, " "+userAgent)
+	return test_case.Run(stageHarness, TCP_DEST, logger, " "+userAgent)
 }

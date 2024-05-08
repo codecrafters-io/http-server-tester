@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
-	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -18,16 +17,6 @@ func testRespondWithContentEncoding(stageHarness *test_case_harness.TestCaseHarn
 	}
 
 	logger := stageHarness.Logger
-
-	// XXX: As we are unable to reuse a connection to send multiple requests, there is no point in exposing it to the caller, just do it while sending the request
-	// @rohitpaulk
-	conn1, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "client")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return fmt.Errorf("Failed to create connection: %v", err)
-	}
-	defer conn1.Close()
-	logger.Debugln("Connection established, sending request...")
 
 	content := randomUrlPath()
 	url := URL + "echo/" + content
@@ -50,17 +39,9 @@ func testRespondWithContentEncoding(stageHarness *test_case_harness.TestCaseHarn
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	if err := test_case.Run(conn1, logger, " "+headerFormattedAsString); err != nil {
+	if err := test_case.Run(stageHarness, TCP_DEST, logger, " "+headerFormattedAsString); err != nil {
 		return err
 	}
-
-	conn2, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "client")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return fmt.Errorf("Failed to create connection: %v", err)
-	}
-	defer conn2.Close()
-	logger.Debugln("Connection established, sending request...")
 
 	// Failure case : 200 OK without Content-Encoding: gzip
 	request, err = http.NewRequest("GET", url, nil)
@@ -77,7 +58,7 @@ func testRespondWithContentEncoding(stageHarness *test_case_harness.TestCaseHarn
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	if err := test_case.Run(conn2, logger, " "); err != nil {
+	if err := test_case.Run(stageHarness, TCP_DEST, logger, " "); err != nil {
 		return err
 	}
 

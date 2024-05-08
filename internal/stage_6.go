@@ -44,7 +44,7 @@ func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.Te
 	}
 
 	for i := 0; i < connectionCount; i++ {
-		if err := test_case.Run(conns[i], logger, ""); err != nil {
+		if err := test_case.RunWithConn(conns[i], logger, ""); err != nil {
 			return err
 		}
 	}

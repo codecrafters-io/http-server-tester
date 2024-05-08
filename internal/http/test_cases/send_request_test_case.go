@@ -3,11 +3,13 @@ package test_cases
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
 	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 type SendRequestTestCase struct {
@@ -19,9 +21,40 @@ type SendRequestTestCase struct {
 	ReceivedResponse http_parser.HTTPResponse
 }
 
-func (t *SendRequestTestCase) Run(conn *http_connection.HttpConnection, logger *logger.Logger, successLog string) error {
-	// TODO: Create connection here, take address only
-	// RunWithConn can be used for conn
+func (t *SendRequestTestCase) Run(stageHarness *test_case_harness.TestCaseHarness, address string, logger *logger.Logger, successLog string) error {
+	conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, address, "client")
+	if err != nil {
+		return fmt.Errorf("Failed to create connection: %v", err)
+	}
+	defer conn.Close()
+	addr := strings.Split(address, ":")
+	host, port := addr[0], addr[1]
+	logger.Debugln(fmt.Sprintf("Connected to %s port %s", host, port))
+
+	err = conn.SendRequest(t.Request)
+	if err != nil {
+		return fmt.Errorf("Failed to send request: %v", err)
+	}
+
+	response, err := conn.ReadResponse()
+	if err != nil {
+		return fmt.Errorf("Failed to read response: %v", err)
+	}
+	t.ReceivedResponse = response
+
+	if err = t.Assertion.Run(response); err != nil {
+		return err
+	}
+
+	if !t.ShouldSkipUnreadDataCheck {
+		conn.EnsureNoUnreadData()
+	}
+
+	logger.Successf("Received %s", response.MinimalFormattedString()+successLog)
+	return nil
+}
+
+func (t *SendRequestTestCase) RunWithConn(conn *http_connection.HttpConnection, logger *logger.Logger, successLog string) error {
 	err := conn.SendRequest(t.Request)
 	if err != nil {
 		return fmt.Errorf("Failed to send request: %v", err)
