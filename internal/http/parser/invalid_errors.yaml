@@ -1,0 +1,61 @@
+# Protocol Errors
+
+- input: "HTTP/3.0 200 OK"
+  error: |
+    Received: "HTTP/3.0 200 OK"
+               ^ error
+    Error: Expected 'HTTP/1.1', Received: "HTTP/3.0"
+
+- input: "HTTP/1.0_200_OK"
+  error: |
+    Received: "HTTP/1.0_200_OK"
+               ^ error
+    Error: Expected 'HTTP/1.1', Received: "HTTP/1.0"
+
+- input: "HTPP/1.0 200 OK"
+  error: |
+    Received: "HTPP/1.0 200 OK"
+               ^ error
+    Error: Expected 'HTTP/1.1', Received: "HTPP/1.0"
+
+- input: "HTTP|1.0 200 OK"
+  error: |
+    Received: "HTTP|1.0 200 OK"
+               ^ error
+    Error: Expected 'HTTP/1.1', Received: "HTTP|1.0"
+
+- input: "HTTP//1.0 200 OK"
+  error: |
+    Received: "HTTP//1.0 200 OK"
+               ^ error
+    Error: Expected 'HTTP/1.1', Received: "HTTP//1."
+
+- input: "HTTP/1 200 OK"
+  error: |
+    Received: "HTTP/1 200 OK"
+               ^ error
+    Error: Expected 'HTTP/1.1', Received: "HTTP/1 2"
+
+- input: "HTTP/1.1 ZOO OK"
+  error: |
+    Received: "HTTP/1.1 ZOO OK"
+                        ^ error
+    Error: Expected integer status-code, received "ZOO"
+
+- input: "HTTP/1.1 2000 OK"
+  error: |
+    Received: "HTTP/1.1 2000 OK"
+                           ^ error
+    Error: Expected space character after 3 digit status code
+
+- input: "HTTP/1.1 200 OK\r\nConnection : close\r\n"
+  error: |
+    Received: "1 200 OK\r\nConnection : close\r\n"
+                                     ^ error
+    Error: No whitespace allowed before colon (:)
+
+- input: "HTTP/1.1 200\r\n"
+  error: |
+    Received: "HTTP/1.1 200\r\n"
+                           ^ error
+    Error: Expected space character after 3 digit status code

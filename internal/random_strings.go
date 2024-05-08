@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/tester-utils/random"
-	"math/rand"
 	"strings"
+
+	"github.com/codecrafters-io/tester-utils/random"
 )
 
 func randomString(n int, joiner string) string {
@@ -17,7 +17,7 @@ func randomString(n int, joiner string) string {
 }
 
 func randomAnything() string {
-	size := rand.Intn(2) + 1
+	size := random.RandomInt(1, 3)
 	return random.RandomWord() + "/" + randomString(size, "-")
 }
 

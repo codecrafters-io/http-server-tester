@@ -1,14 +1,14 @@
 package internal
 
 import (
-	"bufio"
 	"fmt"
-	"math/rand"
-	"net"
 	"net/http"
-	"time"
 
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
+	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
+	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
+	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -19,28 +19,37 @@ func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.Te
 	}
 
 	logger := stageHarness.Logger
+	connectionCount := random.RandomInt(2, 5)
+	logger.Infof("Creating %d parallel connections", connectionCount)
 
-	randomInt := rand.Intn(2) + 2
+	conns := make([]*http_connection.HttpConnection, connectionCount)
 
-	logger.Infof("Creating %d parallel connections", randomInt)
-	conns := make([]net.Conn, randomInt)
-
-	for i := 0; i < randomInt; i++ {
+	for i := 0; i < connectionCount; i++ {
 		logger.Debugf("Creating connection %d", i+1)
-		conn, err := createTcpConn(TCP_DEST)
-		if err != nil {
-			return err
-		}
-		conns[i] = conn
-	}
-	for i := randomInt - 1; i >= 0; i-- {
-		err := sendRequestDirectlyOverTcp(logger, conns[i], i+1)
+		conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, fmt.Sprintf("client-%d", i+1))
 		if err != nil {
 			logFriendlyError(logger, err)
 			return err
 		}
+		conns[i] = conn
 	}
-	for i := randomInt - 1; i >= 0; i-- {
+
+	request, _ := http.NewRequest("GET", URL, nil)
+	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
+	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine}
+	test_case := test_cases.SendRequestTestCase{
+		Request:                   request,
+		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
+		ShouldSkipUnreadDataCheck: false,
+	}
+
+	for i := 0; i < connectionCount; i++ {
+		if err := test_case.Run(conns[i], logger); err != nil {
+			return err
+		}
+	}
+
+	for i := 0; i < connectionCount; i++ {
 		logger.Debugf("Closing connection %d", i+1)
 		err := conns[i].Close()
 		if err != nil {
@@ -49,51 +58,5 @@ func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.Te
 		}
 	}
 
-	return nil
-}
-
-func createTcpConn(destination string) (net.Conn, error) {
-	retries := 0
-	var conn net.Conn
-	var err error
-
-	for {
-		conn, err = net.Dial("tcp", destination)
-		if err != nil && retries > 15 {
-			return nil, err
-		} else if err == nil {
-			return conn, nil
-		} else {
-			retries += 1
-			time.Sleep(1000 * time.Millisecond)
-		}
-	}
-}
-
-func sendRequestDirectlyOverTcp(logger *logger.Logger, conn net.Conn, i int) error {
-	req := "GET / HTTP/1.1\r\n" + "\r\n\r\n"
-	logger.Infof("Sending request on %d (status line): %s", i, getFirstLine(string(req)))
-	logPrefix := ">>>"
-	logger.Debugf("Sending request on %d: (Messages with %s prefix are part of this log)", i, logPrefix)
-	logFriendlyHTTPMessage(logger, string(req), logPrefix)
-
-	_, err := conn.Write([]byte(req))
-	if err != nil {
-		return err
-	}
-
-	resp, err := http.ReadResponse(bufio.NewReader(conn), nil)
-	if err != nil {
-		return err
-	}
-	err = dumpResponse(logger, resp)
-	if err != nil {
-		return err
-	}
-
-	if resp.StatusCode != resp.StatusCode {
-		return fmt.Errorf("Expected status code %d, got %d on connection %d", 200, resp.StatusCode, i)
-	}
-	defer resp.Body.Close()
 	return nil
 }

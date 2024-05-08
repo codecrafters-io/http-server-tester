@@ -3,15 +3,15 @@ package internal
 import (
 	"fmt"
 	"io"
-	"math/rand"
 	"net/http"
 	"net/http/httputil"
 	"strings"
 
 	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/random"
 )
 
-const URL = "http://localhost:4221/"
+const URL = "http://127.0.0.1:4221/"
 const TCP_DEST = "localhost:4221"
 const DATA_DIR = "/tmp/data/codecrafters.io/http-server-tester/"
 const FILENAME_SIZE = 40
@@ -21,7 +21,7 @@ var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456
 func randSeq(n int) string {
 	b := make([]rune, n)
 	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
+		b[i] = letters[random.RandomInt(0, len(letters))]
 	}
 	return string(b)
 }
@@ -41,7 +41,7 @@ func logFriendlyHTTPMessage(logger *logger.Logger, msg string, logPrefix string)
 }
 
 func dumpRequest(logger *logger.Logger, req *http.Request) error {
-	logCurl(logger, req)
+	// logCurl(logger, req)
 	reqDump, err := httputil.DumpRequestOut(req, true)
 	if err != nil {
 		return fmt.Errorf("Failed to dump request: '%v'", err)
@@ -78,10 +78,10 @@ func dumpResponseWithBody(logger *logger.Logger, resp *http.Response) error {
 	return nil
 }
 
-func logCurl(logger *logger.Logger, req *http.Request) {
-	logger.Infof("You can use the following curl command to test this locally")
-	logger.Infof("$ %s", httpRequestToCurlString(req))
-}
+// func logCurl(logger *logger.Logger, req *http.Request) {
+// 	logger.Infof("You can use the following curl command to test this locally")
+// 	logger.Infof("$ %s", http_connection.httpRequestToCurlString(req))
+// }
 
 func executeHTTPRequestWithLogging(client *http.Client, req *http.Request, logger *logger.Logger) (*http.Response, error) {
 	err := dumpRequest(logger, req)

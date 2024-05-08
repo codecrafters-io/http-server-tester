@@ -1,4 +1,4 @@
-package internal
+package http_connection
 
 import (
 	"bytes"
@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"sort"
 	"strings"
+
+	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 func httpRequestToCurlString(req *http.Request) string {
@@ -59,4 +61,10 @@ func bodyToString(req *http.Request) string {
 
 func escapeSingleQuotes(s string) string {
 	return strings.ReplaceAll(s, "'", `\'`)
+}
+
+func logFriendlyHTTPMessage(logger *logger.Logger, msg string, logPrefix string) {
+	for _, line := range strings.Split(msg, "\r\n") {
+		logger.Debugf("%s %s", logPrefix, line)
+	}
 }
