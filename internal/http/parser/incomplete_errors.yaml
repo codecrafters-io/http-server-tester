@@ -20,12 +20,12 @@
 
 - input: "HTTP/1.1 200 OK\r\nConnection\r\n"
   error: |
-    Received: "1 200 OK\r\nConnection\r\n"
-                                     ^ error
+    Received: "HTTP/1.1 200 OK\r\nConnection\r\n"
+                                  ^ error
     Error: Expected ':' after header key
 
-- input: "HTTP/1.1 200\r\n"
+- input: "HTTP/1.1 foo"
   error: |
-    Received: "HTTP/1.1 200\r\n"
-                           ^ error
-    Error: Expected reason phrase (example: 'OK' for 200 response) at end of status line
+    Received: "HTTP/1.1 foo"
+                        ^ error
+    Error: Expected 3-digit status code followed by space, received EOF

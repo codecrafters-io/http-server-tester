@@ -73,28 +73,28 @@ func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
 	statusLine.Version = version
 
 	offsetBeforeCurrentSection = GetReaderOffset(reader)
-	statusBytes, err := ReadUntil(reader, SPACE)
+	statusBytes, err := ReadBytes(reader, 4)
 	if err == io.EOF {
-		reader.Seek(int64(-2), io.SeekCurrent)
+		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
 		return StatusLine{}, IncompleteHTTPResponseError{
 			Reader:  reader,
-			Message: "Expected reason phrase (example: 'OK' for 200 response) at end of status line",
+			Message: "Expected 3-digit status code followed by space, received EOF",
 		}
 	}
 	statusCode := string(statusBytes)
-	if len(statusCode) != 3 {
-		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
-		return StatusLine{}, InvalidHTTPResponseError{
-			Reader:  reader,
-			Message: fmt.Sprintf("Expected 3-digit status code, received %v digits", strconv.Itoa(len(statusCode))),
-		}
-	}
-	intStatusCode, err := strconv.Atoi(statusCode)
+	intStatusCode, err := strconv.Atoi(statusCode[:3])
 	if err != nil {
 		reader.Seek(int64(offsetBeforeCurrentSection), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
-			Message: fmt.Sprintf("Expected integer status-code, received %q", statusCode),
+			Message: fmt.Sprintf("Expected integer status-code, received %q", statusCode[:3]),
+		}
+	}
+	if statusCode[3] != ' ' {
+		reader.Seek(int64(offsetBeforeCurrentSection+3), io.SeekStart)
+		return StatusLine{}, InvalidHTTPResponseError{
+			Reader:  reader,
+			Message: "Expected space character after 3 digit status code",
 		}
 	}
 	statusLine.StatusCode = intStatusCode
@@ -139,7 +139,7 @@ func parseHeaders(reader *bytes.Reader) ([]Header, error) {
 			reader.Seek(int64(startOffset), io.SeekStart)
 			key, err := ReadUntil(reader, []byte(":"))
 			if err == io.EOF {
-				reader.Seek(int64(-2), io.SeekCurrent)
+				reader.Seek(int64(startOffset), io.SeekStart)
 				return []Header{}, IncompleteHTTPResponseError{
 					Reader:  reader,
 					Message: "Expected ':' after header key",
