@@ -20,6 +20,8 @@ type SendRequestTestCase struct {
 }
 
 func (t *SendRequestTestCase) Run(conn *http_connection.HttpConnection, logger *logger.Logger, successLog string) error {
+	// TODO: Create connection here, take address only
+	// RunWithConn can be used for conn
 	err := conn.SendRequest(t.Request)
 	if err != nil {
 		return fmt.Errorf("Failed to send request: %v", err)

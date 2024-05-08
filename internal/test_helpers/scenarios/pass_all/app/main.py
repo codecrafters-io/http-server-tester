@@ -1,5 +1,6 @@
 import argparse
 import enum
+import gzip
 import socket
 from http import HTTPMethod, HTTPStatus
 from pathlib import Path
@@ -9,6 +10,8 @@ ACCEPTED_BUFFSIZE = 1024
 """Accepted request buffer size by the socket server."""
 
 USER_AGENT_HEADER = "User-Agent"
+ACCEPT_ENCODING_HEADER = "Accept-Encoding"
+SUPPORTED_ENCODINGS = ["gzip"]
 
 
 class Route(enum.StrEnum):
@@ -37,11 +40,15 @@ class Request:
         self.headers = headers
 
     def get_header(self, header_name: str) -> str:
-        header_line = next(header for header in self.headers if header_name in header)
-
-        _name, value = header_line.split(":")
-
-        return value.strip()
+        try:
+            header_line = next(
+                header for header in self.headers if header_name in header
+            )
+            _name, value = header_line.split(":")
+            return value.strip()
+        except StopIteration:
+            # Returns "" if header_name key is not found
+            return ""
 
 
 class Response:
@@ -50,28 +57,43 @@ class Response:
     def __init__(
         self,
         status: HTTPStatus = HTTPStatus.OK,
+        headers: dict[str, str] = {},
         data: str = "",
-        content_type: str = "text/plain",
+        bytes_data: bytes = b"",
     ) -> None:
         self.status = f"{status} {status.phrase}"
-        self.content_type = content_type
 
+        self.headers = headers
         self.data = data
         self.content_length = len(data)
+        self.bytes_data = bytes_data
+
+        if self.data != "" and self.bytes_data != b"":
+            raise ValueError("Only one of data or bytes_data can be provided")
 
     def __bytes__(self) -> bytes:
         response = f"{self.version} {self.status}\r\n"
+        if self.data:
+            self.headers["Content-Length"] = str(self.content_length)
+            if self.headers.get("Content-Type") is None:
+                self.headers["Content-Type"] = "text/plain"
+
+        if self.headers:
+            response += "\r\n".join(
+                f"{header}: {value}" for header, value in self.headers.items()
+            )
+            response += "\r\n"
+        response += "\r\n"
 
         if self.data:
-            response += (
-                f"Content-Type: {self.content_type}\r\n"
-                f"Content-Length: {self.content_length}\r\n\r\n"
-                f"{self.data}"
-            )
-        else:
-            response += "\r\n\r\n"
+            response += self.data
 
-        return response.encode()
+        encoded_response = response.encode()
+
+        if self.bytes_data:
+            encoded_response += self.bytes_data
+
+        return encoded_response
 
 
 class NotFoundResponse(Response):
@@ -94,7 +116,8 @@ def handle_files_route(request: Request, filename: str) -> Response:
 
             with open(media_path, mode="r") as file:
                 return Response(
-                    data=file.read(), content_type="application/octet-stream"
+                    data=file.read(),
+                    headers={"Content-Type": "application/octet-stream"},
                 )
 
         case HTTPMethod.POST:
@@ -120,7 +143,22 @@ def handle_connection(connection: socket.socket) -> None:
                 response = Response()
 
             case Route.ECHO:
-                response = Response(data=path[-1])
+                headers: dict[str, str] = {}
+                encodings = request.get_header(ACCEPT_ENCODING_HEADER)
+                if encodings != "":
+                    encoding_list = encodings.split(",")
+                    for encoding in encoding_list:
+                        encoding = encoding.strip()
+                        if encoding in SUPPORTED_ENCODINGS:
+                            headers["Content-Encoding"] = encoding
+                            break
+
+                if headers.get("Content-Encoding") is None:
+                    response = Response(data=path[-1])
+                else:
+                    body = gzip.compress(path[-1].encode())
+                    headers["Content-Length"] = str(len(body))
+                    response = Response(bytes_data=body, headers=headers)
 
             case Route.USER_AGENT:
                 response = Response(data=request.get_header(USER_AGENT_HEADER))
