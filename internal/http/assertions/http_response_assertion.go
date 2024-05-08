@@ -5,12 +5,13 @@ import (
 	"strings"
 
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
+	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 type HTTPResponseAssertion struct {
 	StatusCode int    // ALWAYS REQUIRED
 	Reason     string // ALWAYS REQUIRED
-	Headers    []http_parser.Header
+	Headers    http_parser.Headers
 	Body       []byte
 }
 
@@ -18,7 +19,7 @@ func NewHTTPResponseAssertion(expectedResponse http_parser.HTTPResponse) HTTPRes
 	return HTTPResponseAssertion{StatusCode: expectedResponse.StatusLine.StatusCode, Reason: expectedResponse.StatusLine.Reason, Headers: expectedResponse.Headers, Body: expectedResponse.Body}
 }
 
-func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse) error {
+func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse, logger *logger.Logger) error {
 	actualStatusLine := response.StatusLine
 	if actualStatusLine.StatusCode != a.StatusCode {
 		return fmt.Errorf("Expected status code %d, got %d", a.StatusCode, actualStatusLine.StatusCode)
@@ -27,6 +28,8 @@ func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse) error {
 	if actualStatusLine.Reason != a.Reason {
 		return fmt.Errorf("Expected reason to be %q, got %q", a.Reason, actualStatusLine.Reason)
 	}
+
+	logger.Successf("Received status line: %s", actualStatusLine.FormattedString())
 
 	if a.Headers != nil {
 		// Only if we pass Headers in the HTTPResponseAssertion, we will check the headers
@@ -37,6 +40,9 @@ func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse) error {
 				return fmt.Errorf("Expected header %s: %s, got %s", expectedKey, expectedValue, actualValue)
 			}
 		}
+
+		logger.Successf("Received headers: %s", strings.TrimSpace(a.Headers.FormattedString()))
+
 	}
 
 	if a.Body != nil {
@@ -47,6 +53,9 @@ func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse) error {
 		if string(response.Body) != string(a.Body) {
 			return fmt.Errorf("Expected body %s, got %s", a.Body, response.Body)
 		}
+
+		logger.Successf("Received body: %s", a.Body)
 	}
+
 	return nil
 }

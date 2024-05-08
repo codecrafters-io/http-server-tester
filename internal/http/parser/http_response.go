@@ -6,6 +6,7 @@ import (
 	"io"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 var CRLF = ([]byte)("\r\n")
@@ -19,6 +20,8 @@ type Header struct {
 	Value string
 }
 
+type Headers []Header
+
 type StatusLine struct {
 	Version    string
 	StatusCode int
@@ -27,7 +30,7 @@ type StatusLine struct {
 
 type HTTPResponse struct {
 	StatusLine StatusLine
-	Headers    []Header
+	Headers    Headers
 	Body       []byte
 }
 
@@ -237,34 +240,55 @@ func (response *HTTPResponse) ContentLength() int {
 func (response *HTTPResponse) FormattedString() string {
 	var builder strings.Builder
 
-	builder.WriteString(response.StatusLine.Version)
-	builder.WriteString(" ")
-	builder.WriteString(strconv.Itoa(response.StatusLine.StatusCode))
-	builder.WriteString(" ")
-	builder.WriteString(response.StatusLine.Reason)
+	builder.WriteString(response.StatusLine.FormattedString())
 	builder.WriteString("\r\n")
 
-	for _, header := range response.Headers {
+	builder.WriteString(response.Headers.FormattedString())
+	builder.WriteString("\r\n")
+
+	if IsPrintable(string(response.Body)) {
+		builder.Write(response.Body)
+	} else {
+		builder.WriteString("<Binary Content>")
+	}
+
+	return strings.TrimSpace(builder.String())
+}
+
+func (response *HTTPResponse) MinimalFormattedString() string {
+	return response.StatusLine.FormattedString()
+}
+
+func (StatusLine *StatusLine) FormattedString() string {
+	var builder strings.Builder
+
+	builder.WriteString(StatusLine.Version)
+	builder.WriteString(" ")
+	builder.WriteString(strconv.Itoa(StatusLine.StatusCode))
+	builder.WriteString(" ")
+	builder.WriteString(StatusLine.Reason)
+
+	return builder.String()
+}
+
+func (header Headers) FormattedString() string {
+	var builder strings.Builder
+
+	for _, header := range header {
 		builder.WriteString(header.Key)
 		builder.WriteString(": ")
 		builder.WriteString(header.Value)
 		builder.WriteString("\r\n")
 	}
 
-	builder.WriteString("\r\n")
-	builder.Write(response.Body)
-
-	return strings.TrimSpace(builder.String())
+	return builder.String()
 }
 
-func (response *HTTPResponse) MinimalFormattedString() string {
-	var builder strings.Builder
-
-	builder.WriteString(response.StatusLine.Version)
-	builder.WriteString(" ")
-	builder.WriteString(strconv.Itoa(response.StatusLine.StatusCode))
-	builder.WriteString(" ")
-	builder.WriteString(response.StatusLine.Reason)
-
-	return builder.String()
+func IsPrintable(s string) bool {
+	for _, r := range s {
+		if r > unicode.MaxASCII || !unicode.IsPrint(r) {
+			return false
+		}
+	}
+	return true
 }

@@ -22,11 +22,12 @@ type SendRequestTestCase struct {
 }
 
 func (t *SendRequestTestCase) Run(stageHarness *test_case_harness.TestCaseHarness, address string, logger *logger.Logger, successLog string) error {
-	conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, address, "client")
+	conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, address, "")
 	if err != nil {
 		return fmt.Errorf("Failed to create connection: %v", err)
 	}
 	defer conn.Close()
+
 	addr := strings.Split(address, ":")
 	host, port := addr[0], addr[1]
 	logger.Debugln(fmt.Sprintf("Connected to %s port %s", host, port))
@@ -42,7 +43,7 @@ func (t *SendRequestTestCase) Run(stageHarness *test_case_harness.TestCaseHarnes
 	}
 	t.ReceivedResponse = response
 
-	if err = t.Assertion.Run(response); err != nil {
+	if err = t.Assertion.Run(response, logger); err != nil {
 		return err
 	}
 
@@ -66,7 +67,7 @@ func (t *SendRequestTestCase) RunWithConn(conn *http_connection.HttpConnection, 
 	}
 	t.ReceivedResponse = response
 
-	if err = t.Assertion.Run(response); err != nil {
+	if err = t.Assertion.Run(response, logger); err != nil {
 		return err
 	}
 
