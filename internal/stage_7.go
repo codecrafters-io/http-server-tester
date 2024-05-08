@@ -5,7 +5,10 @@ import (
 	"net/http"
 	"os"
 
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
+	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
+	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
+	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -30,42 +33,60 @@ func testGetFile(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger.Debugf("Creating file %s in %s", fileName, DATA_DIR)
 	logger.Debugf("File Content: %q", fileContent)
 	err = createFileWith(DATA_DIR+fileName, fileContent)
-
 	if err != nil {
 		return err
 	}
 
-	err = testGetFileResponse(logger, fileName, fileContent)
+	conn1, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "client")
 	if err != nil {
+		logFriendlyError(logger, err)
+		return fmt.Errorf("Failed to create connection: %v", err)
+	}
+	defer conn1.Close()
+	logger.Debugln("Connection established, sending request...")
+
+	request, err := http.NewRequest("GET", URL+"files/"+fileName, nil)
+	if err != nil {
+		return err
+	}
+	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
+	header1 := http_parser.Header{Key: "Content-Type", Value: "application/octet-stream"}
+	header2 := http_parser.Header{Key: "Content-Length", Value: fmt.Sprintf("%d", len(fileContent))}
+	expectedHeaders := []http_parser.Header{header1, header2}
+	expectedBody := []byte(fileContent)
+	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine, Headers: expectedHeaders, Body: expectedBody}
+
+	test_case := test_cases.SendRequestTestCase{
+		Request:                   request,
+		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
+		ShouldSkipUnreadDataCheck: false,
+	}
+	if err := test_case.Run(conn1, logger, " "+fileName); err != nil {
 		return err
 	}
 
 	logger.Infof("Testing non existent file returns 404")
+
+	conn2, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "client")
+	if err != nil {
+		logFriendlyError(logger, err)
+		return fmt.Errorf("Failed to create connection: %v", err)
+	}
+	defer conn2.Close()
+	logger.Debugln("Connection established, sending request...")
+
 	nonExistentFileName := randomFileNameWithPrefix("non-existent")
-	err = testNonExistentFileResponseIs404(logger, nonExistentFileName)
+	request, err = http.NewRequest("GET", URL+"files/"+nonExistentFileName, nil)
 	if err != nil {
 		return err
 	}
+	expectedStatusLine = http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 404, Reason: "Not Found"}
+	expectedResponse = http_parser.HTTPResponse{StatusLine: expectedStatusLine}
 
-	return nil
-}
-
-func testNonExistentFileResponseIs404(logger *logger.Logger, fileName string) error {
-	httpClient := NewHTTPClient()
-
-	req, err := http.NewRequest("GET", URL+"files/"+fileName, nil)
-	if err != nil {
-		return err
+	test_case = test_cases.SendRequestTestCase{
+		Request:                   request,
+		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
+		ShouldSkipUnreadDataCheck: false,
 	}
-
-	resp, err := executeHTTPRequestWithLogging(httpClient, req, logger)
-	if err != nil {
-		return err
-	}
-
-	if resp.StatusCode != 404 {
-		return fmt.Errorf("Expected status code 404, got %d", resp.StatusCode)
-	}
-
-	return nil
+	return test_case.Run(conn2, logger, " ")
 }
