@@ -19,7 +19,7 @@ type SendRequestTestCase struct {
 	ReceivedResponse http_parser.HTTPResponse
 }
 
-func (t *SendRequestTestCase) Run(conn *http_connection.HttpConnection, logger *logger.Logger) error {
+func (t *SendRequestTestCase) Run(conn *http_connection.HttpConnection, logger *logger.Logger, successLog string) error {
 	err := conn.SendRequest(t.Request)
 	if err != nil {
 		return fmt.Errorf("Failed to send request: %v", err)
@@ -39,6 +39,6 @@ func (t *SendRequestTestCase) Run(conn *http_connection.HttpConnection, logger *
 		conn.EnsureNoUnreadData()
 	}
 
-	logger.Successf("Received %s", response.MinimalFormattedString())
+	logger.Successf("Received %s", response.MinimalFormattedString()+successLog)
 	return nil
 }

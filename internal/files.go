@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"path/filepath"
 
@@ -23,30 +22,6 @@ func createFileWith(location string, content string) error {
 
 	_, err = f.WriteString(content)
 	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func testGetFileResponse(logger *logger.Logger, fileName string, fileContent string) error {
-	httpClient := NewHTTPClient()
-
-	req, err := http.NewRequest("GET", URL+"files/"+fileName, nil)
-	if err != nil {
-		return err
-	}
-
-	resp, err := executeHTTPRequestWithLogging(httpClient, req, logger)
-	if err != nil {
-		return err
-	}
-
-	if resp.StatusCode != 200 {
-		return fmt.Errorf("Expected status code 200, got %d", resp.StatusCode)
-	}
-
-	if err := validateContent(*resp, fileContent, "application/octet-stream"); err != nil {
 		return err
 	}
 

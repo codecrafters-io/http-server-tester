@@ -1,4 +1,3 @@
-// XXX : This package okay ?
 package http_connection
 
 import (
