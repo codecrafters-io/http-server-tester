@@ -10,7 +10,6 @@ import (
 
 var CRLF = ([]byte)("\r\n")
 var SPACE = []byte{' '}
-var TAB = []byte{'\t'}
 var CR = []byte{'\r'}
 var LF = []byte{'\n'}
 var NUL = []byte{0}
@@ -67,14 +66,14 @@ func parseStatusLine(reader *bytes.Reader) (StatusLine, error) {
 		reader.Seek(int64(offsetBeforeCurrentSection+9), io.SeekStart)
 		return StatusLine{}, InvalidHTTPResponseError{
 			Reader:  reader,
-			Message: "Expected white-space after 'HTTP/1.1'",
+			Message: "Expected space character after 'HTTP/1.1'",
 		}
 	}
 	version = version[:8]
 	statusLine.Version = version
 
 	offsetBeforeCurrentSection = GetReaderOffset(reader)
-	statusBytes, err := ReadUntilAnyDelimiter(reader, [][]byte{SPACE, TAB})
+	statusBytes, err := ReadUntil(reader, SPACE)
 	if err == io.EOF {
 		reader.Seek(int64(-2), io.SeekCurrent)
 		return StatusLine{}, IncompleteHTTPResponseError{
@@ -117,7 +116,7 @@ func parseHeaders(reader *bytes.Reader) ([]Header, error) {
 	headers := []Header{}
 
 	for {
-		offsetBeforeCRLF := GetReaderOffset(reader)
+		startOffset := GetReaderOffset(reader)
 		possibleHeaderLine, err := ReadUntilCRLF(reader)
 		if err == io.EOF {
 			if len(possibleHeaderLine) == 0 {
@@ -137,7 +136,7 @@ func parseHeaders(reader *bytes.Reader) ([]Header, error) {
 			return headers, nil
 		} else {
 			// We know header is present
-			reader.Seek(int64(offsetBeforeCRLF), io.SeekStart)
+			reader.Seek(int64(startOffset), io.SeekStart)
 			key, err := ReadUntil(reader, []byte(":"))
 			if err == io.EOF {
 				reader.Seek(int64(-2), io.SeekCurrent)
@@ -254,6 +253,18 @@ func (response *HTTPResponse) FormattedString() string {
 
 	builder.WriteString("\r\n")
 	builder.Write(response.Body)
+
+	return strings.TrimSpace(builder.String())
+}
+
+func (response *HTTPResponse) MinimalFormattedString() string {
+	var builder strings.Builder
+
+	builder.WriteString(response.StatusLine.Version)
+	builder.WriteString(" ")
+	builder.WriteString(strconv.Itoa(response.StatusLine.StatusCode))
+	builder.WriteString(" ")
+	builder.WriteString(response.StatusLine.Reason)
 
 	return builder.String()
 }

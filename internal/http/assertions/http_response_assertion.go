@@ -28,10 +28,8 @@ func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse) error {
 		return fmt.Errorf("Expected reason to be %q, got %q", a.Reason, actualStatusLine.Reason)
 	}
 
-	if response.Headers != nil {
-		if len(response.Headers) != len(a.Headers) {
-			return fmt.Errorf("Expected %d headers, got %d", len(a.Headers), len(response.Headers))
-		}
+	if a.Headers != nil {
+		// Only if we pass Headers in the HTTPResponseAssertion, we will check the headers
 		for _, header := range a.Headers {
 			expectedKey, expectedValue := header.Key, header.Value
 			actualValue := response.FindHeader(expectedKey)
@@ -41,7 +39,8 @@ func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse) error {
 		}
 	}
 
-	if response.Body != nil {
+	if a.Body != nil {
+		// Only if we pass Body in the HTTPResponseAssertion, we will check the body
 		if len(response.Body) != len(a.Body) {
 			return fmt.Errorf("Expected body of length %d, got %d", len(a.Body), len(response.Body))
 		}

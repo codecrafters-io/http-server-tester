@@ -2,13 +2,13 @@ package internal
 
 import (
 	"fmt"
-	"math/rand"
 	"net/http"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
 	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -19,7 +19,7 @@ func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.Te
 	}
 
 	logger := stageHarness.Logger
-	connectionCount := rand.Intn(2) + 3 // Fixtures will fail, unless we use tester-utils/random
+	connectionCount := random.RandomInt(2, 5)
 	logger.Infof("Creating %d parallel connections", connectionCount)
 
 	conns := make([]*http_connection.HttpConnection, connectionCount)

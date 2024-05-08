@@ -3,12 +3,12 @@ package internal
 import (
 	"fmt"
 	"io"
-	"math/rand"
 	"net/http"
 	"net/http/httputil"
 	"strings"
 
 	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/random"
 )
 
 const URL = "http://127.0.0.1:4221/"
@@ -21,7 +21,7 @@ var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456
 func randSeq(n int) string {
 	b := make([]rune, n)
 	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
+		b[i] = letters[random.RandomInt(0, len(letters))]
 	}
 	return string(b)
 }

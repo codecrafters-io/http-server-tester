@@ -39,6 +39,6 @@ func (t *SendRequestTestCase) Run(conn *http_connection.HttpConnection, logger *
 		conn.EnsureNoUnreadData()
 	}
 
-	logger.Successf("Received %s", response.FormattedString())
+	logger.Successf("Received %s", response.MinimalFormattedString())
 	return nil
 }
