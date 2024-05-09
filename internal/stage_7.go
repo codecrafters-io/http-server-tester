@@ -6,7 +6,6 @@ import (
 	"os"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
-	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -37,14 +36,6 @@ func testGetFile(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	conn1, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "client")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return fmt.Errorf("Failed to create connection: %v", err)
-	}
-	defer conn1.Close()
-	logger.Debugln("Connection established, sending request...")
-
 	request, err := http.NewRequest("GET", URL+"files/"+fileName, nil)
 	if err != nil {
 		return err
@@ -61,19 +52,12 @@ func testGetFile(stageHarness *test_case_harness.TestCaseHarness) error {
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	if err := test_case.Run(conn1, logger, " "+fileName); err != nil {
+	if err := test_case.Run(stageHarness, TCP_DEST, logger); err != nil {
 		return err
 	}
 
+	logger.Successf("First test passed.")
 	logger.Infof("Testing non existent file returns 404")
-
-	conn2, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "client")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return fmt.Errorf("Failed to create connection: %v", err)
-	}
-	defer conn2.Close()
-	logger.Debugln("Connection established, sending request...")
 
 	nonExistentFileName := randomFileNameWithPrefix("non-existent")
 	request, err = http.NewRequest("GET", URL+"files/"+nonExistentFileName, nil)
@@ -88,5 +72,5 @@ func testGetFile(stageHarness *test_case_harness.TestCaseHarness) error {
 		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
 		ShouldSkipUnreadDataCheck: false,
 	}
-	return test_case.Run(conn2, logger, " ")
+	return test_case.Run(stageHarness, TCP_DEST, logger)
 }

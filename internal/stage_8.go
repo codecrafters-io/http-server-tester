@@ -2,12 +2,10 @@ package internal
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"os"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
-	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -30,14 +28,6 @@ func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
 	fileName := randomFileName()
 	fileContent := randomFileContent()
 
-	conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "client")
-	if err != nil {
-		logFriendlyError(logger, err)
-		return fmt.Errorf("Failed to create connection: %v", err)
-	}
-	defer conn.Close()
-	logger.Debugln("Connection established, sending request...")
-
 	request, err := http.NewRequest("POST", URL+"files/"+fileName, bytes.NewBufferString(fileContent))
 	if err != nil {
 		return err
@@ -51,7 +41,7 @@ func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
 		ShouldSkipUnreadDataCheck: false,
 	}
 
-	if err := test_case.Run(conn, logger, ""); err != nil {
+	if err := test_case.Run(stageHarness, TCP_DEST, logger); err != nil {
 		return err
 	}
 

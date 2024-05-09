@@ -47,7 +47,14 @@ func TestStages(t *testing.T) {
 			UntilStageSlug:      "post-file",
 			CodePath:            "./test_helpers/scenarios/pass_all",
 			ExpectedExitCode:    0,
-			StdoutFixturePath:   "./test_helpers/fixtures/pass_all",
+			StdoutFixturePath:   "./test_helpers/fixtures/base/pass_all",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"compression_pass_all": {
+			UntilStageSlug:      "compression-gzip",
+			CodePath:            "./test_helpers/scenarios/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/compression/pass_all",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 	}
@@ -56,6 +63,19 @@ func TestStages(t *testing.T) {
 }
 
 func normalizeTesterOutput(testerOutput []byte) []byte {
-	re, _ := regexp.Compile(`(\d{2}\/[A-Za-z]{3}\/\d{4} \d{2}:\d{2}:\d{2})`)
-	return re.ReplaceAll(testerOutput, []byte("xx/xxx/xxxx xx:xx:xx"))
+	replacements := map[string][]*regexp.Regexp{
+		"xx/xxx/xxxx xx:xx:xx": {regexp.MustCompile(`(\d{2}\/[A-Za-z]{3}\/\d{4} \d{2}:\d{2}:\d{2})`)},
+		"gzip_encoded_data_11": {regexp.MustCompile(`\[stage-11\] .*Received bytes: .*`)},
+		"gzip_encoded_data_10": {regexp.MustCompile(`\[stage-10\] .*Received bytes: .*`)},
+		"gzip_encoded_data_9":  {regexp.MustCompile(`\[stage-9\] .*Received bytes: .*`)},
+	}
+
+	for replacement, regexes := range replacements {
+		for _, regex := range regexes {
+			testerOutput = regex.ReplaceAll(testerOutput, []byte(replacement))
+		}
+	}
+
+	return testerOutput
+
 }

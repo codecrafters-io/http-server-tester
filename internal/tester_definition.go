@@ -56,5 +56,20 @@ var testerDefinition = tester_definition.TesterDefinition{
 			TestFunc: testPostFile,
 			Timeout:  15 * time.Second,
 		},
+		{
+			Slug:     "compression-content-encoding",
+			TestFunc: testRespondWithContentEncoding,
+			Timeout:  15 * time.Second,
+		},
+		{
+			Slug:     "compression-multiple-schemes",
+			TestFunc: testRespondWithCorrectContentEncoding,
+			Timeout:  15 * time.Second,
+		},
+		{
+			Slug:     "compression-gzip",
+			TestFunc: testRespondWithEncodedData,
+			Timeout:  15 * time.Second,
+		},
 	},
 }
