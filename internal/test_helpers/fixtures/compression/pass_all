@@ -1,0 +1,311 @@
+Debug = true
+
+[33m[stage-11] [0m[94mRunning tests for Stage #11: compression-gzip[0m
+[33m[stage-11] [0m[36mRunning program[0m
+[33m[stage-11] [0m[94m$ ./your_server.sh[0m
+[33m[stage-11] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-11] [0m[94m$ curl -v -X GET http://127.0.0.1:4221/echo/pear -H "Accept-Encoding: gzip"[0m
+[33m[stage-11] [0m[36m> GET /echo/pear HTTP/1.1[0m
+[33m[stage-11] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-11] [0m[36m> Accept-Encoding: gzip[0m
+[33m[stage-11] [0m[36m> [0m
+[33m[stage-11] [0m[36mSent bytes: "GET /echo/pear HTTP/1.1\r\nHost: 127.0.0.1:4221\r\nAccept-Encoding: gzip\r\n\r\n"[0m
+[33m[stage-11] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 24\r\n\r\n\x1f\x8b\b\x00\xfbe<f\x02\xff+HM,\x02\x00\xbd<\x8a\xc6\x04\x00\x00\x00"[0m
+[33m[stage-11] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-11] [0m[36m< Content-Encoding: gzip[0m
+[33m[stage-11] [0m[36m< Content-Length: 24[0m
+[33m[stage-11] [0m[36m< [0m
+[33m[stage-11] [0m[36m< <Binary Content>[0m
+[33m[stage-11] [0m[36m< [0m
+[33m[stage-11] [0m[92mReceived response with 200 status code[0m
+[33m[stage-11] [0m[92m✓ Content-Encoding header is present[0m
+[33m[stage-11] [0m[92m✓ Content-Length header is present[0m
+[33m[stage-11] [0m[92m✓ Body is gzip encoded[0m
+[33m[stage-11] [0m[92m✓ Body is correct[0m
+[33m[stage-11] [0m[92mTest passed.[0m
+[33m[stage-11] [0m[36mTerminating program[0m
+[33m[stage-11] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-10] [0m[94mRunning tests for Stage #10: compression-multiple-schemes[0m
+[33m[stage-10] [0m[36mRunning program[0m
+[33m[stage-10] [0m[94m$ ./your_server.sh[0m
+[33m[stage-10] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-10] [0m[94m$ curl -v -X GET http://127.0.0.1:4221/echo/orange -H "Accept-Encoding: encoding-1, gzip, encoding-2"[0m
+[33m[stage-10] [0m[36m> GET /echo/orange HTTP/1.1[0m
+[33m[stage-10] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-10] [0m[36m> Accept-Encoding: encoding-1, gzip, encoding-2[0m
+[33m[stage-10] [0m[36m> [0m
+[33m[stage-10] [0m[36mSent bytes: "GET /echo/orange HTTP/1.1\r\nHost: 127.0.0.1:4221\r\nAccept-Encoding: encoding-1, gzip, encoding-2\r\n\r\n"[0m
+[33m[stage-10] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 26\r\n\r\n\x1f\x8b\b\x00\xfbe<f\x02\xff\xcb/J\xccKO\x05\x00x\xb1\xc5\x1d\x06\x00\x00\x00"[0m
+[33m[stage-10] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-10] [0m[36m< Content-Encoding: gzip[0m
+[33m[stage-10] [0m[36m< Content-Length: 26[0m
+[33m[stage-10] [0m[36m< [0m
+[33m[stage-10] [0m[36m< <Binary Content>[0m
+[33m[stage-10] [0m[36m< [0m
+[33m[stage-10] [0m[92mReceived response with 200 status code[0m
+[33m[stage-10] [0m[92m✓ Content-Encoding header is present[0m
+[33m[stage-10] [0m[92mFirst test passed.[0m
+[33m[stage-10] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-10] [0m[94m$ curl -v -X GET http://127.0.0.1:4221/echo/orange -H "Accept-Encoding: encoding-1, encoding-2"[0m
+[33m[stage-10] [0m[36m> GET /echo/orange HTTP/1.1[0m
+[33m[stage-10] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-10] [0m[36m> Accept-Encoding: encoding-1, encoding-2[0m
+[33m[stage-10] [0m[36m> [0m
+[33m[stage-10] [0m[36mSent bytes: "GET /echo/orange HTTP/1.1\r\nHost: 127.0.0.1:4221\r\nAccept-Encoding: encoding-1, encoding-2\r\n\r\n"[0m
+[33m[stage-10] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Length: 6\r\nContent-Type: text/plain\r\n\r\norange"[0m
+[33m[stage-10] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-10] [0m[36m< Content-Length: 6[0m
+[33m[stage-10] [0m[36m< Content-Type: text/plain[0m
+[33m[stage-10] [0m[36m< [0m
+[33m[stage-10] [0m[36m< orange[0m
+[33m[stage-10] [0m[36m< [0m
+[33m[stage-10] [0m[92mReceived response with 200 status code[0m
+[33m[stage-10] [0m[92m✓ Content-Encoding header is not present[0m
+[33m[stage-10] [0m[92mTest passed.[0m
+[33m[stage-10] [0m[36mTerminating program[0m
+[33m[stage-10] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-9] [0m[94mRunning tests for Stage #9: compression-content-encoding[0m
+[33m[stage-9] [0m[36mRunning program[0m
+[33m[stage-9] [0m[94m$ ./your_server.sh[0m
+[33m[stage-9] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-9] [0m[94m$ curl -v -X GET http://127.0.0.1:4221/echo/raspberry -H "Accept-Encoding: gzip"[0m
+[33m[stage-9] [0m[36m> GET /echo/raspberry HTTP/1.1[0m
+[33m[stage-9] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-9] [0m[36m> Accept-Encoding: gzip[0m
+[33m[stage-9] [0m[36m> [0m
+[33m[stage-9] [0m[36mSent bytes: "GET /echo/raspberry HTTP/1.1\r\nHost: 127.0.0.1:4221\r\nAccept-Encoding: gzip\r\n\r\n"[0m
+[33m[stage-9] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 29\r\n\r\n\x1f\x8b\b\x00\xfbe<f\x02\xff+J,.HJ-*\xaa\x04\x00a\xd5\x10~\t\x00\x00\x00"[0m
+[33m[stage-9] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-9] [0m[36m< Content-Encoding: gzip[0m
+[33m[stage-9] [0m[36m< Content-Length: 29[0m
+[33m[stage-9] [0m[36m< [0m
+[33m[stage-9] [0m[36m< <Binary Content>[0m
+[33m[stage-9] [0m[36m< [0m
+[33m[stage-9] [0m[92mReceived response with 200 status code[0m
+[33m[stage-9] [0m[92m✓ Content-Encoding header is present[0m
+[33m[stage-9] [0m[92mFirst test passed.[0m
+[33m[stage-9] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-9] [0m[94m$ curl -v -X GET http://127.0.0.1:4221/echo/raspberry -H "Accept-Encoding: invalid-encoding"[0m
+[33m[stage-9] [0m[36m> GET /echo/raspberry HTTP/1.1[0m
+[33m[stage-9] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-9] [0m[36m> Accept-Encoding: invalid-encoding[0m
+[33m[stage-9] [0m[36m> [0m
+[33m[stage-9] [0m[36mSent bytes: "GET /echo/raspberry HTTP/1.1\r\nHost: 127.0.0.1:4221\r\nAccept-Encoding: invalid-encoding\r\n\r\n"[0m
+[33m[stage-9] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Length: 9\r\nContent-Type: text/plain\r\n\r\nraspberry"[0m
+[33m[stage-9] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-9] [0m[36m< Content-Length: 9[0m
+[33m[stage-9] [0m[36m< Content-Type: text/plain[0m
+[33m[stage-9] [0m[36m< [0m
+[33m[stage-9] [0m[36m< raspberry[0m
+[33m[stage-9] [0m[36m< [0m
+[33m[stage-9] [0m[92mReceived response with 200 status code[0m
+[33m[stage-9] [0m[92m✓ Content-Encoding header is not present[0m
+[33m[stage-9] [0m[92mTest passed.[0m
+[33m[stage-9] [0m[36mTerminating program[0m
+[33m[stage-9] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-8] [0m[94mRunning tests for Stage #8: post-file[0m
+[33m[stage-8] [0m[36mRunning program[0m
+[33m[stage-8] [0m[94m$ ./your_server.sh --directory /tmp/data/codecrafters.io/http-server-tester/[0m
+[33m[stage-8] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-8] [0m[94m$ curl -v -X POST http://127.0.0.1:4221/files/mango_pear_banana_blueberry -d 'banana pear orange grape grape apple apple banana'[0m
+[33m[stage-8] [0m[36m> POST /files/mango_pear_banana_blueberry HTTP/1.1[0m
+[33m[stage-8] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-8] [0m[36m> [0m
+[33m[stage-8] [0m[36m> banana pear orange grape grape apple apple banana[0m
+[33m[stage-8] [0m[36m> [0m
+[33m[stage-8] [0m[36mSent bytes: "POST /files/mango_pear_banana_blueberry HTTP/1.1\r\nHost: 127.0.0.1:4221\r\n\r\nbanana pear orange grape grape apple apple banana"[0m
+[33m[stage-8] [0m[36mReceived bytes: "HTTP/1.1 201 Created\r\n\r\n"[0m
+[33m[stage-8] [0m[36m< HTTP/1.1 201 Created[0m
+[33m[stage-8] [0m[36m< [0m
+[33m[stage-8] [0m[92mReceived response with 201 status code[0m
+[33m[stage-8] [0m[36mValidating file `mango_pear_banana_blueberry` exists on disk[0m
+[33m[stage-8] [0m[36mValidating file `mango_pear_banana_blueberry` content[0m
+[33m[stage-8] [0m[92mTest passed.[0m
+[33m[stage-8] [0m[36mTerminating program[0m
+[33m[stage-8] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-7] [0m[94mRunning tests for Stage #7: get-file[0m
+[33m[stage-7] [0m[36mRunning program[0m
+[33m[stage-7] [0m[94m$ ./your_server.sh --directory /tmp/data/codecrafters.io/http-server-tester/[0m
+[33m[stage-7] [0m[94mTesting existing file[0m
+[33m[stage-7] [0m[36mCreating file mango_grape_banana_mango in /tmp/data/codecrafters.io/http-server-tester/[0m
+[33m[stage-7] [0m[36mFile Content: "apple pear banana pineapple raspberry apple apple mango"[0m
+[33m[stage-7] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-7] [0m[94m$ curl -v -X GET http://127.0.0.1:4221/files/mango_grape_banana_mango[0m
+[33m[stage-7] [0m[36m> GET /files/mango_grape_banana_mango HTTP/1.1[0m
+[33m[stage-7] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-7] [0m[36m> [0m
+[33m[stage-7] [0m[36mSent bytes: "GET /files/mango_grape_banana_mango HTTP/1.1\r\nHost: 127.0.0.1:4221\r\n\r\n"[0m
+[33m[stage-7] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: 55\r\n\r\napple pear banana pineapple raspberry apple apple mango"[0m
+[33m[stage-7] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-7] [0m[36m< Content-Type: application/octet-stream[0m
+[33m[stage-7] [0m[36m< Content-Length: 55[0m
+[33m[stage-7] [0m[36m< [0m
+[33m[stage-7] [0m[36m< apple pear banana pineapple raspberry apple apple mango[0m
+[33m[stage-7] [0m[36m< [0m
+[33m[stage-7] [0m[92mReceived response with 200 status code[0m
+[33m[stage-7] [0m[92m✓ Content-Type header is present[0m
+[33m[stage-7] [0m[92m✓ Content-Length header is present[0m
+[33m[stage-7] [0m[92m✓ Body is correct[0m
+[33m[stage-7] [0m[92mFirst test passed.[0m
+[33m[stage-7] [0m[94mTesting non existent file returns 404[0m
+[33m[stage-7] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-7] [0m[94m$ curl -v -X GET http://127.0.0.1:4221/files/non-existentbanana_pear_apple_blueberry[0m
+[33m[stage-7] [0m[36m> GET /files/non-existentbanana_pear_apple_blueberry HTTP/1.1[0m
+[33m[stage-7] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-7] [0m[36m> [0m
+[33m[stage-7] [0m[36mSent bytes: "GET /files/non-existentbanana_pear_apple_blueberry HTTP/1.1\r\nHost: 127.0.0.1:4221\r\n\r\n"[0m
+[33m[stage-7] [0m[36mReceived bytes: "HTTP/1.1 404 Not Found\r\n\r\n"[0m
+[33m[stage-7] [0m[36m< HTTP/1.1 404 Not Found[0m
+[33m[stage-7] [0m[36m< [0m
+[33m[stage-7] [0m[92mReceived response with 404 status code[0m
+[33m[stage-7] [0m[92mTest passed.[0m
+[33m[stage-7] [0m[36mTerminating program[0m
+[33m[stage-7] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-6] [0m[94mRunning tests for Stage #6: concurrent-connections[0m
+[33m[stage-6] [0m[36mRunning program[0m
+[33m[stage-6] [0m[94m$ ./your_server.sh[0m
+[33m[stage-6] [0m[94mCreating 4 parallel connections[0m
+[33m[stage-6] [0m[36mCreating connection 1[0m
+[33m[stage-6] [0m[36mCreating connection 2[0m
+[33m[stage-6] [0m[36mCreating connection 3[0m
+[33m[stage-6] [0m[36mCreating connection 4[0m
+[33m[stage-6] [0m[94mclient-1: $ curl -v -X GET http://127.0.0.1:4221/[0m
+[33m[stage-6] [0m[36mclient-1: > GET / HTTP/1.1[0m
+[33m[stage-6] [0m[36mclient-1: > Host: 127.0.0.1:4221[0m
+[33m[stage-6] [0m[36mclient-1: > [0m
+[33m[stage-6] [0m[36mclient-1: Sent bytes: "GET / HTTP/1.1\r\nHost: 127.0.0.1:4221\r\n\r\n"[0m
+[33m[stage-6] [0m[36mclient-1: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-6] [0m[36mclient-1: < HTTP/1.1 200 OK[0m
+[33m[stage-6] [0m[36mclient-1: < [0m
+[33m[stage-6] [0m[92mReceived response with 200 status code[0m
+[33m[stage-6] [0m[94mclient-2: $ curl -v -X GET http://127.0.0.1:4221/[0m
+[33m[stage-6] [0m[36mclient-2: > GET / HTTP/1.1[0m
+[33m[stage-6] [0m[36mclient-2: > Host: 127.0.0.1:4221[0m
+[33m[stage-6] [0m[36mclient-2: > [0m
+[33m[stage-6] [0m[36mclient-2: Sent bytes: "GET / HTTP/1.1\r\nHost: 127.0.0.1:4221\r\n\r\n"[0m
+[33m[stage-6] [0m[36mclient-2: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-6] [0m[36mclient-2: < HTTP/1.1 200 OK[0m
+[33m[stage-6] [0m[36mclient-2: < [0m
+[33m[stage-6] [0m[92mReceived response with 200 status code[0m
+[33m[stage-6] [0m[94mclient-3: $ curl -v -X GET http://127.0.0.1:4221/[0m
+[33m[stage-6] [0m[36mclient-3: > GET / HTTP/1.1[0m
+[33m[stage-6] [0m[36mclient-3: > Host: 127.0.0.1:4221[0m
+[33m[stage-6] [0m[36mclient-3: > [0m
+[33m[stage-6] [0m[36mclient-3: Sent bytes: "GET / HTTP/1.1\r\nHost: 127.0.0.1:4221\r\n\r\n"[0m
+[33m[stage-6] [0m[36mclient-3: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-6] [0m[36mclient-3: < HTTP/1.1 200 OK[0m
+[33m[stage-6] [0m[36mclient-3: < [0m
+[33m[stage-6] [0m[92mReceived response with 200 status code[0m
+[33m[stage-6] [0m[94mclient-4: $ curl -v -X GET http://127.0.0.1:4221/[0m
+[33m[stage-6] [0m[36mclient-4: > GET / HTTP/1.1[0m
+[33m[stage-6] [0m[36mclient-4: > Host: 127.0.0.1:4221[0m
+[33m[stage-6] [0m[36mclient-4: > [0m
+[33m[stage-6] [0m[36mclient-4: Sent bytes: "GET / HTTP/1.1\r\nHost: 127.0.0.1:4221\r\n\r\n"[0m
+[33m[stage-6] [0m[36mclient-4: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-6] [0m[36mclient-4: < HTTP/1.1 200 OK[0m
+[33m[stage-6] [0m[36mclient-4: < [0m
+[33m[stage-6] [0m[92mReceived response with 200 status code[0m
+[33m[stage-6] [0m[36mClosing connection 1[0m
+[33m[stage-6] [0m[36mClosing connection 2[0m
+[33m[stage-6] [0m[36mClosing connection 3[0m
+[33m[stage-6] [0m[36mClosing connection 4[0m
+[33m[stage-6] [0m[92mTest passed.[0m
+[33m[stage-6] [0m[36mTerminating program[0m
+[33m[stage-6] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-5] [0m[94mRunning tests for Stage #5: parse-headers[0m
+[33m[stage-5] [0m[36mRunning program[0m
+[33m[stage-5] [0m[94m$ ./your_server.sh[0m
+[33m[stage-5] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-5] [0m[94m$ curl -v -X GET http://127.0.0.1:4221/user-agent -H "User-Agent: pear/strawberry"[0m
+[33m[stage-5] [0m[36m> GET /user-agent HTTP/1.1[0m
+[33m[stage-5] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-5] [0m[36m> User-Agent: pear/strawberry[0m
+[33m[stage-5] [0m[36m> [0m
+[33m[stage-5] [0m[36mSent bytes: "GET /user-agent HTTP/1.1\r\nHost: 127.0.0.1:4221\r\nUser-Agent: pear/strawberry\r\n\r\n"[0m
+[33m[stage-5] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Length: 15\r\nContent-Type: text/plain\r\n\r\npear/strawberry"[0m
+[33m[stage-5] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-5] [0m[36m< Content-Length: 15[0m
+[33m[stage-5] [0m[36m< Content-Type: text/plain[0m
+[33m[stage-5] [0m[36m< [0m
+[33m[stage-5] [0m[36m< pear/strawberry[0m
+[33m[stage-5] [0m[36m< [0m
+[33m[stage-5] [0m[92mReceived response with 200 status code[0m
+[33m[stage-5] [0m[92m✓ Content-Type header is present[0m
+[33m[stage-5] [0m[92m✓ Content-Length header is present[0m
+[33m[stage-5] [0m[92m✓ Body is correct[0m
+[33m[stage-5] [0m[92mTest passed.[0m
+[33m[stage-5] [0m[36mTerminating program[0m
+[33m[stage-5] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-4] [0m[94mRunning tests for Stage #4: respond-with-content[0m
+[33m[stage-4] [0m[36mRunning program[0m
+[33m[stage-4] [0m[94m$ ./your_server.sh[0m
+[33m[stage-4] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-4] [0m[94m$ curl -v -X GET http://127.0.0.1:4221/echo/pear[0m
+[33m[stage-4] [0m[36m> GET /echo/pear HTTP/1.1[0m
+[33m[stage-4] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-4] [0m[36m> [0m
+[33m[stage-4] [0m[36mSent bytes: "GET /echo/pear HTTP/1.1\r\nHost: 127.0.0.1:4221\r\n\r\n"[0m
+[33m[stage-4] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Length: 4\r\nContent-Type: text/plain\r\n\r\npear"[0m
+[33m[stage-4] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-4] [0m[36m< Content-Length: 4[0m
+[33m[stage-4] [0m[36m< Content-Type: text/plain[0m
+[33m[stage-4] [0m[36m< [0m
+[33m[stage-4] [0m[36m< pear[0m
+[33m[stage-4] [0m[36m< [0m
+[33m[stage-4] [0m[92mReceived response with 200 status code[0m
+[33m[stage-4] [0m[92m✓ Content-Type header is present[0m
+[33m[stage-4] [0m[92m✓ Content-Length header is present[0m
+[33m[stage-4] [0m[92m✓ Body is correct[0m
+[33m[stage-4] [0m[92mTest passed.[0m
+[33m[stage-4] [0m[36mTerminating program[0m
+[33m[stage-4] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-3] [0m[94mRunning tests for Stage #3: respond-with-404[0m
+[33m[stage-3] [0m[36mRunning program[0m
+[33m[stage-3] [0m[94m$ ./your_server.sh[0m
+[33m[stage-3] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-3] [0m[94m$ curl -v -X GET http://127.0.0.1:4221/pineapple[0m
+[33m[stage-3] [0m[36m> GET /pineapple HTTP/1.1[0m
+[33m[stage-3] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-3] [0m[36m> [0m
+[33m[stage-3] [0m[36mSent bytes: "GET /pineapple HTTP/1.1\r\nHost: 127.0.0.1:4221\r\n\r\n"[0m
+[33m[stage-3] [0m[36mReceived bytes: "HTTP/1.1 404 Not Found\r\n\r\n"[0m
+[33m[stage-3] [0m[36m< HTTP/1.1 404 Not Found[0m
+[33m[stage-3] [0m[36m< [0m
+[33m[stage-3] [0m[92mReceived response with 404 status code[0m
+[33m[stage-3] [0m[92mTest passed.[0m
+[33m[stage-3] [0m[36mTerminating program[0m
+[33m[stage-3] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-2] [0m[94mRunning tests for Stage #2: respond-with-200[0m
+[33m[stage-2] [0m[36mRunning program[0m
+[33m[stage-2] [0m[94m$ ./your_server.sh[0m
+[33m[stage-2] [0m[36mConnected to 127.0.0.1 port 4221[0m
+[33m[stage-2] [0m[94m$ curl -v -X GET http://127.0.0.1:4221/[0m
+[33m[stage-2] [0m[36m> GET / HTTP/1.1[0m
+[33m[stage-2] [0m[36m> Host: 127.0.0.1:4221[0m
+[33m[stage-2] [0m[36m> [0m
+[33m[stage-2] [0m[36mSent bytes: "GET / HTTP/1.1\r\nHost: 127.0.0.1:4221\r\n\r\n"[0m
+[33m[stage-2] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-2] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-2] [0m[36m< [0m
+[33m[stage-2] [0m[92mReceived response with 200 status code[0m
+[33m[stage-2] [0m[92mTest passed.[0m
+[33m[stage-2] [0m[36mTerminating program[0m
+[33m[stage-2] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-1] [0m[94mRunning tests for Stage #1: connect-to-port[0m
+[33m[stage-1] [0m[36mRunning program[0m
+[33m[stage-1] [0m[94m$ ./your_server.sh[0m
+[33m[stage-1] [0m[94mConnecting to 127.0.0.1:4221 using TCP[0m
+[33m[stage-1] [0m[94mSuccess! Closing connection[0m
+[33m[stage-1] [0m[92mTest passed.[0m
+[33m[stage-1] [0m[36mTerminating program[0m
+[33m[stage-1] [0m[36mProgram terminated successfully[0m
