@@ -36,6 +36,9 @@ func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse, logger *lo
 		for _, header := range a.Headers {
 			expectedKey, expectedValue := header.Key, header.Value
 			actualValue := response.FindHeader(expectedKey)
+			if actualValue == "" {
+				return fmt.Errorf("Expected header %s: %s, to be present", expectedKey, expectedValue)
+			}
 			if !strings.EqualFold(actualValue, expectedValue) {
 				return fmt.Errorf("Expected header %s: %s, got %s", expectedKey, expectedValue, actualValue)
 			}

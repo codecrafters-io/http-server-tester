@@ -42,7 +42,7 @@ func testRespondWithEncodedData(stageHarness *test_case_harness.TestCaseHarness)
 	}
 
 	if test_case.ReceivedResponse.FindHeader("Content-Length") != fmt.Sprintf("%d", len(test_case.ReceivedResponse.Body)) {
-		return fmt.Errorf("Content-Length header does not match the length of the body")
+		return fmt.Errorf("Content-Length header (%v bytes) does not match the length of the body (%d bytes)", test_case.ReceivedResponse.FindHeader("Content-Length"), len(test_case.ReceivedResponse.Body))
 	}
 	logger.Successf("✓ Content-Length header is present")
 
@@ -53,7 +53,7 @@ func testRespondWithEncodedData(stageHarness *test_case_harness.TestCaseHarness)
 	}
 	logger.Successf("✓ Body is gzip encoded")
 
-	if decodedString != content {
+	if string(decodedString) != content {
 		return fmt.Errorf("Expected %s, got %s", content, decodedString)
 	}
 	logger.Successf("✓ Body is correct")
