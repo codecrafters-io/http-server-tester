@@ -39,7 +39,7 @@ func (t *SendRequestTestCase) Run(stageHarness *test_case_harness.TestCaseHarnes
 
 	response, err := conn.ReadResponse()
 	if err != nil {
-		return fmt.Errorf("Failed to read response: %v", err)
+		return fmt.Errorf("Failed to read response: \n%v", err)
 	}
 	t.ReceivedResponse = response
 
@@ -62,7 +62,7 @@ func (t *SendRequestTestCase) RunWithConn(conn *http_connection.HttpConnection, 
 
 	response, err := conn.ReadResponse()
 	if err != nil {
-		return fmt.Errorf("Failed to read response: %v", err)
+		return fmt.Errorf("Failed to read response: \n%v", err)
 	}
 	t.ReceivedResponse = response
 

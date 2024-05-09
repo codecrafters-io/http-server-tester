@@ -41,6 +41,9 @@ func testRespondWithEncodedData(stageHarness *test_case_harness.TestCaseHarness)
 		return err
 	}
 
+	if test_case.ReceivedResponse.FindHeader("Content-Length") == "" {
+		return fmt.Errorf("Expected %q header to be present", "Content-Length")
+	}
 	if test_case.ReceivedResponse.FindHeader("Content-Length") != fmt.Sprintf("%d", len(test_case.ReceivedResponse.Body)) {
 		return fmt.Errorf("Content-Length header (%v bytes) does not match the length of the body (%d bytes)", test_case.ReceivedResponse.FindHeader("Content-Length"), len(test_case.ReceivedResponse.Body))
 	}
