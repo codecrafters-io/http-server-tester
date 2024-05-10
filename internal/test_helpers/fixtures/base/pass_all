@@ -3,7 +3,7 @@ Debug = true
 [33m[stage-8] [0m[94mRunning tests for Stage #8: post-file[0m
 [33m[stage-8] [0m[36mRunning program[0m
 [33m[stage-8] [0m[94m$ ./your_server.sh --directory /tmp/data/codecrafters.io/http-server-tester/[0m
-[33m[stage-8] [0m[36mConnected to localhost (127.0.0.1) port 4221[0m
+[33m[stage-8] [0m[36mConnected to localhost port 4221[0m
 [33m[stage-8] [0m[94m$ curl -v -X POST http://localhost:4221/files/pear_orange_raspberry_mango -H "Content-Length: 52" -d 'pear banana blueberry banana pear orange grape grape'[0m
 [33m[stage-8] [0m[36m> POST /files/pear_orange_raspberry_mango HTTP/1.1[0m
 [33m[stage-8] [0m[36m> Host: localhost:4221[0m
@@ -28,7 +28,7 @@ Debug = true
 [33m[stage-7] [0m[94mTesting existing file[0m
 [33m[stage-7] [0m[36mCreating file apple_apple_banana_mango in /tmp/data/codecrafters.io/http-server-tester/[0m
 [33m[stage-7] [0m[36mFile Content: "grape banana mango apple pear banana pineapple raspberry"[0m
-[33m[stage-7] [0m[36mConnected to localhost (127.0.0.1) port 4221[0m
+[33m[stage-7] [0m[36mConnected to localhost port 4221[0m
 [33m[stage-7] [0m[94m$ curl -v -X GET http://localhost:4221/files/apple_apple_banana_mango[0m
 [33m[stage-7] [0m[36m> GET /files/apple_apple_banana_mango HTTP/1.1[0m
 [33m[stage-7] [0m[36m> Host: localhost:4221[0m
@@ -47,7 +47,7 @@ Debug = true
 [33m[stage-7] [0m[92m✓ Body is correct[0m
 [33m[stage-7] [0m[92mFirst test passed.[0m
 [33m[stage-7] [0m[94mTesting non existent file returns 404[0m
-[33m[stage-7] [0m[36mConnected to localhost (127.0.0.1) port 4221[0m
+[33m[stage-7] [0m[36mConnected to localhost port 4221[0m
 [33m[stage-7] [0m[94m$ curl -v -X GET http://localhost:4221/files/non-existentapple_apple_mango_banana[0m
 [33m[stage-7] [0m[36m> GET /files/non-existentapple_apple_mango_banana HTTP/1.1[0m
 [33m[stage-7] [0m[36m> Host: localhost:4221[0m
@@ -105,7 +105,7 @@ Debug = true
 [33m[stage-5] [0m[94mRunning tests for Stage #5: parse-headers[0m
 [33m[stage-5] [0m[36mRunning program[0m
 [33m[stage-5] [0m[94m$ ./your_server.sh[0m
-[33m[stage-5] [0m[36mConnected to localhost (127.0.0.1) port 4221[0m
+[33m[stage-5] [0m[36mConnected to localhost port 4221[0m
 [33m[stage-5] [0m[94m$ curl -v -X GET http://localhost:4221/user-agent -H "User-Agent: blueberry/mango"[0m
 [33m[stage-5] [0m[36m> GET /user-agent HTTP/1.1[0m
 [33m[stage-5] [0m[36m> Host: localhost:4221[0m
@@ -130,7 +130,7 @@ Debug = true
 [33m[stage-4] [0m[94mRunning tests for Stage #4: respond-with-content[0m
 [33m[stage-4] [0m[36mRunning program[0m
 [33m[stage-4] [0m[94m$ ./your_server.sh[0m
-[33m[stage-4] [0m[36mConnected to localhost (127.0.0.1) port 4221[0m
+[33m[stage-4] [0m[36mConnected to localhost port 4221[0m
 [33m[stage-4] [0m[94m$ curl -v -X GET http://localhost:4221/echo/banana[0m
 [33m[stage-4] [0m[36m> GET /echo/banana HTTP/1.1[0m
 [33m[stage-4] [0m[36m> Host: localhost:4221[0m
@@ -154,7 +154,7 @@ Debug = true
 [33m[stage-3] [0m[94mRunning tests for Stage #3: respond-with-404[0m
 [33m[stage-3] [0m[36mRunning program[0m
 [33m[stage-3] [0m[94m$ ./your_server.sh[0m
-[33m[stage-3] [0m[36mConnected to localhost (127.0.0.1) port 4221[0m
+[33m[stage-3] [0m[36mConnected to localhost port 4221[0m
 [33m[stage-3] [0m[94m$ curl -v -X GET http://localhost:4221/pear[0m
 [33m[stage-3] [0m[36m> GET /pear HTTP/1.1[0m
 [33m[stage-3] [0m[36m> Host: localhost:4221[0m
@@ -171,7 +171,7 @@ Debug = true
 [33m[stage-2] [0m[94mRunning tests for Stage #2: respond-with-200[0m
 [33m[stage-2] [0m[36mRunning program[0m
 [33m[stage-2] [0m[94m$ ./your_server.sh[0m
-[33m[stage-2] [0m[36mConnected to localhost (127.0.0.1) port 4221[0m
+[33m[stage-2] [0m[36mConnected to localhost port 4221[0m
 [33m[stage-2] [0m[94m$ curl -v -X GET http://localhost:4221/[0m
 [33m[stage-2] [0m[36m> GET / HTTP/1.1[0m
 [33m[stage-2] [0m[36m> Host: localhost:4221[0m
