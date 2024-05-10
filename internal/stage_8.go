@@ -2,6 +2,7 @@ package internal
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -29,6 +30,7 @@ func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
 	fileContent := randomFileContent()
 
 	request, err := http.NewRequest("POST", URL+"files/"+fileName, bytes.NewBufferString(fileContent))
+	request.Header.Add("Content-Length", fmt.Sprint(len(fileContent)))
 	if err != nil {
 		return err
 	}

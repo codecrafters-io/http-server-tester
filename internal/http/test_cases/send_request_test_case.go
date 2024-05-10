@@ -30,7 +30,9 @@ func (t *SendRequestTestCase) Run(stageHarness *test_case_harness.TestCaseHarnes
 
 	addr := strings.Split(address, ":")
 	host, port := addr[0], addr[1]
-	logger.Debugln(fmt.Sprintf("Connected to %s port %s", host, port))
+	remoteAddr := strings.Split(conn.Conn.RemoteAddr().String(), ":")
+	ip := remoteAddr[0]
+	logger.Debugln(fmt.Sprintf("Connected to %s (%s) port %s", host, ip, port))
 
 	err = conn.SendRequest(t.Request)
 	if err != nil {
