@@ -17,57 +17,57 @@ var testerDefinition = tester_definition.TesterDefinition{
 	ExecutableFileName: "your_server.sh",
 	TestCases: []tester_definition.TestCase{
 		{
-			Slug:     "connect-to-port",
+			Slug:     "at4",
 			TestFunc: testConnects,
 			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:     "respond-with-200",
+			Slug:     "ia4",
 			TestFunc: test200OK,
 			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:     "respond-with-404",
+			Slug:     "ih0",
 			TestFunc: test404NotFound,
 			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:     "respond-with-content",
+			Slug:     "cn2",
 			TestFunc: testRespondWithContent,
 			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:     "parse-headers",
+			Slug:     "fs3",
 			TestFunc: testRespondWithUserAgent,
 			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:     "concurrent-connections",
+			Slug:     "ej5",
 			TestFunc: testHandlesMultipleConcurrentConnections,
 			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:     "get-file",
+			Slug:     "ap6",
 			TestFunc: testGetFile,
 			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:     "post-file",
+			Slug:     "qv8",
 			TestFunc: testPostFile,
 			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:     "compression-content-encoding",
+			Slug:     "df4",
 			TestFunc: testRespondWithContentEncoding,
 			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:     "compression-multiple-schemes",
+			Slug:     "ij8",
 			TestFunc: testRespondWithCorrectContentEncoding,
 			Timeout:  15 * time.Second,
 		},
 		{
-			Slug:     "compression-gzip",
+			Slug:     "cr8",
 			TestFunc: testRespondWithEncodedData,
 			Timeout:  15 * time.Second,
 		},

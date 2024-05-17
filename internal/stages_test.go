@@ -15,21 +15,21 @@ func TestStages(t *testing.T) {
 
 	testCases := map[string]tester_utils_testing.TesterOutputTestCase{
 		"init_failure": {
-			UntilStageSlug:      "connect-to-port",
+			UntilStageSlug:      "at4",
 			CodePath:            "./test_helpers/scenarios/init/failure",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/failure",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"init_timeout": {
-			UntilStageSlug:      "connect-to-port",
+			UntilStageSlug:      "at4",
 			CodePath:            "./test_helpers/scenarios/init/timeout",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/timeout",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"init_success_cheat": {
-			UntilStageSlug:      "connect-to-port",
+			UntilStageSlug:      "at4",
 			CodePath:            "./test_helpers/scenarios/init/success_cheat",
 			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/success_cheat",
@@ -37,21 +37,21 @@ func TestStages(t *testing.T) {
 			SkipAntiCheat:       &falseVar,
 		},
 		"init_success": {
-			UntilStageSlug:      "connect-to-port",
+			UntilStageSlug:      "at4",
 			CodePath:            "./test_helpers/scenarios/init/success",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/init/success",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"pass_all": {
-			UntilStageSlug:      "post-file",
+			UntilStageSlug:      "qv8",
 			CodePath:            "./test_helpers/scenarios/pass_all",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/base/pass_all",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"compression_pass_all": {
-			UntilStageSlug:      "compression-gzip",
+			UntilStageSlug:      "cr8",
 			CodePath:            "./test_helpers/scenarios/pass_all",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/compression/pass_all",

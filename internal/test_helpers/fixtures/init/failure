@@ -1,4 +1,4 @@
-[33m[stage-1] [0m[94mRunning tests for Stage #1: connect-to-port[0m
+[33m[stage-1] [0m[94mRunning tests for Stage #1: at4[0m
 [33m[stage-1] [0m[94m$ ./your_server.sh[0m
 [33m[stage-1] [0m[94mConnecting to localhost:4221 using TCP[0m
 [33m[your_program] [0mhey, i exit immediately!
