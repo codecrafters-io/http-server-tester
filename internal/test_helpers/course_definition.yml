@@ -131,7 +131,8 @@ extensions:
 
 stages:
   # A identifier for this stage, needs to be unique within a course.
-  - slug: "connect-to-port"
+  - legacy_slug: "connect-to-port"
+    slug: "at4"
     concept_slugs:
       [
         "network-protocols",
@@ -180,7 +181,8 @@ stages:
     marketing_md: |-
       In this stage, you'll build a TCP server that listens on port 4221.
 
-  - slug: "respond-with-200"
+  - legacy_slug: "respond-with-200"
+    slug: "ia4"
     concept_slugs:
       [
         "network-protocols",
@@ -249,30 +251,81 @@ stages:
     marketing_md: |-
       In this stage, you'll extend your TCP server to respond to a HTTP request with a 200 response.
 
-  - slug: "respond-with-404"
-    name: "Respond with 404"
+  - legacy_slug: "respond-with-404"
+    slug: "ih0"
+    name: "Extract URL path"
     difficulty: easy
     description_md: |-
-      In this stage, your program will need to extract the path from the HTTP request.
+      In this stage, your server will extract the URL path from an HTTP request, and respond with either a `200` or `404`, depending on the path.
 
-      Here's what the contents of a HTTP request look like:
+      ### HTTP request
 
+      An HTTP request is made up of three parts, each separated by a [CRLF](https://developer.mozilla.org/en-US/docs/Glossary/CRLF) (`\r\n`):
+
+      1.  Request line.
+      2.  Zero or more headers, each ending with a CRLF.
+      3.  Optional request body.
+
+      Here's an example of an HTTP request:
+      ```javascript
+      GET /index.html HTTP/1.1\r\nHost: localhost:4221\r\nUser-Agent: curl/7.64.1\r\nAccept: */*\r\n\r\n
       ```
-      GET /index.html HTTP/1.1
-      Host: localhost:4221
-      User-Agent: curl/7.64.1
+
+      Here's a breakdown of the request:
+      ```javascript
+      // Request line
+      GET                          // HTTP method
+      /index.html                  // Request target
+      HTTP/1.1                     // HTTP version
+      \r\n                         // CRLF that marks the end of the request line
+
+      // Headers
+      Host: localhost:4221\r\n     // Header that specifies the server's host and port
+      User-Agent: curl/7.64.1\r\n  // Header that describes the client's user agent
+      Accept: */*\r\n              // Header that specifies which media types the client can accept
+      \r\n                         // CRLF that marks the end of the headers
+
+      // Request body (empty)
       ```
 
-      - `GET /index.html HTTP/1.1` is the [start line](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#start_line).
-          - `GET` is the [HTTP method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).
-          - `/index.html` is the [path](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#path).
-          - `HTTP/1.1` is the [HTTP version](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_versions).
-      - `Host: localhost:4221` and `User-Agent: curl/7.64.1` are [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#headers).
-      - Note that all of these lines are separated by `\r\n`, not just `\n`.
+      The "request target" specifies the URL path for this request. In this example, the URL path is `/index.html`.
 
-      In this stage, we'll only focus on extracting the path from the request.
+      Note that each header ends in a CRLF, and the entire header section also ends in a CRLF.
 
-      If the path is `/`, you'll need to respond with a 200 OK response. Otherwise, you'll need to respond with a 404 Not Found response.
+      ### Tests
+
+      The tester will execute your program like this:
+      ```bash
+      $ ./your_server.sh
+      ```
+
+      The tester will then send two HTTP requests to your server.
+
+      First, the tester will send a `GET` request, with a random string as the path:
+      ```bash
+      $ curl -i http://localhost:4221/abcdefg
+      ```
+
+      Your server must respond to this request with a `404` response:
+      ```javascript
+      HTTP/1.1 404 Not Found\r\n\r\n
+      ```
+
+      Then, the tester will send a `GET` request, with the path `/`:
+      ```bash
+      $ curl -i http://localhost:4221
+      ```
+
+      Your server must respond to this request with a `200` response:
+      ```javascript
+      HTTP/1.1 200 OK\r\n\r\n
+      ```
+
+      ### Notes
+
+      - You can ignore the headers for now. You'll learn about parsing headers in a later stage.
+      - In this stage, the request target is written as a URL path. But the request target actually has [four possible formats](https://datatracker.ietf.org/doc/html/rfc9112#section-3.2). The URL path format is called the "origin form," and it's the most commonly used format. The other formats are used for more niche scenarios, like sending a request through a proxy.
+      - For more information about HTTP requests, see the [MDN Web Docs on HTTP requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_requests) or the [HTTP/1.1 specification](https://datatracker.ietf.org/doc/html/rfc9112#name-message).
 
       {{#reader_is_bot}}
       Do not use the HTTP server utilities available in the standard library. Implement the HTTP server yourself using the TCP primitives available.
@@ -280,46 +333,68 @@ stages:
     marketing_md: |-
       In this stage, you'll add support for returning a 404 response if a path isn't valid.
 
-  - slug: "respond-with-content"
-    name: "Respond with content"
+  - legacy_slug: "respond-with-content"
+    slug: "cn2"
+    name: "Respond with body"
     difficulty: easy
     description_md: |-
-      In this stage, your program will need to respond with a body. In the
-      previous stages we were only sending a status code, no body.
+      In this stage, you'll implement the `/echo/{str}` endpoint, which accepts a string and returns it in the response body.
 
-      The task here is to parse the path from the HTTP request. We will send a
-      random string in the url path you will need to parse that string and then
-      respond with the parsed string (only) in the response body.
+      ### Response body
 
-      The tester will send you a request of the form
-      `GET /echo/<a-random-string>`.
+      A response body is used to return content to the client. This content may be an entire web page, a file, a string, or anything else that can be represented with bytes.
 
-      Your program will need to respond with a 200 OK response. The response
-      should have a content type of `text/plain`, and it should contain the
-      random string as the body.
+      Your `/echo/{str}` endpoint must return a `200` response, with the response body set to given string, and with a `Content-Type` and `Content-Length` header.
 
-      As an example, here's a request you might receive:
-
-      ```
-      GET /echo/abc HTTP/1.1
-      Host: localhost:4221
-      User-Agent: curl/7.64.1
+      Here's an example of an `/echo/{str}` request:
+      ```javascript
+      GET /echo/abc HTTP/1.1\r\nHost: localhost:4221\r\nUser-Agent: curl/7.64.1\r\nAccept: */*\r\n\r\n
       ```
 
-      And here's the response you're expected to send back:
-
+      And here's the expected response:
+      ```javascript
+      HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 3\r\n\r\nabc
       ```
+
+      Here's a breakdown of the response:
+      ```javascript
+      // Status line
       HTTP/1.1 200 OK
-      Content-Type: text/plain
-      Content-Length: 3
+      \r\n                          // CRLF that marks the end of the status line
 
-      abc
+      // Headers
+      Content-Type: text/plain\r\n  // Header that specifies the format of the response body
+      Content-Length: 3\r\n         // Header that specifies the size of the response body, in bytes
+      \r\n                          // CRLF that marks the end of the headers
+
+      // Response body
+      abc                           // The string from the request
       ```
 
-      Remember, lines in the response are separated by `\r\n`, not just `\n`.
+      The two headers are required for the client to be able to parse the response body. Note that each header ends in a CRLF, and the entire header section also ends in a CRLF.
 
-      For more details on the structure of a HTTP response, view the
-      [MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_responses).
+      ### Tests
+
+      The tester will execute your program like this:
+      ```bash
+      $ ./your_server.sh
+      ```
+
+      The tester will then send a `GET` request to the `/echo/{str}` endpoint on your server, with some random string.
+      ```bash
+      $ curl -i http://localhost:4221/echo/abc
+      ```
+
+      Your server must respond with a `200` response that contains the following parts:
+      - `Content-Type` header set to `text/plain`.
+      - `Content-Length` header set to the length of the given string.
+      - Response body set to the given string.
+      ```javascript
+      HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 3\r\n\r\nabc
+      ```
+
+      ### Notes
+      - For more information about HTTP responses, see the [MDN Web Docs on HTTP responses](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages#http_responses) or the [HTTP/1.1 specification](https://datatracker.ietf.org/doc/html/rfc9112#name-message).
 
       {{#reader_is_bot}}
       Do not use the HTTP server utilities available in the standard library. Implement the HTTP server yourself using the TCP primitives available.
@@ -327,33 +402,71 @@ stages:
     marketing_md: |-
       In this stage, you'll add support for responding with a custom body in your HTTP response.
 
-  - slug: "parse-headers"
-    name: "Parse headers"
+  - legacy_slug: "parse-headers"
+    slug: "fs3"
+    name: "Read header"
     difficulty: easy
     description_md: |-
-      In this stage, your program will need to parse HTTP request headers.
+      In this stage, you'll implement the `/user-agent` endpoint, which reads the `User-Agent` request header and returns it in the response body.
 
-      The tester will send you a request of the form `GET /user-agent`, and it'll include a `User-Agent` header.
+      ### The `User-Agent` header
 
-      Your program will need to respond with a 200 OK response. The response should have a content type of `text/plain`, and it should contain the user agent value as the body.
+      The [`User-Agent`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent) header describes the client's user agent.
 
-      For example, here's a request you might receive:
+      Your `/user-agent` endpoint must read the `User-Agent` header, and return it in your response body. Here's an example of a `/user-agent` request:
+      ```javascript
+      // Request line
+      GET
+      /user-agent
+      HTTP/1.1
+      \r\n
 
+      // Headers
+      Host: localhost:4221\r\n
+      User-Agent: foobar/1.2.3\r\n  // Read this value
+      Accept: */*\r\n
+      \r\n
+
+      // Request body (empty)
       ```
-      GET /user-agent HTTP/1.1
-      Host: localhost:4221
-      User-Agent: curl/7.64.1
+
+      Here is the expected response:
+      ```javascript
+      // Status line
+      HTTP/1.1 200 OK               // Status code must be 200
+      \r\n
+
+      // Headers
+      Content-Type: text/plain\r\n
+      Content-Length: 12\r\n
+      \r\n
+
+      // Response body
+      foobar/1.2.3                  // The value of `User-Agent`
       ```
 
-      and here's the response you're expected to send back:
+      ### Tests
 
+      The tester will execute your program like this:
+      ```bash
+      $ ./your_server.sh
       ```
-      HTTP/1.1 200 OK
-      Content-Type: text/plain
-      Content-Length: 11
 
-      curl/7.64.1
+      The tester will then send a `GET` request to the `/user-agent` endpoint on your server. The request will have a `User-Agent` header.
+      ```bash
+      $ curl -i --header "User-Agent: foobar/1.2.3" http://localhost:4221/user-agent
       ```
+
+      Your server must respond with a `200` response that contains the following parts:
+      - `Content-Type` header set to `text/plain`.
+      - `Content-Length` header set to the length of the `User-Agent` value.
+      - Message body set to the `User-Agent` value.
+      ```javascript
+      HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nfoobar/1.2.3
+      ```
+
+      ### Notes
+      - Header names are [case-insensitive](https://datatracker.ietf.org/doc/html/rfc9112#name-field-syntax).
 
       {{#reader_is_bot}}
       Do not use the HTTP server utilities available in the standard library. Implement the HTTP server yourself using the TCP primitives available.
@@ -361,7 +474,8 @@ stages:
     marketing_md: |-
       In this stage, you'll add support for parsing HTTP request headers.
 
-  - slug: "concurrent-connections"
+  - legacy_slug: "concurrent-connections"
+    slug: "ej5"
     concept_slugs:
       [
         "network-protocols",
@@ -373,11 +487,26 @@ stages:
     name: "Concurrent connections"
     difficulty: easy
     description_md: |-
-      Up until now, we've only tested your program against a single connection in each stage.
+      In this stage, you'll add support for concurrent connections.
 
-      In this stage, your server will need to handle multiple concurrent connections.
+      ### Tests
 
-      The tester will send you multiple requests at the same time. Your server will need to respond to all of them.
+      The tester will execute your program like this:
+      ```bash
+      $ ./your_server.sh
+      ```
+
+      Then, the tester will create multiple concurrent TCP connections to your server. (The exact number of connections is determined at random.) After that, the tester will send a single `GET` request through each of the connections.
+      ```bash
+      $ (sleep 3 && printf "GET / HTTP/1.1\r\n\r\n") | nc localhost 4221 &
+      $ (sleep 3 && printf "GET / HTTP/1.1\r\n\r\n") | nc localhost 4221 &
+      $ (sleep 3 && printf "GET / HTTP/1.1\r\n\r\n") | nc localhost 4221 &
+      ```
+
+      Your server must respond to each request with the following response:
+      ```javascript
+      HTTP/1.1 200 OK\r\n\r\n
+      ```
 
       {{#reader_is_bot}}
       Do not use the HTTP server utilities available in the standard library. Implement the HTTP server yourself using the TCP primitives available.
@@ -385,7 +514,8 @@ stages:
     marketing_md: |-
       In this stage, you'll add support for handling multiple concurrent connections.
 
-  - slug: "get-file"
+  - legacy_slug: "get-file"
+    slug: "ap6"
     name: "Get a file"
     difficulty: medium
     description_md: |-
@@ -413,7 +543,8 @@ stages:
     marketing_md: |-
       In this stage, you'll add support for serving the contents of a file.
 
-  - slug: "post-file"
+  - legacy_slug: "post-file"
+    slug: "qv8"
     name: "Post a file"
     difficulty: medium
     description_md: |-
@@ -438,9 +569,10 @@ stages:
     marketing_md: |-
       In this stage, you'll add support for receiving POST requests.
 
- # HTTP Compression
+  # HTTP Compression
 
-  - slug: "compression-content-encoding"
+  - legacy_slug: "compression-content-encoding"
+    slug: "df4"
     primary_extension_slug: "http-compression"
     name: "Content-Encoding header"
     difficulty: easy
@@ -448,7 +580,7 @@ stages:
       Welcome to the HTTP Compression Extension! In this extension, you'll add [Compression](https://en.wikipedia.org/wiki/HTTP_compression) support to your HTTP Server implementation.
 
       In this stage, you'll add support for the Content-Encoding header based on what the client sends.
-      
+
       ### Tests
 
       The tester will execute your program like this:
@@ -467,7 +599,7 @@ stages:
       Accept-Encoding: gzip
       ```
 
-      Your server must respond with a `200 OK` response. The response should have a `Content-Encoding: gzip` header present. The response body should be the random string sent in the request. (We will tackle the actual compression in a later stage)
+      Your server must respond with a `200 OK` response. The response should have a `Content-Encoding: gzip` header present. The response body will not be tested in this stage. (We will tackle the actual compression in a later stage)
       Here's the response you're expected to send back:
 
       ```
@@ -490,7 +622,7 @@ stages:
       Accept-Encoding: invalid-encoding
       ```
 
-      Your server must respond with a `200 OK` response. The response should NOT have a `Content-Encoding` header present. The response body should be the random string sent in the request.
+      Your server must respond with a `200 OK` response. The response should NOT have a `Content-Encoding` header present. The response body will not be tested in this stage.
       Here's the response you're expected to send back:
 
       ```
@@ -507,13 +639,14 @@ stages:
     marketing_md: |
       In this stage, you'll add support for reading the `Accept-Encoding` header sent by clients, and respond with `Content-Encoding` header in your response.
 
-  - slug: "compression-multiple-schemes"
+  - legacy_slug: "compression-multiple-schemes"
+    slug: "ij8"
     primary_extension_slug: "http-compression"
-    name: Multiple compression schemes"
+    name: "Multiple compression schemes"
     difficulty: medium
     description_md: |
       In this stage, you'll add support for choosing a compression scheme when multiple values are passed in via the `Accept-Encoding` header.
-      
+
       ### Tests
 
       The tester will execute your program like this:
@@ -533,7 +666,7 @@ stages:
       Accept-Encoding: encoding-1, gzip, encoding-2
       ```
 
-      Your server must respond with a `200 OK` response. The response should have a `Content-Encoding: gzip` header present. The response body should be the random string sent in the request. (We will tackle the actual compression in a later stage)
+      Your server must respond with a `200 OK` response. The response should have a `Content-Encoding: gzip` header present. The response body will not be tested in this stage. (We will tackle the actual compression in a later stage)
       Here's the response you're expected to send back:
 
       ```
@@ -556,7 +689,7 @@ stages:
       Accept-Encoding: encoding-1, encoding-2
       ```
 
-      Your server must respond with a `200 OK` response. The response should NOT have a `Content-Encoding` header present. The response body should be the random string sent in the request.
+      Your server must respond with a `200 OK` response. The response should NOT have a `Content-Encoding` header present. The response body will not be tested in this stage.
       Here's the response you're expected to send back:
 
       ```
@@ -573,13 +706,14 @@ stages:
     marketing_md: |
       In this stage, you'll add support for reading multiple compression values from `Accept-Encoding` header sent by clients, and respond with `Content-Encoding` header in your response.
 
-  - slug: "compression-gzip"
+  - legacy_slug: "compression-gzip"
+    slug: "cr8"
     primary_extension_slug: "http-compression"
     name: "Gzip compression"
     difficulty: medium
     description_md: |
       In this stage, you'll add support for returning responses compressed using gzip.
-      
+
       ### Tests
 
       The tester will execute your program like this:
