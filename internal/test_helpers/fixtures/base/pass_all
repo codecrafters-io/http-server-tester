@@ -29,7 +29,7 @@ Debug = true
 [33m[stage-7] [0m[36mCreating file apple_apple_banana_mango in /tmp/data/codecrafters.io/http-server-tester/[0m
 [33m[stage-7] [0m[36mFile Content: "grape banana mango apple pear banana pineapple raspberry"[0m
 [33m[stage-7] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-7] [0m[94m$ curl -i http://localhost:4221/files/apple_apple_banana_mango[0m
+[33m[stage-7] [0m[94m$ curl -v http://localhost:4221/files/apple_apple_banana_mango[0m
 [33m[stage-7] [0m[36m> GET /files/apple_apple_banana_mango HTTP/1.1[0m
 [33m[stage-7] [0m[36m> Host: localhost:4221[0m
 [33m[stage-7] [0m[36m> [0m
@@ -48,7 +48,7 @@ Debug = true
 [33m[stage-7] [0m[92mFirst test passed.[0m
 [33m[stage-7] [0m[94mTesting non existent file returns 404[0m
 [33m[stage-7] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-7] [0m[94m$ curl -i http://localhost:4221/files/non-existentapple_apple_mango_banana[0m
+[33m[stage-7] [0m[94m$ curl -v http://localhost:4221/files/non-existentapple_apple_mango_banana[0m
 [33m[stage-7] [0m[36m> GET /files/non-existentapple_apple_mango_banana HTTP/1.1[0m
 [33m[stage-7] [0m[36m> Host: localhost:4221[0m
 [33m[stage-7] [0m[36m> [0m
@@ -68,7 +68,7 @@ Debug = true
 [33m[stage-6] [0m[36mCreating connection 1[0m
 [33m[stage-6] [0m[36mCreating connection 2[0m
 [33m[stage-6] [0m[36mCreating connection 3[0m
-[33m[stage-6] [0m[94mclient-1: $ curl -i http://localhost:4221/[0m
+[33m[stage-6] [0m[94mclient-1: $ curl -v http://localhost:4221/[0m
 [33m[stage-6] [0m[36mclient-1: > GET / HTTP/1.1[0m
 [33m[stage-6] [0m[36mclient-1: > Host: localhost:4221[0m
 [33m[stage-6] [0m[36mclient-1: > [0m
@@ -77,7 +77,7 @@ Debug = true
 [33m[stage-6] [0m[36mclient-1: < HTTP/1.1 200 OK[0m
 [33m[stage-6] [0m[36mclient-1: < [0m
 [33m[stage-6] [0m[92mReceived response with 200 status code[0m
-[33m[stage-6] [0m[94mclient-2: $ curl -i http://localhost:4221/[0m
+[33m[stage-6] [0m[94mclient-2: $ curl -v http://localhost:4221/[0m
 [33m[stage-6] [0m[36mclient-2: > GET / HTTP/1.1[0m
 [33m[stage-6] [0m[36mclient-2: > Host: localhost:4221[0m
 [33m[stage-6] [0m[36mclient-2: > [0m
@@ -86,7 +86,7 @@ Debug = true
 [33m[stage-6] [0m[36mclient-2: < HTTP/1.1 200 OK[0m
 [33m[stage-6] [0m[36mclient-2: < [0m
 [33m[stage-6] [0m[92mReceived response with 200 status code[0m
-[33m[stage-6] [0m[94mclient-3: $ curl -i http://localhost:4221/[0m
+[33m[stage-6] [0m[94mclient-3: $ curl -v http://localhost:4221/[0m
 [33m[stage-6] [0m[36mclient-3: > GET / HTTP/1.1[0m
 [33m[stage-6] [0m[36mclient-3: > Host: localhost:4221[0m
 [33m[stage-6] [0m[36mclient-3: > [0m
@@ -106,7 +106,7 @@ Debug = true
 [33m[stage-5] [0m[36mRunning program[0m
 [33m[stage-5] [0m[94m$ ./your_server.sh[0m
 [33m[stage-5] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-5] [0m[94m$ curl -i http://localhost:4221/user-agent -H "User-Agent: blueberry/mango"[0m
+[33m[stage-5] [0m[94m$ curl -v http://localhost:4221/user-agent -H "User-Agent: blueberry/mango"[0m
 [33m[stage-5] [0m[36m> GET /user-agent HTTP/1.1[0m
 [33m[stage-5] [0m[36m> Host: localhost:4221[0m
 [33m[stage-5] [0m[36m> User-Agent: blueberry/mango[0m
@@ -131,7 +131,7 @@ Debug = true
 [33m[stage-4] [0m[36mRunning program[0m
 [33m[stage-4] [0m[94m$ ./your_server.sh[0m
 [33m[stage-4] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-4] [0m[94m$ curl -i http://localhost:4221/echo/banana[0m
+[33m[stage-4] [0m[94m$ curl -v http://localhost:4221/echo/banana[0m
 [33m[stage-4] [0m[36m> GET /echo/banana HTTP/1.1[0m
 [33m[stage-4] [0m[36m> Host: localhost:4221[0m
 [33m[stage-4] [0m[36m> [0m
@@ -155,7 +155,7 @@ Debug = true
 [33m[stage-3] [0m[36mRunning program[0m
 [33m[stage-3] [0m[94m$ ./your_server.sh[0m
 [33m[stage-3] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-3] [0m[94m$ curl -i http://localhost:4221/pear[0m
+[33m[stage-3] [0m[94m$ curl -v http://localhost:4221/pear[0m
 [33m[stage-3] [0m[36m> GET /pear HTTP/1.1[0m
 [33m[stage-3] [0m[36m> Host: localhost:4221[0m
 [33m[stage-3] [0m[36m> [0m
@@ -172,7 +172,7 @@ Debug = true
 [33m[stage-2] [0m[36mRunning program[0m
 [33m[stage-2] [0m[94m$ ./your_server.sh[0m
 [33m[stage-2] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-2] [0m[94m$ curl -i http://localhost:4221/[0m
+[33m[stage-2] [0m[94m$ curl -v http://localhost:4221/[0m
 [33m[stage-2] [0m[36m> GET / HTTP/1.1[0m
 [33m[stage-2] [0m[36m> Host: localhost:4221[0m
 [33m[stage-2] [0m[36m> [0m
