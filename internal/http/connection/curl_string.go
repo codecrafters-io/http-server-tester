@@ -16,10 +16,10 @@ func httpRequestToCurlString(req *http.Request) string {
 	var curlCommand string
 
 	if method == "GET" {
-		curlCommand = fmt.Sprintf("curl -i %s%s%s",
+		curlCommand = fmt.Sprintf("curl -v %s%s%s",
 			req.URL.String(), formatHeaders(req.Header), formatBody(req))
 	} else {
-		curlCommand = fmt.Sprintf("curl -i -X %s %s%s%s",
+		curlCommand = fmt.Sprintf("curl -v -X %s %s%s%s",
 			method, req.URL.String(), formatHeaders(req.Header), formatBody(req))
 	}
 

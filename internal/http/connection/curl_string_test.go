@@ -21,7 +21,7 @@ func TestCurlCommandGeneration(t *testing.T) {
 			url:        "https://example.com",
 			headers:    map[string]string{"Header1": "Value1", "Header2": "Value2"},
 			body:       "",
-			curlOutput: "curl -i https://example.com -H \"Header1: Value1\" -H \"Header2: Value2\"",
+			curlOutput: "curl -v https://example.com -H \"Header1: Value1\" -H \"Header2: Value2\"",
 		},
 		{
 			name:       "POST request with body and headers",
@@ -29,7 +29,7 @@ func TestCurlCommandGeneration(t *testing.T) {
 			url:        "https://example.com",
 			headers:    map[string]string{"Content-Type": "application/json", "Authorization": "Bearer Token"},
 			body:       `{"key": "value"}`,
-			curlOutput: "curl -i -X POST https://example.com -H \"Authorization: Bearer Token\" -H \"Content-Type: application/json\" -d '{\"key\": \"value\"}'",
+			curlOutput: "curl -v -X POST https://example.com -H \"Authorization: Bearer Token\" -H \"Content-Type: application/json\" -d '{\"key\": \"value\"}'",
 		},
 		{
 			name:       "Empty body",
@@ -37,7 +37,7 @@ func TestCurlCommandGeneration(t *testing.T) {
 			url:        "https://example.com/resource",
 			headers:    map[string]string{"Content-Type": "text/plain"},
 			body:       "",
-			curlOutput: "curl -i -X PUT https://example.com/resource -H \"Content-Type: text/plain\"",
+			curlOutput: "curl -v -X PUT https://example.com/resource -H \"Content-Type: text/plain\"",
 		},
 		{
 			name:       "No headers",
@@ -45,7 +45,7 @@ func TestCurlCommandGeneration(t *testing.T) {
 			url:        "https://example.com/item",
 			headers:    map[string]string{},
 			body:       "request body",
-			curlOutput: "curl -i -X DELETE https://example.com/item -d 'request body'",
+			curlOutput: "curl -v -X DELETE https://example.com/item -d 'request body'",
 		},
 	}
 

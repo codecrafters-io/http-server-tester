@@ -4,7 +4,7 @@ Debug = true
 [33m[stage-8] [0m[36mRunning program[0m
 [33m[stage-8] [0m[94m$ ./your_server.sh --directory /tmp/data/codecrafters.io/http-server-tester/[0m
 [33m[stage-8] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-8] [0m[94m$ curl -i -X POST http://localhost:4221/files/pear_orange_raspberry_mango -H "Content-Length: 52" -d 'pear banana blueberry banana pear orange grape grape'[0m
+[33m[stage-8] [0m[94m$ curl -v -X POST http://localhost:4221/files/pear_orange_raspberry_mango -H "Content-Length: 52" -d 'pear banana blueberry banana pear orange grape grape'[0m
 [33m[stage-8] [0m[36m> POST /files/pear_orange_raspberry_mango HTTP/1.1[0m
 [33m[stage-8] [0m[36m> Host: localhost:4221[0m
 [33m[stage-8] [0m[36m> Content-Length: 52[0m
