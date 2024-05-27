@@ -12,8 +12,16 @@ import (
 )
 
 func httpRequestToCurlString(req *http.Request) string {
-	curlCommand := fmt.Sprintf("curl -v -X %s %s%s%s",
-		req.Method, req.URL.String(), formatHeaders(req.Header), formatBody(req))
+	method := req.Method
+	var curlCommand string
+
+	if method == "GET" {
+		curlCommand = fmt.Sprintf("curl -v %s%s%s",
+			req.URL.String(), formatHeaders(req.Header), formatBody(req))
+	} else {
+		curlCommand = fmt.Sprintf("curl -v -X %s %s%s%s",
+			method, req.URL.String(), formatHeaders(req.Header), formatBody(req))
+	}
 
 	return curlCommand
 }

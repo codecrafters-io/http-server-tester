@@ -21,7 +21,7 @@ func TestCurlCommandGeneration(t *testing.T) {
 			url:        "https://example.com",
 			headers:    map[string]string{"Header1": "Value1", "Header2": "Value2"},
 			body:       "",
-			curlOutput: "curl -v -X GET https://example.com -H \"Header1: Value1\" -H \"Header2: Value2\"",
+			curlOutput: "curl -v https://example.com -H \"Header1: Value1\" -H \"Header2: Value2\"",
 		},
 		{
 			name:       "POST request with body and headers",
