@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/codecrafters-io/http-server-tester/internal/http/inspectable_byte_string"
+	"github.com/codecrafters-io/tester-utils/inspectable_byte_string"
 )
 
 type IncompleteHTTPResponseError struct {
