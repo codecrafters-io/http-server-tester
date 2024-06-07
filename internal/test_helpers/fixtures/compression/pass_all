@@ -10,7 +10,7 @@ Debug = true
 [33m[stage-11] [0m[36m> Accept-Encoding: gzip[0m
 [33m[stage-11] [0m[36m> [0m
 [33m[stage-11] [0m[36mSent bytes: "GET /echo/pear HTTP/1.1\r\nHost: localhost:4221\r\nAccept-Encoding: gzip\r\n\r\n"[0m
-[33m[stage-11] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 24\r\n\r\n\x1f\x8b\b\x00&\xb6Tf\x02\xff+HM,\x02\x00\xbd<\x8a\xc6\x04\x00\x00\x00"[0m
+[33m[stage-11] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 24\r\n\r\n\x1f\x8b\b\x00ҫbf\x02\xff+HM,\x02\x00\xbd<\x8a\xc6\x04\x00\x00\x00"[0m
 [33m[stage-11] [0m[36m< HTTP/1.1 200 OK[0m
 [33m[stage-11] [0m[36m< Content-Encoding: gzip[0m
 [33m[stage-11] [0m[36m< Content-Length: 24[0m
@@ -36,7 +36,7 @@ Debug = true
 [33m[stage-10] [0m[36m> Accept-Encoding: encoding-1, gzip, encoding-2[0m
 [33m[stage-10] [0m[36m> [0m
 [33m[stage-10] [0m[36mSent bytes: "GET /echo/orange HTTP/1.1\r\nHost: localhost:4221\r\nAccept-Encoding: encoding-1, gzip, encoding-2\r\n\r\n"[0m
-[33m[stage-10] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 26\r\n\r\n\x1f\x8b\b\x00&\xb6Tf\x02\xff\xcb/J\xccKO\x05\x00x\xb1\xc5\x1d\x06\x00\x00\x00"[0m
+[33m[stage-10] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 26\r\n\r\n\x1f\x8b\b\x00ҫbf\x02\xff\xcb/J\xccKO\x05\x00x\xb1\xc5\x1d\x06\x00\x00\x00"[0m
 [33m[stage-10] [0m[36m< HTTP/1.1 200 OK[0m
 [33m[stage-10] [0m[36m< Content-Encoding: gzip[0m
 [33m[stage-10] [0m[36m< Content-Length: 26[0m
@@ -76,7 +76,7 @@ Debug = true
 [33m[stage-9] [0m[36m> Accept-Encoding: gzip[0m
 [33m[stage-9] [0m[36m> [0m
 [33m[stage-9] [0m[36mSent bytes: "GET /echo/raspberry HTTP/1.1\r\nHost: localhost:4221\r\nAccept-Encoding: gzip\r\n\r\n"[0m
-[33m[stage-9] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 29\r\n\r\n\x1f\x8b\b\x00&\xb6Tf\x02\xff+J,.HJ-*\xaa\x04\x00a\xd5\x10~\t\x00\x00\x00"[0m
+[33m[stage-9] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 29\r\n\r\n\x1f\x8b\b\x00ҫbf\x02\xff+J,.HJ-*\xaa\x04\x00a\xd5\x10~\t\x00\x00\x00"[0m
 [33m[stage-9] [0m[36m< HTTP/1.1 200 OK[0m
 [33m[stage-9] [0m[36m< Content-Encoding: gzip[0m
 [33m[stage-9] [0m[36m< Content-Length: 29[0m
@@ -110,14 +110,15 @@ Debug = true
 [33m[stage-8] [0m[36mRunning program[0m
 [33m[stage-8] [0m[94m$ ./your_server.sh --directory /tmp/data/codecrafters.io/http-server-tester/[0m
 [33m[stage-8] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-8] [0m[94m$ curl -v -X POST http://localhost:4221/files/mango_pear_banana_blueberry -H "Content-Length: 49" -d 'banana pear orange grape grape apple apple banana'[0m
+[33m[stage-8] [0m[94m$ curl -v -X POST http://localhost:4221/files/mango_pear_banana_blueberry -H "Content-Length: 49" -H "Content-Type: application/octet-stream" -d 'banana pear orange grape grape apple apple banana'[0m
 [33m[stage-8] [0m[36m> POST /files/mango_pear_banana_blueberry HTTP/1.1[0m
 [33m[stage-8] [0m[36m> Host: localhost:4221[0m
 [33m[stage-8] [0m[36m> Content-Length: 49[0m
+[33m[stage-8] [0m[36m> Content-Type: application/octet-stream[0m
 [33m[stage-8] [0m[36m> [0m
 [33m[stage-8] [0m[36m> banana pear orange grape grape apple apple banana[0m
 [33m[stage-8] [0m[36m> [0m
-[33m[stage-8] [0m[36mSent bytes: "POST /files/mango_pear_banana_blueberry HTTP/1.1\r\nHost: localhost:4221\r\nContent-Length: 49\r\n\r\nbanana pear orange grape grape apple apple banana"[0m
+[33m[stage-8] [0m[36mSent bytes: "POST /files/mango_pear_banana_blueberry HTTP/1.1\r\nHost: localhost:4221\r\nContent-Length: 49\r\nContent-Type: application/octet-stream\r\n\r\nbanana pear orange grape grape apple apple banana"[0m
 [33m[stage-8] [0m[36mReceived bytes: "HTTP/1.1 201 Created\r\n\r\n"[0m
 [33m[stage-8] [0m[36m< HTTP/1.1 201 Created[0m
 [33m[stage-8] [0m[36m< [0m
