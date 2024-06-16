@@ -14,7 +14,8 @@ var testerDefinition = tester_definition.TesterDefinition{
 			Timeout:  15 * time.Second,
 		},
 	},
-	ExecutableFileName: "your_server.sh",
+	ExecutableFileName:       "your_program.sh",
+	LegacyExecutableFileName: "your_server.sh",
 	TestCases: []tester_definition.TestCase{
 		{
 			Slug:     "at4",
