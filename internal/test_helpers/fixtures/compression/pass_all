@@ -10,7 +10,7 @@ Debug = true
 [33m[stage-11] [0m[36m> Accept-Encoding: gzip[0m
 [33m[stage-11] [0m[36m> [0m
 [33m[stage-11] [0m[36mSent bytes: "GET /echo/pear HTTP/1.1\r\nHost: localhost:4221\r\nAccept-Encoding: gzip\r\n\r\n"[0m
-[33m[stage-11] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 24\r\n\r\n\x1f\x8b\b\x00\xf6\xf8of\x02\xff+HM,\x02\x00\xbd<\x8a\xc6\x04\x00\x00\x00"[0m
+[33m[stage-11] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 24\r\n\r\n\x1f\x8b\b\x00\xaa\xf0\x8ff\x02\xff+HM,\x02\x00\xbd<\x8a\xc6\x04\x00\x00\x00"[0m
 [33m[stage-11] [0m[36m< HTTP/1.1 200 OK[0m
 [33m[stage-11] [0m[36m< Content-Encoding: gzip[0m
 [33m[stage-11] [0m[36m< Content-Length: 24[0m
@@ -36,7 +36,7 @@ Debug = true
 [33m[stage-10] [0m[36m> Accept-Encoding: encoding-1, gzip, encoding-2[0m
 [33m[stage-10] [0m[36m> [0m
 [33m[stage-10] [0m[36mSent bytes: "GET /echo/orange HTTP/1.1\r\nHost: localhost:4221\r\nAccept-Encoding: encoding-1, gzip, encoding-2\r\n\r\n"[0m
-[33m[stage-10] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 26\r\n\r\n\x1f\x8b\b\x00\xf6\xf8of\x02\xff\xcb/J\xccKO\x05\x00x\xb1\xc5\x1d\x06\x00\x00\x00"[0m
+[33m[stage-10] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 26\r\n\r\n\x1f\x8b\b\x00\xaa\xf0\x8ff\x02\xff\xcb/J\xccKO\x05\x00x\xb1\xc5\x1d\x06\x00\x00\x00"[0m
 [33m[stage-10] [0m[36m< HTTP/1.1 200 OK[0m
 [33m[stage-10] [0m[36m< Content-Encoding: gzip[0m
 [33m[stage-10] [0m[36m< Content-Length: 26[0m
@@ -76,7 +76,7 @@ Debug = true
 [33m[stage-9] [0m[36m> Accept-Encoding: gzip[0m
 [33m[stage-9] [0m[36m> [0m
 [33m[stage-9] [0m[36mSent bytes: "GET /echo/raspberry HTTP/1.1\r\nHost: localhost:4221\r\nAccept-Encoding: gzip\r\n\r\n"[0m
-[33m[stage-9] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 29\r\n\r\n\x1f\x8b\b\x00\xf6\xf8of\x02\xff+J,.HJ-*\xaa\x04\x00a\xd5\x10~\t\x00\x00\x00"[0m
+[33m[stage-9] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: 29\r\n\r\n\x1f\x8b\b\x00\xaa\xf0\x8ff\x02\xff+J,.HJ-*\xaa\x04\x00a\xd5\x10~\t\x00\x00\x00"[0m
 [33m[stage-9] [0m[36m< HTTP/1.1 200 OK[0m
 [33m[stage-9] [0m[36m< Content-Encoding: gzip[0m
 [33m[stage-9] [0m[36m< Content-Length: 29[0m
@@ -175,26 +175,6 @@ Debug = true
 [33m[stage-6] [0m[36mCreating connection 1[0m
 [33m[stage-6] [0m[36mCreating connection 2[0m
 [33m[stage-6] [0m[36mSending first set of requests[0m
-[33m[stage-6] [0m[94mclient-1: $ curl -v http://localhost:4221/[0m
-[33m[stage-6] [0m[36mclient-1: > GET / HTTP/1.1[0m
-[33m[stage-6] [0m[36mclient-1: > Host: localhost:4221[0m
-[33m[stage-6] [0m[36mclient-1: > [0m
-[33m[stage-6] [0m[36mclient-1: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-1: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-1: < HTTP/1.1 200 OK[0m
-[33m[stage-6] [0m[36mclient-1: < [0m
-[33m[stage-6] [0m[92mReceived response with 200 status code[0m
-[33m[stage-6] [0m[36mClosing connection 1[0m
-[33m[stage-6] [0m[94mclient-2: $ curl -v http://localhost:4221/[0m
-[33m[stage-6] [0m[36mclient-2: > GET / HTTP/1.1[0m
-[33m[stage-6] [0m[36mclient-2: > Host: localhost:4221[0m
-[33m[stage-6] [0m[36mclient-2: > [0m
-[33m[stage-6] [0m[36mclient-2: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-2: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-2: < HTTP/1.1 200 OK[0m
-[33m[stage-6] [0m[36mclient-2: < [0m
-[33m[stage-6] [0m[92mReceived response with 200 status code[0m
-[33m[stage-6] [0m[36mClosing connection 2[0m
 [33m[stage-6] [0m[94mCreating 2 parallel connections[0m
 [33m[stage-6] [0m[36mCreating connection 1[0m
 [33m[stage-6] [0m[36mCreating connection 2[0m
