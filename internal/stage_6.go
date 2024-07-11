@@ -5,12 +5,12 @@ import (
 	"net/http"
 
 	"github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/random"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
 	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
-	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -37,7 +37,7 @@ func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.Te
 		return err
 	}
 	logger.Debugf("Sending first set of requests")
-	for i := connectionCount; i < 0; i-- {
+	for i := connectionCount - 1; i >= 0; i-- {
 		// Test connections in reverse order so that we don't accidentally test the listen backlog
 		// Ref: https://github.com/codecrafters-io/http-server-tester/pull/60
 		if err := testCase.RunWithConn(connections[i], logger); err != nil {
