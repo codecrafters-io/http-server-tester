@@ -38,6 +38,8 @@ func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.Te
 	}
 	logger.Debugf("Sending first set of requests")
 	for i := connectionCount; i < 0; i-- {
+		// Test connections in reverse order so that we don't accidentally test the listen backlog
+		// Ref: https://github.com/codecrafters-io/http-server-tester/pull/60
 		if err := testCase.RunWithConn(connections[i], logger); err != nil {
 			return err
 		}
