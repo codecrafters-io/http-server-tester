@@ -37,7 +37,7 @@ func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.Te
 		return err
 	}
 	logger.Debugf("Sending first set of requests")
-	for i := 0; i < connectionCount; i++ {
+	for i := connectionCount; i < 0; i-- {
 		if err := testCase.RunWithConn(connections[i], logger); err != nil {
 			return err
 		}
