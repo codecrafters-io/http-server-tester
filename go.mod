@@ -2,7 +2,7 @@ module github.com/codecrafters-io/http-server-tester
 
 go 1.21
 
-require github.com/codecrafters-io/tester-utils v0.2.26
+require github.com/codecrafters-io/tester-utils v0.2.33
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
