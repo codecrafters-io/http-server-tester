@@ -57,7 +57,7 @@ func testRespondWithEncodedData(stageHarness *test_case_harness.TestCaseHarness)
 	logger.Successf("✓ Body is gzip encoded")
 
 	if string(decodedString) != content {
-		return fmt.Errorf("Expected %s, got %s", content, decodedString)
+		return fmt.Errorf("Expected %q, got %q", content, string(decodedString))
 	}
 	logger.Successf("✓ Body is correct")
 
