@@ -55,7 +55,7 @@ func (a HTTPResponseAssertion) Run(response http_parser.HTTPResponse, logger *lo
 			return fmt.Errorf("Expected body of length %d, got %d", len(a.Body), len(response.Body))
 		}
 		if string(response.Body) != string(a.Body) {
-			return fmt.Errorf("Expected body %s, got %s", a.Body, response.Body)
+			return fmt.Errorf("Expected body %q, got %q", a.Body, response.Body)
 		}
 
 		logger.Successf("✓ Body is correct")
