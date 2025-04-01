@@ -27,7 +27,7 @@ func NewHTTPServerBinary(stageHarness *test_case_harness.TestCaseHarness) *HTTPS
 
 func (b *HTTPServerBinary) Run(args ...string) error {
 	b.logger.Debugf("Running program")
-	if args == nil || len(args) == 0 {
+	if len(args) == 0 {
 		b.logger.Infof("$ ./%s", path.Base(b.executable.Path))
 	} else {
 		b.logger.Infof("$ ./%s %s", path.Base(b.executable.Path), strings.Join(args, " "))
