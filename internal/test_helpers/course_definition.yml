@@ -748,3 +748,5 @@ stages:
 
     marketing_md: |
       In this stage, you'll add support for encoding the response body using `gzip`.
+
+  - slug: "pe1"
