@@ -42,3 +42,37 @@ $ curl -v http://localhost:4221/echo/orange
 $ curl -v http://localhost:4221/user-agent -H "User-Agent: mango/grape-mango"
 $ curl -v http://localhost:4221/files/apple_orange_pineapple_pineapple
 $ curl -v http://localhost:4221/echo/mango -H "Accept-Encoding: gzip"
+
+
+* Host localhost:4221 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:4221...
+* connect to ::1 port 4221 from ::1 port 57240 failed: Connection refused
+*   Trying 127.0.0.1:4221...
+* Connected to localhost (127.0.0.1) port 4221
+> GET /echo/mango HTTP/1.1
+> Host: localhost:4221
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Content-Length: 5
+< Content-Type: text/plain
+< 
+* Connection #0 to host localhost left intact
+mango* Found bundle for host: 0x1297045f0 [serially]
+* Re-using existing connection with host localhost
+> GET /echo/mango HTTP/1.1
+> Host: localhost:4221
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Content-Length: 5
+< Content-Type: text/plain
+< 
+* Connection #0 to host localhost left intact
+mango%

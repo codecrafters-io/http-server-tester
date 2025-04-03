@@ -198,6 +198,13 @@ func getRandomRequestResponsePair(logger *logger.Logger) (*RequestResponsePair, 
 	return requestResponsePair, nil
 }
 
+// GetRandomRequestResponsePairs returns a slice of RequestResponsePairs
+// The RequestResponsePairs can be of the following types:
+// - GET /
+// - GET /echo/{content}
+// - GET /user-agent
+// - GET /files/{filename}
+// Use with Data Directory, and pass --directory flag to the server
 func GetRandomRequestResponsePairs(count int, logger *logger.Logger) ([]*RequestResponsePair, error) {
 	requestResponsePairs := make([]*RequestResponsePair, count)
 	for i := range count {
