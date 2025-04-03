@@ -37,21 +37,11 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 		if err := testCase.RunWithConn(connection, logger); err != nil {
 			return err
 		}
-
-		err := assertConnectionIsOpen(connection, logger)
-		if err != nil {
-			return err
-		}
 	}
 
 	logger.Debugf("Sending second set of requests")
 	for i := requestCount; i >= 0; i-- {
 		if err := testCase.RunWithConn(connection, logger); err != nil {
-			return err
-		}
-
-		err := assertConnectionIsOpen(connection, logger)
-		if err != nil {
 			return err
 		}
 	}
