@@ -1,0 +1,169 @@
+Debug = true
+
+[33m[stage-3] [0m[94mRunning tests for Stage #3: pe1[0m
+[33m[stage-3] [0m[36mRunning program[0m
+[33m[stage-3] [0m[94m$ ./your_server.sh[0m
+[33m[stage-3] [0m[36mCreating connection[0m
+[33m[stage-3] [0m[36mSending first set of requests[0m
+[33m[stage-3] [0m[94m$ curl --http1.1 -v http://localhost:4221/ http://localhost:4221/ [0m
+[33m[stage-3] [0m[36m> GET / HTTP/1.1[0m
+[33m[stage-3] [0m[36m> Host: localhost:4221[0m
+[33m[stage-3] [0m[36m> [0m
+[33m[stage-3] [0m[36mSent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-3] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-3] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-3] [0m[36m< [0m
+[33m[stage-3] [0m[36m* Connection #0 to host localhost left intact[0m
+[33m[stage-3] [0m[92mReceived response with 200 status code[0m
+[33m[stage-3] [0m[36m> GET / HTTP/1.1[0m
+[33m[stage-3] [0m[36m> Host: localhost:4221[0m
+[33m[stage-3] [0m[36m> [0m
+[33m[stage-3] [0m[36mSent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-3] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-3] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-3] [0m[36m< [0m
+[33m[stage-3] [0m[36m* Connection #0 to host localhost left intact[0m
+[33m[stage-3] [0m[92mReceived response with 200 status code[0m
+[33m[stage-3] [0m[36mSending second set of requests[0m
+[33m[stage-3] [0m[94m$ curl --http1.1 -v http://localhost:4221/ http://localhost:4221/ [0m
+[33m[stage-3] [0m[36m> GET / HTTP/1.1[0m
+[33m[stage-3] [0m[36m> Host: localhost:4221[0m
+[33m[stage-3] [0m[36m> [0m
+[33m[stage-3] [0m[36mSent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-3] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-3] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-3] [0m[36m< [0m
+[33m[stage-3] [0m[36m* Connection #0 to host localhost left intact[0m
+[33m[stage-3] [0m[92mReceived response with 200 status code[0m
+[33m[stage-3] [0m[36m> GET / HTTP/1.1[0m
+[33m[stage-3] [0m[36m> Host: localhost:4221[0m
+[33m[stage-3] [0m[36m> [0m
+[33m[stage-3] [0m[36mSent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-3] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-3] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-3] [0m[36m< [0m
+[33m[stage-3] [0m[36m* Connection #0 to host localhost left intact[0m
+[33m[stage-3] [0m[92mReceived response with 200 status code[0m
+[33m[stage-3] [0m[92mTest passed.[0m
+[33m[stage-3] [0m[36mTerminating program[0m
+[33m[stage-3] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-2] [0m[94mRunning tests for Stage #2: pe2[0m
+[33m[stage-2] [0m[36mRunning program[0m
+[33m[stage-2] [0m[94m$ ./your_server.sh[0m
+[33m[stage-2] [0m[36mCreating 2 persistent connections[0m
+[33m[stage-2] [0m[36mSending first set of requests[0m
+[33m[stage-2] [0m[94m$ curl --http1.1 -v http://localhost:4221/ http://localhost:4221/ [0m
+[33m[stage-2] [0m[36mclient-2: > GET / HTTP/1.1[0m
+[33m[stage-2] [0m[36mclient-2: > Host: localhost:4221[0m
+[33m[stage-2] [0m[36mclient-2: > [0m
+[33m[stage-2] [0m[36mclient-2: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-2] [0m[36mclient-2: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-2] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-2] [0m[36m< [0m
+[33m[stage-2] [0m[36m* Connection #2 to host localhost left intact[0m
+[33m[stage-2] [0m[92mReceived response with 200 status code[0m
+[33m[stage-2] [0m[36mclient-2: > GET / HTTP/1.1[0m
+[33m[stage-2] [0m[36mclient-2: > Host: localhost:4221[0m
+[33m[stage-2] [0m[36mclient-2: > [0m
+[33m[stage-2] [0m[36mclient-2: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-2] [0m[36mclient-2: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-2] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-2] [0m[36m< [0m
+[33m[stage-2] [0m[36m* Connection #2 to host localhost left intact[0m
+[33m[stage-2] [0m[92mReceived response with 200 status code[0m
+[33m[stage-2] [0m[36mclient-1: > GET / HTTP/1.1[0m
+[33m[stage-2] [0m[36mclient-1: > Host: localhost:4221[0m
+[33m[stage-2] [0m[36mclient-1: > [0m
+[33m[stage-2] [0m[36mclient-1: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-2] [0m[36mclient-1: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-2] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-2] [0m[36m< [0m
+[33m[stage-2] [0m[36m* Connection #1 to host localhost left intact[0m
+[33m[stage-2] [0m[92mReceived response with 200 status code[0m
+[33m[stage-2] [0m[36mclient-1: > GET / HTTP/1.1[0m
+[33m[stage-2] [0m[36mclient-1: > Host: localhost:4221[0m
+[33m[stage-2] [0m[36mclient-1: > [0m
+[33m[stage-2] [0m[36mclient-1: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-2] [0m[36mclient-1: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-2] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-2] [0m[36m< [0m
+[33m[stage-2] [0m[36m* Connection #1 to host localhost left intact[0m
+[33m[stage-2] [0m[92mReceived response with 200 status code[0m
+[33m[stage-2] [0m[36mSending second set of requests[0m
+[33m[stage-2] [0m[94m$ curl --http1.1 -v http://localhost:4221/ http://localhost:4221/ [0m
+[33m[stage-2] [0m[36mclient-2: > GET / HTTP/1.1[0m
+[33m[stage-2] [0m[36mclient-2: > Host: localhost:4221[0m
+[33m[stage-2] [0m[36mclient-2: > [0m
+[33m[stage-2] [0m[36mclient-2: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-2] [0m[36mclient-2: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-2] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-2] [0m[36m< [0m
+[33m[stage-2] [0m[36m* Connection #2 to host localhost left intact[0m
+[33m[stage-2] [0m[92mReceived response with 200 status code[0m
+[33m[stage-2] [0m[36mclient-2: > GET / HTTP/1.1[0m
+[33m[stage-2] [0m[36mclient-2: > Host: localhost:4221[0m
+[33m[stage-2] [0m[36mclient-2: > [0m
+[33m[stage-2] [0m[36mclient-2: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-2] [0m[36mclient-2: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-2] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-2] [0m[36m< [0m
+[33m[stage-2] [0m[36m* Connection #2 to host localhost left intact[0m
+[33m[stage-2] [0m[92mReceived response with 200 status code[0m
+[33m[stage-2] [0m[36mclient-1: > GET / HTTP/1.1[0m
+[33m[stage-2] [0m[36mclient-1: > Host: localhost:4221[0m
+[33m[stage-2] [0m[36mclient-1: > [0m
+[33m[stage-2] [0m[36mclient-1: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-2] [0m[36mclient-1: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-2] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-2] [0m[36m< [0m
+[33m[stage-2] [0m[36m* Connection #1 to host localhost left intact[0m
+[33m[stage-2] [0m[92mReceived response with 200 status code[0m
+[33m[stage-2] [0m[36mclient-1: > GET / HTTP/1.1[0m
+[33m[stage-2] [0m[36mclient-1: > Host: localhost:4221[0m
+[33m[stage-2] [0m[36mclient-1: > [0m
+[33m[stage-2] [0m[36mclient-1: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[stage-2] [0m[36mclient-1: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[stage-2] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[stage-2] [0m[36m< [0m
+[33m[stage-2] [0m[36m* Connection #1 to host localhost left intact[0m
+[33m[stage-2] [0m[92mReceived response with 200 status code[0m
+[33m[stage-2] [0m[92mTest passed.[0m
+[33m[stage-2] [0m[36mTerminating program[0m
+[33m[stage-2] [0m[36mProgram terminated successfully[0m
+
+[33m[stage-1] [0m[94mRunning tests for Stage #1: pe3[0m
+[33m[stage-1] [0m[36mRunning program[0m
+[33m[stage-1] [0m[94m$ ./your_server.sh[0m
+[33m[stage-1] [0m[94mCreating 2 parallel connections[0m
+[33m[stage-1] [0m[36mCreating connection 1[0m
+[33m[stage-1] [0m[36mCreating connection 2[0m
+[33m[stage-1] [0m[36mSending first set of requests[0m
+[33m[stage-1] [0m[94mclient-1: $ curl -v http://localhost:4221/ -H "Connection: close"[0m
+[33m[stage-1] [0m[36mclient-1: > GET / HTTP/1.1[0m
+[33m[stage-1] [0m[36mclient-1: > Host: localhost:4221[0m
+[33m[stage-1] [0m[36mclient-1: > Connection: close[0m
+[33m[stage-1] [0m[36mclient-1: > [0m
+[33m[stage-1] [0m[36mclient-1: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\nConnection: close\r\n\r\n"[0m
+[33m[stage-1] [0m[36mclient-1: Received bytes: "HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n"[0m
+[33m[stage-1] [0m[36mclient-1: < HTTP/1.1 200 OK[0m
+[33m[stage-1] [0m[36mclient-1: < Connection: close[0m
+[33m[stage-1] [0m[36mclient-1: < [0m
+[33m[stage-1] [0m[92mReceived response with 200 status code[0m
+[33m[stage-1] [0m[92m✓ Connection header is present[0m
+[33m[stage-1] [0m[36mSending second set of requests[0m
+[33m[stage-1] [0m[94mclient-2: $ curl -v http://localhost:4221/ -H "Connection: close"[0m
+[33m[stage-1] [0m[36mclient-2: > GET / HTTP/1.1[0m
+[33m[stage-1] [0m[36mclient-2: > Host: localhost:4221[0m
+[33m[stage-1] [0m[36mclient-2: > Connection: close[0m
+[33m[stage-1] [0m[36mclient-2: > [0m
+[33m[stage-1] [0m[36mclient-2: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\nConnection: close\r\n\r\n"[0m
+[33m[stage-1] [0m[36mclient-2: Received bytes: "HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n"[0m
+[33m[stage-1] [0m[36mclient-2: < HTTP/1.1 200 OK[0m
+[33m[stage-1] [0m[36mclient-2: < Connection: close[0m
+[33m[stage-1] [0m[36mclient-2: < [0m
+[33m[stage-1] [0m[92mReceived response with 200 status code[0m
+[33m[stage-1] [0m[92m✓ Connection header is present[0m
+[33m[stage-1] [0m[92mTest passed.[0m
+[33m[stage-1] [0m[36mTerminating program[0m
+[33m[stage-1] [0m[36mProgram terminated successfully[0m
