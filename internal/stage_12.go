@@ -33,14 +33,14 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger.Debugf("Sending first set of requests")
-	for i := requestCount; i >= 0; i-- {
+	for range requestCount {
 		if err := testCase.RunWithConn(connection, logger); err != nil {
 			return err
 		}
 	}
 
 	logger.Debugf("Sending second set of requests")
-	for i := requestCount; i >= 0; i-- {
+	for range requestCount {
 		if err := testCase.RunWithConn(connection, logger); err != nil {
 			return err
 		}

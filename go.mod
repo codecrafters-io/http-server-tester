@@ -1,6 +1,6 @@
 module github.com/codecrafters-io/http-server-tester
 
-go 1.21
+go 1.22
 
 require github.com/codecrafters-io/tester-utils v0.2.38
 
