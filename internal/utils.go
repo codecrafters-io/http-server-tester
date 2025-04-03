@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -10,6 +11,14 @@ import (
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
+
+func setupDataDirectory() {
+	err := os.MkdirAll(DATA_DIR, 0755)
+	if err != nil {
+		panic(err)
+	}
+	defer os.RemoveAll(DATA_DIR)
+}
 
 func spawnPersistentConnection(stageHarness *test_case_harness.TestCaseHarness, logger *logger.Logger) (*http_connection.HttpConnection, error) {
 	logger.Debugf("Creating connection")

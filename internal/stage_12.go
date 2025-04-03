@@ -11,8 +11,9 @@ import (
 
 // TODO: Add better emulated curl logs
 func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
+	setupDataDirectory()
 	b := NewHTTPServerBinary(stageHarness)
-	if err := b.Run(); err != nil {
+	if err := b.Run("--directory", DATA_DIR); err != nil {
 		return err
 	}
 

@@ -2,7 +2,6 @@ package internal
 
 import (
 	"net/http"
-	"os"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
@@ -11,12 +10,7 @@ import (
 )
 
 func testGetFile(stageHarness *test_case_harness.TestCaseHarness) error {
-	err := os.MkdirAll(DATA_DIR, 0755)
-	if err != nil {
-		panic(err)
-	}
-	defer os.RemoveAll(DATA_DIR)
-
+	setupDataDirectory()
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run("--directory", DATA_DIR); err != nil {
 		return err
