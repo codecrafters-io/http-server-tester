@@ -14,9 +14,7 @@ func testRespondWithContent(stageHarness *test_case_harness.TestCaseHarness) err
 
 	logger := stageHarness.Logger
 
-	content := randomUrlPath()
-
-	requestResponsePair, err := getEchoRequestResponsePair(content)
+	requestResponsePair, err := GetEchoRequestResponsePair()
 	if err != nil {
 		return err
 	}

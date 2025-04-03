@@ -14,8 +14,7 @@ func testRespondWithUserAgent(stageHarness *test_case_harness.TestCaseHarness) e
 
 	logger := stageHarness.Logger
 
-	userAgent := randomUserAgent()
-	requestResponsePair, err := getUserAgentRequestResponsePair(userAgent)
+	requestResponsePair, err := GetUserAgentRequestResponsePair()
 	if err != nil {
 		return err
 	}

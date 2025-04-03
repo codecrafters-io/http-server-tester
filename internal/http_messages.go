@@ -29,7 +29,7 @@ func getBaseURLGetResponse() (*http_parser.HTTPResponse, error) {
 	return &response, nil
 }
 
-func getBaseURLGetRequestResponsePair() (*RequestResponsePair, error) {
+func GetBaseURLGetRequestResponsePair() (*RequestResponsePair, error) {
 	request, err := getBaseURLGetRequest()
 	if err != nil {
 		return nil, err
@@ -77,6 +77,10 @@ func getEchoRequestResponsePair(content string) (*RequestResponsePair, error) {
 	return &RequestResponsePair{Request: request, Response: response}, nil
 }
 
+func GetEchoRequestResponsePair() (*RequestResponsePair, error) {
+	return getEchoRequestResponsePair(randomUrlPath())
+}
+
 // User-Agent: GET /user-agent
 
 func getUserAgentRequest(userAgent string) (*http.Request, error) {
@@ -111,4 +115,8 @@ func getUserAgentRequestResponsePair(userAgent string) (*RequestResponsePair, er
 		return nil, err
 	}
 	return &RequestResponsePair{Request: request, Response: response}, nil
+}
+
+func GetUserAgentRequestResponsePair() (*RequestResponsePair, error) {
+	return getUserAgentRequestResponsePair(randomUserAgent())
 }

@@ -14,7 +14,7 @@ func test200OK(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	requestResponsePair, err := getBaseURLGetRequestResponsePair()
+	requestResponsePair, err := GetBaseURLGetRequestResponsePair()
 	if err != nil {
 		return err
 	}
