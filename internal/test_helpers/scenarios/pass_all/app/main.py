@@ -153,7 +153,7 @@ def handle_connection(connection: socket.socket) -> None:
 
                 match path[1]:
                     case Route.ROOT:
-                        response = Response(headers={"Content-Type": "text/plain"})
+                        response = Response(headers={})
 
                     case Route.ECHO:
                         encodings = request.get_header(ACCEPT_ENCODING_HEADER)
@@ -166,7 +166,7 @@ def handle_connection(connection: socket.socket) -> None:
                                     break
 
                         if headers.get("Content-Encoding") is None:
-                            response = Response(data=path[-1], headers={"Content-Type": "text/plain"})
+                            response = Response(data=path[-1], headers={})
                         else:
                             body = gzip.compress(path[-1].encode())
                             headers["Content-Length"] = str(len(body))
@@ -174,7 +174,7 @@ def handle_connection(connection: socket.socket) -> None:
                             response = Response(bytes_data=body, headers=headers)
 
                     case Route.USER_AGENT:
-                        response = Response(data=request.get_header(USER_AGENT_HEADER), headers={"Content-Type": "text/plain"})
+                        response = Response(data=request.get_header(USER_AGENT_HEADER), headers={})
 
                     case Route.FILES:
                         response = handle_files_route(request, filename=path[-1])
