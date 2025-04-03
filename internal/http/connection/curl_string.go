@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"sort"
 	"strings"
-
-	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 func httpRequestToCurlString(req *http.Request) string {
@@ -29,12 +27,12 @@ func httpRequestToCurlString(req *http.Request) string {
 // There is no pointing in logging single requests with keep-alive expectation
 // We need to log all requests at once then
 func HttpKeepAliveRequestToCurlString(req *http.Request, requestCount int) string {
-	requestsString := ""
+	var requestsBuilder strings.Builder
 	for range requestCount {
-		requestsString += fmt.Sprintf("%s%s%s", req.URL.String(), formatHeaders(req.Header), formatBody(req))
-		requestsString += " "
+		requestsBuilder.WriteString(fmt.Sprintf("%s%s%s ",
+			req.URL.String(), formatHeaders(req.Header), formatBody(req)))
 	}
-	return fmt.Sprintf("curl --http1.1 -v %s", requestsString)
+	return fmt.Sprintf("curl --http1.1 -v %s", requestsBuilder.String())
 }
 
 func formatHeaders(headers http.Header) string {
@@ -80,10 +78,4 @@ func bodyToString(req *http.Request) string {
 
 func escapeSingleQuotes(s string) string {
 	return strings.ReplaceAll(s, "'", `\'`)
-}
-
-func logFriendlyHTTPMessage(logger *logger.Logger, msg string, logPrefix string) {
-	for _, line := range strings.Split(msg, "\r\n") {
-		logger.Debugf("%s %s", logPrefix, line)
-	}
 }
