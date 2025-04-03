@@ -189,3 +189,26 @@ func (c *HttpConnection) EnsureNoUnreadData() error {
 	}
 	return nil
 }
+
+func (c *HttpConnection) IsOpen() bool {
+	// Try to read from the connection with a short timeout
+	c.Conn.SetReadDeadline(time.Now().Add(1 * time.Millisecond))
+	buf := make([]byte, 1)
+	n, err := c.Conn.Read(buf)
+
+	// If we get an error that's not a timeout, the connection is closed
+	if err != nil {
+		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+			// Timeout means connection is still open
+			return true
+		}
+		return false
+	}
+
+	// If we read some data, we don't want to lose it
+	if n > 0 {
+		c.UnreadBuffer.Write(buf[:n])
+	}
+
+	return true
+}

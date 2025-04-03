@@ -26,30 +26,37 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 		ShouldSkipUnreadDataCheck: false,
 	}
 
-	connections, err := repeatSingleConnection(stageHarness, 2, logger)
+	requestCount := 2
+	connection, err := spawnConnection(stageHarness, logger)
 	if err != nil {
 		return err
 	}
 
 	logger.Debugf("Sending first set of requests")
-	for i := len(connections) - 1; i >= 0; i-- {
-		// Test connections in reverse order so that we don't accidentally test the listen backlog
-		// Ref: https://github.com/codecrafters-io/http-server-tester/pull/60
-		if err := testCase.RunWithConn(connections[i], logger); err != nil {
+	for i := requestCount; i >= 0; i-- {
+		if err := testCase.RunWithConn(connection, logger); err != nil {
+			return err
+		}
+
+		err := assertConnectionIsOpen(connection, logger)
+		if err != nil {
 			return err
 		}
 	}
 
 	logger.Debugf("Sending second set of requests")
-	for i := len(connections) - 1; i >= 0; i-- {
-		// Test connections in reverse order so that we don't accidentally test the listen backlog
-		// Ref: https://github.com/codecrafters-io/http-server-tester/pull/60
-		if err := testCase.RunWithConn(connections[i], logger); err != nil {
+	for i := requestCount; i >= 0; i-- {
+		if err := testCase.RunWithConn(connection, logger); err != nil {
+			return err
+		}
+
+		err := assertConnectionIsOpen(connection, logger)
+		if err != nil {
 			return err
 		}
 	}
 
-	err = connections[0].Close()
+	err = connection.Close()
 	if err != nil {
 		logFriendlyError(logger, err)
 		return err
