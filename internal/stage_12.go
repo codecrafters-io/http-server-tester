@@ -1,11 +1,8 @@
 package internal
 
 import (
-	"net/http"
-
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
 	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
-	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -19,12 +16,14 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	request, _ := http.NewRequest("GET", URL, nil)
-	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
-	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine}
+	requestResponsePair, err := GetBaseURLGetRequestResponsePair()
+	if err != nil {
+		return err
+	}
+
 	testCase := test_cases.SendRequestTestCase{
-		Request:                   request,
-		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
+		Request:                   requestResponsePair.Request,
+		Assertion:                 http_assertions.NewHTTPResponseAssertion(*requestResponsePair.Response),
 		ShouldSkipUnreadDataCheck: false,
 	}
 
@@ -37,7 +36,7 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger.Debugf("Sending first set of requests")
-	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(request, requestCount))
+	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(requestResponsePair.Request, requestCount))
 	for range requestCount {
 		if err := testCase.RunWithConn(connection, logger); err != nil {
 			return err
@@ -45,7 +44,7 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger.Debugf("Sending second set of requests")
-	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(request, requestCount))
+	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(requestResponsePair.Request, requestCount))
 	for range requestCount {
 		if err := testCase.RunWithConn(connection, logger); err != nil {
 			return err
