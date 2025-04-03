@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
+	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
 type RequestResponsePair struct {
@@ -119,4 +120,52 @@ func getUserAgentRequestResponsePair(userAgent string) (*RequestResponsePair, er
 
 func GetUserAgentRequestResponsePair() (*RequestResponsePair, error) {
 	return getUserAgentRequestResponsePair(randomUserAgent())
+}
+
+// files: GET /files/{filename}
+
+func getFilesRequest(filename, fileContent string, logger *logger.Logger) (*http.Request, error) {
+	// Prerequisite: create file
+	logger.Infof("Testing existing file")
+	logger.Debugf("Creating file %s in %s", filename, DATA_DIR)
+	logger.Debugf("File Content: %q", fileContent)
+	err := createFileWith(DATA_DIR+filename, fileContent)
+	if err != nil {
+		return nil, fmt.Errorf("Could not create file: %v", err)
+	}
+
+	request, err := http.NewRequest("GET", URL+"files/"+filename, nil)
+	if err != nil {
+		return nil, fmt.Errorf("Could not create request: %v", err)
+	}
+
+	return request, nil
+}
+
+func getFilesResponse(fileContent string) (*http_parser.HTTPResponse, error) {
+	statusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
+
+	header1 := http_parser.Header{Key: "Content-Type", Value: "application/octet-stream"}
+	header2 := http_parser.Header{Key: "Content-Length", Value: fmt.Sprintf("%d", len(fileContent))}
+	headers := []http_parser.Header{header1, header2}
+	body := []byte(fileContent)
+
+	response := http_parser.HTTPResponse{StatusLine: statusLine, Headers: headers, Body: body}
+	return &response, nil
+}
+
+func getFilesRequestResponsePair(filename, fileContent string, logger *logger.Logger) (*RequestResponsePair, error) {
+	request, err := getFilesRequest(filename, fileContent, logger)
+	if err != nil {
+		return nil, err
+	}
+	response, err := getFilesResponse(fileContent)
+	if err != nil {
+		return nil, err
+	}
+	return &RequestResponsePair{Request: request, Response: response}, nil
+}
+
+func GetFilesRequestResponsePair(logger *logger.Logger) (*RequestResponsePair, error) {
+	return getFilesRequestResponsePair(randomFileName(), randomFileContent(), logger)
 }

@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
@@ -25,31 +24,14 @@ func testGetFile(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	fileName := randomFileName()
-	fileContent := randomFileContent()
-
-	logger.Infof("Testing existing file")
-	logger.Debugf("Creating file %s in %s", fileName, DATA_DIR)
-	logger.Debugf("File Content: %q", fileContent)
-	err = createFileWith(DATA_DIR+fileName, fileContent)
+	requestResponsePair, err := GetFilesRequestResponsePair(logger)
 	if err != nil {
 		return err
 	}
-
-	request, err := http.NewRequest("GET", URL+"files/"+fileName, nil)
-	if err != nil {
-		return err
-	}
-	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
-	header1 := http_parser.Header{Key: "Content-Type", Value: "application/octet-stream"}
-	header2 := http_parser.Header{Key: "Content-Length", Value: fmt.Sprintf("%d", len(fileContent))}
-	expectedHeaders := []http_parser.Header{header1, header2}
-	expectedBody := []byte(fileContent)
-	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine, Headers: expectedHeaders, Body: expectedBody}
 
 	test_case := test_cases.SendRequestTestCase{
-		Request:                   request,
-		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
+		Request:                   requestResponsePair.Request,
+		Assertion:                 http_assertions.NewHTTPResponseAssertion(*requestResponsePair.Response),
 		ShouldSkipUnreadDataCheck: false,
 	}
 	if err := test_case.Run(stageHarness, TCP_DEST, logger); err != nil {
@@ -60,12 +42,12 @@ func testGetFile(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger.Infof("Testing non existent file returns 404")
 
 	nonExistentFileName := randomFileNameWithPrefix("non-existent")
-	request, err = http.NewRequest("GET", URL+"files/"+nonExistentFileName, nil)
+	request, err := http.NewRequest("GET", URL+"files/"+nonExistentFileName, nil)
 	if err != nil {
 		return err
 	}
-	expectedStatusLine = http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 404, Reason: "Not Found"}
-	expectedResponse = http_parser.HTTPResponse{StatusLine: expectedStatusLine}
+	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 404, Reason: "Not Found"}
+	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine}
 
 	test_case = test_cases.SendRequestTestCase{
 		Request:                   request,
