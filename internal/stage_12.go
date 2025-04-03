@@ -32,8 +32,7 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger.Debugf("Sending first set of requests")
-	for i := range connections {
-		// TODO: Reverse all loops
+	for i := len(connections) - 1; i >= 0; i-- {
 		// Test connections in reverse order so that we don't accidentally test the listen backlog
 		// Ref: https://github.com/codecrafters-io/http-server-tester/pull/60
 		if err := testCase.RunWithConn(connections[i], logger); err != nil {
@@ -42,7 +41,7 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger.Debugf("Sending second set of requests")
-	for i := range connections {
+	for i := len(connections) - 1; i >= 0; i-- {
 		// Test connections in reverse order so that we don't accidentally test the listen backlog
 		// Ref: https://github.com/codecrafters-io/http-server-tester/pull/60
 		if err := testCase.RunWithConn(connections[i], logger); err != nil {
