@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
+	"os"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
@@ -13,6 +14,7 @@ import (
 
 func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
 	setupDataDirectory()
+	defer os.RemoveAll(DATA_DIR)
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run("--directory", DATA_DIR); err != nil {
 		return err

@@ -2,6 +2,7 @@ package internal
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/codecrafters-io/tester-utils/random"
 
@@ -14,6 +15,7 @@ import (
 
 func testPersistence2(stageHarness *test_case_harness.TestCaseHarness) error {
 	setupDataDirectory()
+	defer os.RemoveAll(DATA_DIR)
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run("--directory", DATA_DIR); err != nil {
 		return err
