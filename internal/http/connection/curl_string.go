@@ -26,6 +26,17 @@ func httpRequestToCurlString(req *http.Request) string {
 	return curlCommand
 }
 
+// There is no pointing in logging single requests with keep-alive expectation
+// We need to log all requests at once then
+func HttpKeepAliveRequestToCurlString(req *http.Request, requestCount int) string {
+	requestsString := ""
+	for range requestCount {
+		requestsString += fmt.Sprintf("%s%s%s", req.URL.String(), formatHeaders(req.Header), formatBody(req))
+		requestsString += " "
+	}
+	return fmt.Sprintf("curl --http1.1 -v %s", requestsString)
+}
+
 func formatHeaders(headers http.Header) string {
 	var formattedHeaders string
 
