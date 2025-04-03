@@ -147,12 +147,15 @@ def handle_connection(connection: socket.socket) -> None:
                 # Check for Connection: close header
                 should_close = request.get_header("Connection").lower() == "close"
 
+                # Initialize response with default headers
+                response = None
+                headers: dict[str, str] = {}
+
                 match path[1]:
                     case Route.ROOT:
-                        response = Response()
+                        response = Response(headers={"Content-Type": "text/plain"})
 
                     case Route.ECHO:
-                        headers: dict[str, str] = {}
                         encodings = request.get_header(ACCEPT_ENCODING_HEADER)
                         if encodings != "":
                             encoding_list = encodings.split(",")
@@ -163,14 +166,15 @@ def handle_connection(connection: socket.socket) -> None:
                                     break
 
                         if headers.get("Content-Encoding") is None:
-                            response = Response(data=path[-1])
+                            response = Response(data=path[-1], headers={"Content-Type": "text/plain"})
                         else:
                             body = gzip.compress(path[-1].encode())
                             headers["Content-Length"] = str(len(body))
+                            headers["Content-Type"] = "text/plain"
                             response = Response(bytes_data=body, headers=headers)
 
                     case Route.USER_AGENT:
-                        response = Response(data=request.get_header(USER_AGENT_HEADER))
+                        response = Response(data=request.get_header(USER_AGENT_HEADER), headers={"Content-Type": "text/plain"})
 
                     case Route.FILES:
                         response = handle_files_route(request, filename=path[-1])
