@@ -144,6 +144,9 @@ def handle_connection(connection: socket.socket) -> None:
                 request = Request(buffer.decode())
                 path = request.path.split("/", 2)
 
+                # Check for Connection: close header
+                should_close = request.get_header("Connection").lower() == "close"
+
                 match path[1]:
                     case Route.ROOT:
                         response = Response()
@@ -175,7 +178,15 @@ def handle_connection(connection: socket.socket) -> None:
                     case _:
                         response = NotFoundResponse()
 
+                # Add Connection: close header if requested
+                if should_close:
+                    response.headers["Connection"] = "close"
+
                 connection.send(bytes(response))
+                
+                # Close connection if Connection: close was requested
+                if should_close:
+                    break
                 
             except socket.timeout:
                 # Connection timed out, break the loop

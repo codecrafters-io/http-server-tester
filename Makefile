@@ -38,5 +38,5 @@ test_persistence: build
 
 test_persistence_pass: build
 	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/scenarios/pass_all \
-	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\": \"pe1\", \"tester_log_prefix\": \"stage-12\", \"title\": \"persistence-1\"}, {\"slug\": \"pe2\", \"tester_log_prefix\": \"stage-13\", \"title\": \"persistence-2\"}]" \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\": \"pe1\", \"tester_log_prefix\": \"stage-12\", \"title\": \"persistence-1\"}, {\"slug\": \"pe2\", \"tester_log_prefix\": \"stage-13\", \"title\": \"persistence-2\"}, {\"slug\": \"pe3\", \"tester_log_prefix\": \"stage-14\", \"title\": \"persistence-3\"}]" \
 	dist/main.out
