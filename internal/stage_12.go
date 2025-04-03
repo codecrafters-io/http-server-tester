@@ -34,8 +34,7 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger.Debugf("Sending first set of requests")
-	curlString := http_connection.HttpKeepAliveRequestToCurlString(request, requestCount)
-	logger.Infof("$ %s", curlString)
+	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(request, requestCount))
 	for range requestCount {
 		if err := testCase.RunWithConn(connection, logger); err != nil {
 			return err
@@ -43,6 +42,7 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger.Debugf("Sending second set of requests")
+	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(request, requestCount))
 	for range requestCount {
 		if err := testCase.RunWithConn(connection, logger); err != nil {
 			return err
