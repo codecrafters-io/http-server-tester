@@ -750,3 +750,5 @@ stages:
       In this stage, you'll add support for encoding the response body using `gzip`.
 
   - slug: "pe1"
+  - slug: "pe2"
+  - slug: "pe3"

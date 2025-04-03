@@ -34,3 +34,11 @@ curl --http1.1 -v http://localhost:4221/ http://localhost:4221/
 < 
 <!DOCTYPE HTML>
 * Connection #0 to host localhost left intact
+
+
+# Endpoints
+$ curl -v http://localhost:4221/
+$ curl -v http://localhost:4221/echo/orange
+$ curl -v http://localhost:4221/user-agent -H "User-Agent: mango/grape-mango"
+$ curl -v http://localhost:4221/files/apple_orange_pineapple_pineapple
+$ curl -v http://localhost:4221/echo/mango -H "Accept-Encoding: gzip"
