@@ -181,7 +181,7 @@ func getRandomRequestResponsePair(logger *logger.Logger) (*RequestResponsePair, 
 		// GetFilesRequestResponsePair, // Expected mismatch in interface
 	}
 
-	randomIndex := random.RandomInt(0, countOfPossibleRequestResponsePairs-1)
+	randomIndex := random.RandomInt(0, countOfPossibleRequestResponsePairs)
 
 	if randomIndex == 3 {
 		requestResponsePair, err := GetFilesRequestResponsePair(logger)
