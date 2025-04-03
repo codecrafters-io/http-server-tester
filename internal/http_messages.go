@@ -77,3 +77,38 @@ func getEchoRequestResponsePair(content string) (*RequestResponsePair, error) {
 	return &RequestResponsePair{Request: request, Response: response}, nil
 }
 
+// User-Agent: GET /user-agent
+
+func getUserAgentRequest(userAgent string) (*http.Request, error) {
+	request, err := http.NewRequest("GET", URL+"user-agent", nil)
+	if err != nil {
+		return nil, fmt.Errorf("Could not create request: %v", err)
+	}
+	request.Header.Set("User-Agent", userAgent)
+
+	return request, nil
+}
+
+func getUserAgentResponse(userAgent string) (*http_parser.HTTPResponse, error) {
+	statusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
+
+	header1 := http_parser.Header{Key: "Content-Type", Value: "text/plain"}
+	header2 := http_parser.Header{Key: "Content-Length", Value: fmt.Sprintf("%d", len(userAgent))}
+	headers := []http_parser.Header{header1, header2}
+	body := []byte(userAgent)
+
+	response := http_parser.HTTPResponse{StatusLine: statusLine, Headers: headers, Body: body}
+	return &response, nil
+}
+
+func getUserAgentRequestResponsePair(userAgent string) (*RequestResponsePair, error) {
+	request, err := getUserAgentRequest(userAgent)
+	if err != nil {
+		return nil, err
+	}
+	response, err := getUserAgentResponse(userAgent)
+	if err != nil {
+		return nil, err
+	}
+	return &RequestResponsePair{Request: request, Response: response}, nil
+}

@@ -1,11 +1,7 @@
 package internal
 
 import (
-	"fmt"
-	"net/http"
-
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
-	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -18,25 +14,15 @@ func testRespondWithUserAgent(stageHarness *test_case_harness.TestCaseHarness) e
 
 	logger := stageHarness.Logger
 
-	url := URL + "user-agent"
 	userAgent := randomUserAgent()
-
-	request, err := http.NewRequest("GET", url, nil)
+	requestResponsePair, err := getUserAgentRequestResponsePair(userAgent)
 	if err != nil {
-		return fmt.Errorf("Could not create request: %v", err)
+		return err
 	}
-	request.Header.Set("User-Agent", userAgent)
-
-	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
-	header1 := http_parser.Header{Key: "Content-Type", Value: "text/plain"}
-	header2 := http_parser.Header{Key: "Content-Length", Value: fmt.Sprintf("%d", len(userAgent))}
-	expectedHeaders := []http_parser.Header{header1, header2}
-	expectedBody := []byte(userAgent)
-	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine, Headers: expectedHeaders, Body: expectedBody}
 
 	test_case := test_cases.SendRequestTestCase{
-		Request:                   request,
-		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
+		Request:                   requestResponsePair.Request,
+		Assertion:                 http_assertions.NewHTTPResponseAssertion(*requestResponsePair.Response),
 		ShouldSkipUnreadDataCheck: false,
 	}
 	return test_case.Run(stageHarness, TCP_DEST, logger)
