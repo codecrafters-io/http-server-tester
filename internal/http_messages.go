@@ -11,6 +11,36 @@ type RequestResponsePair struct {
 	Request  *http.Request
 	Response *http_parser.HTTPResponse
 }
+
+// Base: GET /
+
+func getBaseURLGetRequest() (*http.Request, error) {
+	request, err := http.NewRequest("GET", URL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("Could not create request: %v", err)
+	}
+	return request, nil
+}
+
+func getBaseURLGetResponse() (*http_parser.HTTPResponse, error) {
+	response := http_parser.HTTPResponse{
+		StatusLine: http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"},
+	}
+	return &response, nil
+}
+
+func getBaseURLGetRequestResponsePair() (*RequestResponsePair, error) {
+	request, err := getBaseURLGetRequest()
+	if err != nil {
+		return nil, err
+	}
+	response, err := getBaseURLGetResponse()
+	if err != nil {
+		return nil, err
+	}
+	return &RequestResponsePair{Request: request, Response: response}, nil
+}
+
 // Echo: GET /echo/{content}
 
 func getEchoRequest(content string) (*http.Request, error) {
