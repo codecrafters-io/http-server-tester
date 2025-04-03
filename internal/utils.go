@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"net"
 	"strings"
 
 	"github.com/codecrafters-io/tester-utils/logger"
@@ -25,7 +24,6 @@ func spawnPersistentConnection(stageHarness *test_case_harness.TestCaseHarness, 
 			stageHarness.Logger.Debugf("%s%s", "< ", line)
 		}
 		stageHarness.Logger.Debugf("%s%s", "< ", "")
-		// TODO: Update conn count + host addr
 		stageHarness.Logger.Debugf("* Connection #0 to host localhost left intact")
 	}
 
@@ -56,7 +54,6 @@ func spawnPersistentConnections(stageHarness *test_case_harness.TestCaseHarness,
 				stageHarness.Logger.Debugf("%s%s", "< ", line)
 			}
 			stageHarness.Logger.Debugf("%s%s", "< ", "")
-			// TODO: Update conn count + host addr
 			stageHarness.Logger.Debugf("* Connection #%d to host localhost left intact", i+1)
 		}
 
@@ -80,18 +77,4 @@ func spawnConnections(stageHarness *test_case_harness.TestCaseHarness, connectio
 		connections[i] = conn
 	}
 	return connections, nil
-}
-
-func getConnectionURL(conn net.Conn) string {
-	// Get the remote address (server address)
-	remoteAddr := conn.RemoteAddr().String()
-
-	// Parse the address to get host and port
-	host, port, err := net.SplitHostPort(remoteAddr)
-	if err != nil {
-		return remoteAddr // fallback to full address if parsing fails
-	}
-
-	// Construct URL
-	return fmt.Sprintf("http://%s:%s", host, port)
 }
