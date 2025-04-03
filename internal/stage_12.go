@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"net/http"
+
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
 	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
@@ -16,36 +18,40 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	requestResponsePair, err := GetBaseURLGetRequestResponsePair()
+	uniqueRequestCount := 2
+	requestResponsePairs, err := GetRandomRequestResponsePairs(uniqueRequestCount, logger)
 	if err != nil {
 		return err
 	}
 
-	testCase := test_cases.SendRequestTestCase{
-		Request:                   requestResponsePair.Request,
-		Assertion:                 http_assertions.NewHTTPResponseAssertion(*requestResponsePair.Response),
-		ShouldSkipUnreadDataCheck: false,
+	testCases := make([]test_cases.SendRequestTestCase, uniqueRequestCount)
+	requests := make([]*http.Request, uniqueRequestCount)
+
+	for i, requestResponsePair := range requestResponsePairs {
+		testCases[i] = test_cases.SendRequestTestCase{
+			Request:                   requestResponsePair.Request,
+			Assertion:                 http_assertions.NewHTTPResponseAssertion(*requestResponsePair.Response),
+			ShouldSkipUnreadDataCheck: false,
+		}
+		requests[i] = requestResponsePair.Request
 	}
 
-	// TODO: We don't want to same the request N times
-	// Need to implement random request generator
-	requestCount := 2
 	connection, err := spawnPersistentConnection(stageHarness, logger)
 	if err != nil {
 		return err
 	}
 
 	logger.Debugf("Sending first set of requests")
-	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(requestResponsePair.Request, requestCount))
-	for range requestCount {
+	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlStringForMultipleRequests(requests))
+	for _, testCase := range testCases {
 		if err := testCase.RunWithConn(connection, logger); err != nil {
 			return err
 		}
 	}
 
 	logger.Debugf("Sending second set of requests")
-	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(requestResponsePair.Request, requestCount))
-	for range requestCount {
+	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlStringForMultipleRequests(requests))
+	for _, testCase := range testCases {
 		if err := testCase.RunWithConn(connection, logger); err != nil {
 			return err
 		}
