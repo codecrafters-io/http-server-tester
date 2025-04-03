@@ -6,6 +6,7 @@ import (
 
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/random"
 )
 
 type RequestResponsePair struct {
@@ -168,4 +169,31 @@ func getFilesRequestResponsePair(filename, fileContent string, logger *logger.Lo
 
 func GetFilesRequestResponsePair(logger *logger.Logger) (*RequestResponsePair, error) {
 	return getFilesRequestResponsePair(randomFileName(), randomFileContent(), logger)
+}
+
+func getRandomRequestResponsePair(logger *logger.Logger) (*RequestResponsePair, error) {
+	countOfPossibleRequestResponsePairs := 4
+
+	possibleRequestResponsePairs := []func() (*RequestResponsePair, error){
+		GetBaseURLGetRequestResponsePair,
+		GetEchoRequestResponsePair,
+		GetUserAgentRequestResponsePair,
+		// GetFilesRequestResponsePair, // Expected mismatch in interface
+	}
+
+	randomIndex := random.RandomInt(0, countOfPossibleRequestResponsePairs-1)
+
+	if randomIndex == 3 {
+		requestResponsePair, err := GetFilesRequestResponsePair(logger)
+		if err != nil {
+			return nil, err
+		}
+		return requestResponsePair, nil
+	}
+
+	requestResponsePair, err := possibleRequestResponsePairs[randomIndex]()
+	if err != nil {
+		return nil, err
+	}
+	return requestResponsePair, nil
 }
