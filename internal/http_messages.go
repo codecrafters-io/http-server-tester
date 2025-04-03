@@ -197,3 +197,15 @@ func getRandomRequestResponsePair(logger *logger.Logger) (*RequestResponsePair, 
 	}
 	return requestResponsePair, nil
 }
+
+func GetRandomRequestResponsePairs(count int, logger *logger.Logger) ([]*RequestResponsePair, error) {
+	requestResponsePairs := make([]*RequestResponsePair, count)
+	for i := range count {
+		requestResponsePair, err := getRandomRequestResponsePair(logger)
+		if err != nil {
+			return nil, err
+		}
+		requestResponsePairs[i] = requestResponsePair
+	}
+	return requestResponsePairs, nil
+}
