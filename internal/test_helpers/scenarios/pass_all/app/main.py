@@ -170,7 +170,6 @@ def handle_connection(connection: socket.socket) -> None:
                         else:
                             body = gzip.compress(path[-1].encode())
                             headers["Content-Length"] = str(len(body))
-                            headers["Content-Type"] = "text/plain"
                             response = Response(bytes_data=body, headers=headers)
 
                     case Route.USER_AGENT:
