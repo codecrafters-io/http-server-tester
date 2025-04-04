@@ -48,7 +48,7 @@ func testPersistence2(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger.Debugf("Sending first set of requests")
-	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlStringForMultipleRequests(requests))
+	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(requests))
 	for i := connectionCount - 1; i >= 0; i-- {
 		// Test connections in reverse order so that we don't accidentally test the listen backlog
 		// Ref: https://github.com/codecrafters-io/http-server-tester/pull/60
@@ -58,7 +58,7 @@ func testPersistence2(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	logger.Debugf("Sending second set of requests")
-	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlStringForMultipleRequests(requests))
+	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(requests))
 	for i := range connectionCount {
 		if err := testCases[i].RunWithConn(connections[i], logger); err != nil {
 			return err

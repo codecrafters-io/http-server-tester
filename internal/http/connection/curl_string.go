@@ -26,9 +26,9 @@ func httpRequestToCurlString(req *http.Request) string {
 
 // There is no pointing in logging single requests with keep-alive expectation
 // We need to log all requests at once then
-func HttpKeepAliveRequestToCurlString(req *http.Request, requestCount int) string {
+func HttpKeepAliveRequestToCurlString(requests []*http.Request) string {
 	var requestsBuilder strings.Builder
-	for range requestCount {
+	for _, req := range requests {
 		requestsBuilder.WriteString(fmt.Sprintf("%s%s%s ",
 			req.URL.String(), formatHeaders(req.Header), formatBody(req)))
 	}
