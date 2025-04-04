@@ -69,10 +69,6 @@ func TestCurlCommandGeneration(t *testing.T) {
 	}
 }
 
-func stringToReadCloser(s string) *StringReadCloser {
-	return &StringReadCloser{strings.NewReader(s)}
-}
-
 type StringReadCloser struct {
 	*strings.Reader
 }

@@ -167,7 +167,8 @@ func newConn(address string) (net.Conn, error) {
 		}
 
 		// Already a timeout
-		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+		var netErr net.Error
+		if errors.As(err, &netErr) && netErr.Timeout() {
 			return nil, err
 		}
 
@@ -198,7 +199,8 @@ func (c *HttpConnection) IsOpen() bool {
 
 	// If we get an error that's not a timeout, the connection is closed
 	if err != nil {
-		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+		var netErr net.Error
+		if errors.As(err, &netErr) && netErr.Timeout() {
 			// Timeout means connection is still open
 			return true
 		}

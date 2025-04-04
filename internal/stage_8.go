@@ -26,11 +26,11 @@ func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
 	fileContent := randomFileContent()
 
 	request, err := http.NewRequest("POST", URL+"files/"+fileName, bytes.NewBufferString(fileContent))
-	request.Header.Add("Content-Length", fmt.Sprint(len(fileContent)))
-	request.Header.Add("Content-Type", "application/octet-stream")
 	if err != nil {
 		return err
 	}
+	request.Header.Add("Content-Length", fmt.Sprint(len(fileContent)))
+	request.Header.Add("Content-Type", "application/octet-stream")
 	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 201, Reason: "Created"}
 	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine}
 

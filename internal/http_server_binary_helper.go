@@ -4,8 +4,8 @@ import (
 	"path"
 	"strings"
 
-	executable "github.com/codecrafters-io/tester-utils/executable"
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/executable"
+	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 

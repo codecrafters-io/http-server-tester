@@ -54,19 +54,19 @@ func readBytesFromReader(reader *bytes.Reader) []byte {
 	defer reader.Seek(int64(previousOffset), 0)
 
 	reader.Seek(0, 0)
-	bytes := make([]byte, reader.Len())
+	buffer := make([]byte, reader.Len())
 
 	if reader.Len() == 0 {
-		return bytes
+		return buffer
 	}
 
-	n, err := reader.Read(bytes)
+	n, err := reader.Read(buffer)
 	if err != nil {
 		panic(fmt.Sprintf("Error reading from reader: %s", err)) // This should never happen
 	}
-	if n != len(bytes) {
-		panic(fmt.Sprintf("Expected to read %d bytes, but only read %d", len(bytes), n)) // This should never happen
+	if n != len(buffer) {
+		panic(fmt.Sprintf("Expected to read %d bytes, but only read %d", len(buffer), n)) // This should never happen
 	}
 
-	return bytes
+	return buffer
 }

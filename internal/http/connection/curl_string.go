@@ -24,9 +24,9 @@ func httpRequestToCurlString(req *http.Request) string {
 	return curlCommand
 }
 
-// There is no pointing in logging single requests with keep-alive expectation
-// We need to log all requests at once then
 func HttpKeepAliveRequestToCurlString(requests []*http.Request) string {
+	// While sending multiple requests on the same connection,
+	// We need to log all requests at once to properly emulate with curl
 	var requestsBuilder strings.Builder
 	for _, req := range requests {
 		requestsBuilder.WriteString(fmt.Sprintf("%s%s%s ",

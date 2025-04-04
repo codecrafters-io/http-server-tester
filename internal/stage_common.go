@@ -13,7 +13,7 @@ const DATA_DIR = "/tmp/data/codecrafters.io/http-server-tester/"
 const FILENAME_SIZE = 40
 
 func decodeGZIP(encodedString []byte) ([]byte, error) {
-	reader := bytes.NewReader([]byte(encodedString))
+	reader := bytes.NewReader(encodedString)
 	gzipReader, err := gzip.NewReader(reader)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to decompress data: %v", err)

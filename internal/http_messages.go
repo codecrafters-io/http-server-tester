@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/random"
 )
 
