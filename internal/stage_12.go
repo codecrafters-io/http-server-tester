@@ -55,6 +55,7 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger.Debugf("Sending second set of requests")
 	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(requests))
 	for _, testCase := range testCases {
+		logger.Debugf("* Re-using existing connection with host localhost")
 		if err := testCase.RunWithConn(connection, logger); err != nil {
 			return err
 		}

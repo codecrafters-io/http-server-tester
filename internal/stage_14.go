@@ -55,7 +55,7 @@ func testPersistence3(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	logger.Debugf("Sending first set of requests to conn:1")
+	logger.Debugf("Sending first set of requests to connection #0")
 	for i := range uniqueRequestCount {
 		if err := testCases[i].RunWithConn(connections[0], logger); err != nil {
 			return err
@@ -66,7 +66,7 @@ func testPersistence3(stageHarness *test_case_harness.TestCaseHarness) error {
 		return fmt.Errorf("connection is still open")
 	}
 
-	logger.Debugf("Sending second set of requests to conn:2")
+	logger.Debugf("Sending second set of requests to connection #1")
 	for i := range uniqueRequestCount {
 		if err := testCases[i].RunWithConn(connections[1], logger); err != nil {
 			return err
