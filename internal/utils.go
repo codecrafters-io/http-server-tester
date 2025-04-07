@@ -62,7 +62,7 @@ func spawnPersistentConnections(stageHarness *test_case_harness.TestCaseHarness,
 				stageHarness.Logger.Debugf("%s%s", "< ", line)
 			}
 			stageHarness.Logger.Debugf("%s%s", "< ", "")
-			stageHarness.Logger.Debugf("* Connection #%d to host localhost left intact", i+1)
+			stageHarness.Logger.Debugf("* Connection #%d to host localhost left intact", i)
 		}
 
 		connections[i] = conn
