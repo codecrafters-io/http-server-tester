@@ -86,3 +86,15 @@ func spawnConnections(stageHarness *test_case_harness.TestCaseHarness, connectio
 	}
 	return connections, nil
 }
+
+func spawnConnection(stageHarness *test_case_harness.TestCaseHarness, logger *logger.Logger) (*http_connection.HttpConnection, error) {
+	logger.Infof("Creating connection")
+
+	conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "")
+	if err != nil {
+		logFriendlyError(logger, err)
+		return nil, err
+	}
+
+	return conn, nil
+}

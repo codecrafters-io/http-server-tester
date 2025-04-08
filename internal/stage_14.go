@@ -18,9 +18,8 @@ func testPersistence3(stageHarness *test_case_harness.TestCaseHarness) error {
 
 	logger := stageHarness.Logger
 
-	// N connections & N unique requests
-	connectionCount := 2
-	uniqueRequestCount := connectionCount
+	// 1 connections & N unique requests
+	uniqueRequestCount := 2
 
 	requestResponsePairs, err := GetRandomRequestResponsePairs(uniqueRequestCount)
 	if err != nil {
@@ -33,7 +32,8 @@ func testPersistence3(stageHarness *test_case_harness.TestCaseHarness) error {
 	for i, requestResponsePair := range requestResponsePairs {
 		response := *requestResponsePair.Response
 
-		if i == 1 {
+		if i == uniqueRequestCount-1 {
+			// Close connection on the last request
 			// Manually add & assert for the Connection header
 			requestResponsePair.Request.Header.Set("Connection", "close")
 			response.Headers = append(response.Headers, http_parser.Header{Key: "Connection", Value: "close"})
@@ -47,30 +47,21 @@ func testPersistence3(stageHarness *test_case_harness.TestCaseHarness) error {
 		requests[i] = requestResponsePair.Request
 	}
 
-	connections, err := spawnConnections(stageHarness, 2, logger)
+	connection, err := spawnConnection(stageHarness, logger)
 	if err != nil {
 		return err
 	}
 
-	logger.Debugf("Sending first set of requests to connection #0")
 	for i := range uniqueRequestCount {
-		if err := testCases[i].RunWithConn(connections[0], logger); err != nil {
+		if err := testCases[i].RunWithConn(connection, logger); err != nil {
 			return err
 		}
 	}
 
-	if connections[0].IsOpen() {
+	if connection.IsOpen() {
 		return fmt.Errorf("connection is still open")
-	}
-
-	logger.Debugf("Sending second set of requests to connection #1")
-	for i := range uniqueRequestCount {
-		if err := testCases[i].RunWithConn(connections[1], logger); err != nil {
-			return err
-		}
-	}
-	if connections[1].IsOpen() {
-		return fmt.Errorf("connection is still open")
+	} else {
+		logger.Successf("Connection #0 is closed")
 	}
 
 	// Connections should be closed by the time we get here
