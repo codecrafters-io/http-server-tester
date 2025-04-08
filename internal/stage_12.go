@@ -2,7 +2,6 @@ package internal
 
 import (
 	"net/http"
-	"os"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
 	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
@@ -10,7 +9,6 @@ import (
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-// TODO: Add better emulated curl logs
 func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run(); err != nil {
@@ -42,18 +40,11 @@ func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	logger.Debugf("Sending first set of requests")
 	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(requests))
-	for _, testCase := range testCases {
-		if err := testCase.RunWithConn(connection, logger); err != nil {
-			return err
+	for i, testCase := range testCases {
+		if i != 0 {
+			logger.Debugf("* Re-using existing connection with host localhost")
 		}
-	}
-
-	logger.Debugf("Sending second set of requests")
-	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(requests))
-	for _, testCase := range testCases {
-		logger.Debugf("* Re-using existing connection with host localhost")
 		if err := testCase.RunWithConn(connection, logger); err != nil {
 			return err
 		}
