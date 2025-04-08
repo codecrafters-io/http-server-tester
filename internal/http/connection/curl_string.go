@@ -34,7 +34,7 @@ func HttpKeepAliveRequestToCurlString(requests []*http.Request) string {
 		allHeaders[header] = struct{}{}
 	}
 
-	// Atleast 2 seperate unique headers
+	// At least 2 separate unique headers
 	if len(allHeaders) > 1 {
 		shouldAddNext = true
 	}

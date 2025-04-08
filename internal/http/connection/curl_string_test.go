@@ -68,9 +68,3 @@ func TestCurlCommandGeneration(t *testing.T) {
 		})
 	}
 }
-
-type StringReadCloser struct {
-	*strings.Reader
-}
-
-func (src *StringReadCloser) Close() error { return nil }

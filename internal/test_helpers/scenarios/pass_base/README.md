@@ -4,7 +4,7 @@ This is a starting point for Python solutions to the
 ["Build Your Own HTTP server" Challenge](https://app.codecrafters.io/courses/http-server/overview).
 
 [HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) is the
-protocol that powers the web. In this challenge, you'll build a HTTP/1.1 server
+protocol that powers the web. In this challenge, you'll build an HTTP/1.1 server
 that is capable of serving multiple clients.
 
 Along the way you'll learn about TCP servers,

@@ -130,7 +130,7 @@ extensions:
       [http-compression]: https://en.wikipedia.org/wiki/HTTP_compression
 
 stages:
-  # A identifier for this stage, needs to be unique within a course.
+  # An identifier for this stage, needs to be unique within a course.
   - legacy_slug: "connect-to-port"
     slug: "at4"
     concept_slugs:
