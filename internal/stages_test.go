@@ -51,19 +51,24 @@ func TestStages(t *testing.T) {
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"compression_pass_all": {
-			// StageSlugs:          []string{"df4", "cr8", "ij8"},
-			// TODO: Break tests into base, compression, persistence
-			UntilStageSlug:      "cr8",
+			StageSlugs:          []string{"df4", "ij8", "cr8"},
 			CodePath:            "./test_helpers/scenarios/pass_all",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/compression/pass_all",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"persistence_pass_all": {
-			StageSlugs:          []string{"pe1", "pe2", "pe3"},
+			StageSlugs:          []string{"ag9", "ul1", "kh7"},
 			CodePath:            "./test_helpers/scenarios/pass_all",
 			ExpectedExitCode:    0,
 			StdoutFixturePath:   "./test_helpers/fixtures/persistence/pass_all",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"persistence_fail": {
+			StageSlugs:          []string{"ag9"},
+			CodePath:            "./test_helpers/scenarios/pass_base",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/persistence/fail",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 	}
