@@ -11,9 +11,10 @@
 
     # Echo endpoint
     handle /echo/* {
+        uri strip_prefix /echo/
         header Content-Type text/plain
-        header Content-Length {len {http.request.uri.path}}
-        respond {http.request.uri.path} 200
+        header Content-Length {len {path}}
+        respond {path} 200
     }
 
     # User-Agent endpoint
