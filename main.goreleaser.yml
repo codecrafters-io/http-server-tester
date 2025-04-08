@@ -1,8 +1,12 @@
+version: 2
+
 builds:
   - main: ./cmd/tester/main.go
     binary: tester
     env:
       - CGO_ENABLED=0
+    goarch: [amd64, arm64]
+    goos: [linux, darwin]
 
 archives:
   - name_template: "{{ .Tag }}_{{ .Os }}_{{ .Arch }}"

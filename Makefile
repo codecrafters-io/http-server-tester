@@ -42,3 +42,6 @@ test_persistence: build
 	dist/main.out
 
 test_all: test_base test_compression test_persistence
+
+test_release_locally:
+	goreleaser release -f main.goreleaser.yml --clean --snapshot
