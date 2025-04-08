@@ -26,8 +26,10 @@
 
     # Files endpoint
     handle /files/* {
-        file_server /tmp/data/codecrafters.io/http-server-tester/*
-
+        root * /tmp/data/codecrafters.io/http-server-tester
+        uri strip_prefix /files/
+        file_server
+        
         # Handle POST requests
         @post {
             method POST
