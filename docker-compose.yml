@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  caddy:
+    build: .
+    ports:
+      - "4221:4221"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./data:/tmp/data/codecrafters.io/http-server-tester
+    restart: unless-stopped 
