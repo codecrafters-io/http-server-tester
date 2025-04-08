@@ -2,7 +2,6 @@ package internal
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/codecrafters-io/tester-utils/random"
 
@@ -13,10 +12,8 @@ import (
 )
 
 func testPersistence2(stageHarness *test_case_harness.TestCaseHarness) error {
-	setupDataDirectory()
-	defer os.RemoveAll(DATA_DIR)
 	b := NewHTTPServerBinary(stageHarness)
-	if err := b.Run("--directory", DATA_DIR); err != nil {
+	if err := b.Run(); err != nil {
 		return err
 	}
 
@@ -26,7 +23,7 @@ func testPersistence2(stageHarness *test_case_harness.TestCaseHarness) error {
 	connectionCount := random.RandomInt(2, 3)
 	uniqueRequestCount := connectionCount
 
-	requestResponsePairs, err := GetRandomRequestResponsePairs(uniqueRequestCount, logger)
+	requestResponsePairs, err := GetRandomRequestResponsePairs(uniqueRequestCount)
 	if err != nil {
 		return err
 	}

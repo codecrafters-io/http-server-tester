@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"net/http"
-	"os"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
@@ -12,10 +11,8 @@ import (
 )
 
 func testPersistence3(stageHarness *test_case_harness.TestCaseHarness) error {
-	setupDataDirectory()
-	defer os.RemoveAll(DATA_DIR)
 	b := NewHTTPServerBinary(stageHarness)
-	if err := b.Run("--directory", DATA_DIR); err != nil {
+	if err := b.Run(); err != nil {
 		return err
 	}
 
@@ -25,7 +22,7 @@ func testPersistence3(stageHarness *test_case_harness.TestCaseHarness) error {
 	connectionCount := 2
 	uniqueRequestCount := connectionCount
 
-	requestResponsePairs, err := GetRandomRequestResponsePairs(uniqueRequestCount, logger)
+	requestResponsePairs, err := GetRandomRequestResponsePairs(uniqueRequestCount)
 	if err != nil {
 		return err
 	}

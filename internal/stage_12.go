@@ -12,17 +12,15 @@ import (
 
 // TODO: Add better emulated curl logs
 func testPersistence1(stageHarness *test_case_harness.TestCaseHarness) error {
-	setupDataDirectory()
-	defer os.RemoveAll(DATA_DIR)
 	b := NewHTTPServerBinary(stageHarness)
-	if err := b.Run("--directory", DATA_DIR); err != nil {
+	if err := b.Run(); err != nil {
 		return err
 	}
 
 	logger := stageHarness.Logger
 
 	uniqueRequestCount := 2
-	requestResponsePairs, err := GetRandomRequestResponsePairs(uniqueRequestCount, logger)
+	requestResponsePairs, err := GetRandomRequestResponsePairs(uniqueRequestCount)
 	if err != nil {
 		return err
 	}
