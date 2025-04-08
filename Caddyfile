@@ -26,10 +26,8 @@
 
     # Files endpoint
     handle /files/* {
-        root * /tmp/data/codecrafters.io/http-server-tester
-        file_server
-        try_files {path} {path}/
-        
+        file_server /tmp/data/codecrafters.io/http-server-tester/*
+
         # Handle POST requests
         @post {
             method POST
