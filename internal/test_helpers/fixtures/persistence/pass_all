@@ -1,6 +1,6 @@
 Debug = true
 
-[33m[stage-3] [0m[94mRunning tests for Stage #3: pe1[0m
+[33m[stage-3] [0m[94mRunning tests for Stage #3: ag9[0m
 [33m[stage-3] [0m[36mRunning program[0m
 [33m[stage-3] [0m[94m$ ./your_server.sh[0m
 [33m[stage-3] [0m[36mCreating connection[0m
@@ -28,7 +28,7 @@ Debug = true
 [33m[stage-3] [0m[36mTerminating program[0m
 [33m[stage-3] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-2] [0m[94mRunning tests for Stage #2: pe2[0m
+[33m[stage-2] [0m[94mRunning tests for Stage #2: ul1[0m
 [33m[stage-2] [0m[36mRunning program[0m
 [33m[stage-2] [0m[94m$ ./your_server.sh[0m
 [33m[stage-2] [0m[36mCreating 2 persistent connections[0m
@@ -108,7 +108,7 @@ Debug = true
 [33m[stage-2] [0m[36mTerminating program[0m
 [33m[stage-2] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: pe3[0m
+[33m[stage-1] [0m[94mRunning tests for Stage #1: kh7[0m
 [33m[stage-1] [0m[36mRunning program[0m
 [33m[stage-1] [0m[94m$ ./your_server.sh[0m
 [33m[stage-1] [0m[36mCreating connection[0m
