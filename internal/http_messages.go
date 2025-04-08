@@ -171,31 +171,15 @@ func GetFilesRequestResponsePair(logger *logger.Logger) (*RequestResponsePair, e
 	return getFilesRequestResponsePair(randomFileName(), randomFileContent(), logger)
 }
 
-func getRandomRequestResponsePair(logger *logger.Logger) (*RequestResponsePair, error) {
-	countOfPossibleRequestResponsePairs := 4
-
+func getRandomRequestResponsePair() (*RequestResponsePair, error) {
 	possibleRequestResponsePairs := []func() (*RequestResponsePair, error){
 		GetBaseURLGetRequestResponsePair,
 		GetEchoRequestResponsePair,
 		GetUserAgentRequestResponsePair,
-		// GetFilesRequestResponsePair, // Expected mismatch in interface
 	}
 
-	randomIndex := random.RandomInt(0, countOfPossibleRequestResponsePairs)
-
-	if randomIndex == 3 {
-		requestResponsePair, err := GetFilesRequestResponsePair(logger)
-		if err != nil {
-			return nil, err
-		}
-		return requestResponsePair, nil
-	}
-
-	requestResponsePair, err := possibleRequestResponsePairs[randomIndex]()
-	if err != nil {
-		return nil, err
-	}
-	return requestResponsePair, nil
+	randomIndex := random.RandomInt(0, len(possibleRequestResponsePairs))
+	return possibleRequestResponsePairs[randomIndex]()
 }
 
 // GetRandomRequestResponsePairs returns a slice of RequestResponsePairs
@@ -203,12 +187,10 @@ func getRandomRequestResponsePair(logger *logger.Logger) (*RequestResponsePair, 
 // - GET /
 // - GET /echo/{content}
 // - GET /user-agent
-// - GET /files/{filename}
-// Use with Data Directory, and pass --directory flag to the server
-func GetRandomRequestResponsePairs(count int, logger *logger.Logger) ([]*RequestResponsePair, error) {
+func GetRandomRequestResponsePairs(count int) ([]*RequestResponsePair, error) {
 	requestResponsePairs := make([]*RequestResponsePair, count)
 	for i := range count {
-		requestResponsePair, err := getRandomRequestResponsePair(logger)
+		requestResponsePair, err := getRandomRequestResponsePair()
 		if err != nil {
 			return nil, err
 		}
