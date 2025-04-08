@@ -29,7 +29,8 @@
         root * /tmp/data/codecrafters.io/http-server-tester
         uri strip_prefix /files/
         file_server
-        
+        header Content-Type application/octet-stream
+
         # Handle POST requests
         @post {
             method POST
