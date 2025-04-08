@@ -28,16 +28,18 @@
     handle /files/* {
         root * /tmp/data/codecrafters.io/http-server-tester
         uri strip_prefix /files/
-        file_server
-        header Content-Type application/octet-stream
 
         # Handle POST requests
         @post {
             method POST
         }
         handle @post {
-            respond 201
+            # Forward to a local server that handles file writing
+            reverse_proxy localhost:4222
         }
+
+        file_server
+        header Content-Type application/octet-stream
     }
 
     # Handle 404 for all other paths

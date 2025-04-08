@@ -5,6 +5,7 @@ services:
     build: .
     ports:
       - "4221:4221"
+      - "4222:4222"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - /tmp/data/codecrafters.io/http-server-tester/:/tmp/data/codecrafters.io/http-server-tester
