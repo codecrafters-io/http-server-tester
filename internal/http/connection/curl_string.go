@@ -27,10 +27,27 @@ func httpRequestToCurlString(req *http.Request) string {
 func HttpKeepAliveRequestToCurlString(requests []*http.Request) string {
 	// While sending multiple requests on the same connection,
 	// We need to log all requests at once to properly emulate with curl
-	var requestsBuilder strings.Builder
+	shouldAddNext := false
+	allHeaders := make(map[string]struct{})
 	for _, req := range requests {
-		requestsBuilder.WriteString(fmt.Sprintf("%s%s%s ",
-			req.URL.String(), formatHeaders(req.Header), formatBody(req)))
+		header := formatHeaders(req.Header)
+		allHeaders[header] = struct{}{}
+	}
+
+	// Atleast 2 seperate unique headers
+	if len(allHeaders) > 1 {
+		shouldAddNext = true
+	}
+
+	var requestsBuilder strings.Builder
+	for i, req := range requests {
+		if i > 0 && shouldAddNext {
+			requestsBuilder.WriteString(fmt.Sprintf("--next %s%s%s ",
+				req.URL.String(), formatHeaders(req.Header), formatBody(req)))
+		} else {
+			requestsBuilder.WriteString(fmt.Sprintf("%s%s%s ",
+				req.URL.String(), formatHeaders(req.Header), formatBody(req)))
+		}
 	}
 	return fmt.Sprintf("curl --http1.1 -v %s", requestsBuilder.String())
 }

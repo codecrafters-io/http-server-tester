@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
+	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
 	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
@@ -47,11 +48,12 @@ func testPersistence3(stageHarness *test_case_harness.TestCaseHarness) error {
 		requests[i] = requestResponsePair.Request
 	}
 
-	connection, err := spawnConnection(stageHarness, logger)
+	connection, err := spawnPersistentConnection(stageHarness, logger)
 	if err != nil {
 		return err
 	}
 
+	logger.Infof("$ %s", http_connection.HttpKeepAliveRequestToCurlString(requests))
 	for i := range uniqueRequestCount {
 		if err := testCases[i].RunWithConn(connection, logger); err != nil {
 			return err
