@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 func createFileWith(location string, content string) error {

@@ -55,7 +55,12 @@ func (t *SendRequestTestCase) Run(stageHarness *test_case_harness.TestCaseHarnes
 }
 
 func (t *SendRequestTestCase) RunWithConn(conn *http_connection.HttpConnection, logger *logger.Logger) error {
-	err := conn.SendRequest(t.Request)
+	err := assertConnectionIsOpen(conn)
+	if err != nil {
+		return err
+	}
+
+	err = conn.SendRequest(t.Request)
 	if err != nil {
 		return fmt.Errorf("Failed to send request: %v", err)
 	}
@@ -74,5 +79,12 @@ func (t *SendRequestTestCase) RunWithConn(conn *http_connection.HttpConnection, 
 		conn.EnsureNoUnreadData()
 	}
 
+	return nil
+}
+
+func assertConnectionIsOpen(connection *http_connection.HttpConnection) error {
+	if !connection.IsOpen() {
+		return fmt.Errorf("Expected connection to stay open, but it is closed")
+	}
 	return nil
 }

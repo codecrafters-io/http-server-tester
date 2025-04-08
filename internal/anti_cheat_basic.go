@@ -3,7 +3,7 @@ package internal
 import (
 	"fmt"
 
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
@@ -13,7 +13,7 @@ func antiCheatBasic(stageHarness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	logger := stageHarness.Logger
+	programLogger := stageHarness.Logger
 
 	client := NewHTTPClient()
 
@@ -23,15 +23,15 @@ func antiCheatBasic(stageHarness *test_case_harness.TestCaseHarness) error {
 	}
 
 	if resp.Proto != "HTTP/1.1" {
-		return fail(logger)
+		return fail(programLogger)
 	}
 
 	if date := resp.Header.Get("Date"); date != "" {
-		return fail(logger)
+		return fail(programLogger)
 	}
 
 	if server := resp.Header.Get("Server"); server != "" {
-		return fail(logger)
+		return fail(programLogger)
 	}
 
 	return nil

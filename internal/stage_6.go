@@ -1,15 +1,9 @@
 package internal
 
 import (
-	"fmt"
-	"net/http"
-
-	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/random"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
-	http_connection "github.com/codecrafters-io/http-server-tester/internal/http/connection"
-	http_parser "github.com/codecrafters-io/http-server-tester/internal/http/parser"
 	"github.com/codecrafters-io/http-server-tester/internal/http/test_cases"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -23,12 +17,14 @@ func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.Te
 	logger := stageHarness.Logger
 	connectionCount := random.RandomInt(2, 3)
 
-	request, _ := http.NewRequest("GET", URL, nil)
-	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 200, Reason: "OK"}
-	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine}
+	requestResponsePair, err := GetBaseURLGetRequestResponsePair()
+	if err != nil {
+		return err
+	}
+
 	testCase := test_cases.SendRequestTestCase{
-		Request:                   request,
-		Assertion:                 http_assertions.NewHTTPResponseAssertion(expectedResponse),
+		Request:                   requestResponsePair.Request,
+		Assertion:                 http_assertions.NewHTTPResponseAssertion(*requestResponsePair.Response),
 		ShouldSkipUnreadDataCheck: false,
 	}
 
@@ -60,7 +56,7 @@ func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.Te
 		return err
 	}
 	logger.Debugf("Sending second set of requests")
-	for i := 0; i < connectionCount; i++ {
+	for i := range connectionCount {
 		if err := testCase.RunWithConn(connections[i], logger); err != nil {
 			return err
 		}
@@ -74,20 +70,4 @@ func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.Te
 	}
 
 	return nil
-}
-
-func spawnConnections(stageHarness *test_case_harness.TestCaseHarness, connectionCount int, logger *logger.Logger) ([]*http_connection.HttpConnection, error) {
-	logger.Infof("Creating %d parallel connections", connectionCount)
-	connections := make([]*http_connection.HttpConnection, connectionCount)
-
-	for i := 0; i < connectionCount; i++ {
-		logger.Debugf("Creating connection %d", i+1)
-		conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, fmt.Sprintf("client-%d", i+1))
-		if err != nil {
-			logFriendlyError(logger, err)
-			return nil, err
-		}
-		connections[i] = conn
-	}
-	return connections, nil
 }

@@ -9,10 +9,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.21.x
-      - uses: actions/setup-python@v2
+          go-version: 1.22.x
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
       - run: make test

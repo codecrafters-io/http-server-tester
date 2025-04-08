@@ -131,76 +131,45 @@ def handle_files_route(request: Request, filename: str) -> Response:
 
 
 def handle_connection(connection: socket.socket) -> None:
-    # Set a timeout for the connection to prevent hanging
-    connection.settimeout(5)  # 5 second timeout
-    
-    try:
-        while True:
-            try:
-                buffer = connection.recv(ACCEPTED_BUFFSIZE)
-                if not buffer:  # Connection closed by client
-                    break
-                
-                request = Request(buffer.decode())
-                path = request.path.split("/", 2)
+    with connection:
+        buffer = connection.recv(ACCEPTED_BUFFSIZE)
 
-                # Check for Connection: close header
-                should_close = request.get_header("Connection").lower() == "close"
+        request = Request(buffer.decode())
 
-                # Initialize response with default headers
-                response = None
+        path = request.path.split("/", 2)
+
+        match path[1]:
+            case Route.ROOT:
+                response = Response()
+
+            case Route.ECHO:
                 headers: dict[str, str] = {}
+                encodings = request.get_header(ACCEPT_ENCODING_HEADER)
+                if encodings != "":
+                    encoding_list = encodings.split(",")
+                    for encoding in encoding_list:
+                        encoding = encoding.strip()
+                        if encoding in SUPPORTED_ENCODINGS:
+                            headers["Content-Encoding"] = encoding
+                            break
 
-                match path[1]:
-                    case Route.ROOT:
-                        response = Response(headers={})
+                if headers.get("Content-Encoding") is None:
+                    response = Response(data=path[-1])
+                else:
+                    body = gzip.compress(path[-1].encode())
+                    headers["Content-Length"] = str(len(body))
+                    response = Response(bytes_data=body, headers=headers)
 
-                    case Route.ECHO:
-                        encodings = request.get_header(ACCEPT_ENCODING_HEADER)
-                        if encodings != "":
-                            encoding_list = encodings.split(",")
-                            for encoding in encoding_list:
-                                encoding = encoding.strip()
-                                if encoding in SUPPORTED_ENCODINGS:
-                                    headers["Content-Encoding"] = encoding
-                                    break
+            case Route.USER_AGENT:
+                response = Response(data=request.get_header(USER_AGENT_HEADER))
 
-                        if headers.get("Content-Encoding") is None:
-                            response = Response(data=path[-1], headers={})
-                        else:
-                            body = gzip.compress(path[-1].encode())
-                            headers["Content-Length"] = str(len(body))
-                            response = Response(bytes_data=body, headers=headers)
+            case Route.FILES:
+                response = handle_files_route(request, filename=path[-1])
 
-                    case Route.USER_AGENT:
-                        response = Response(data=request.get_header(USER_AGENT_HEADER), headers={})
+            case _:
+                response = NotFoundResponse()
 
-                    case Route.FILES:
-                        response = handle_files_route(request, filename=path[-1])
-
-                    case _:
-                        response = NotFoundResponse()
-
-                # Add Connection: close header if requested
-                if should_close:
-                    response.headers["Connection"] = "close"
-
-                connection.send(bytes(response))
-                
-                # Close connection if Connection: close was requested
-                if should_close:
-                    break
-                
-            except socket.timeout:
-                # Connection timed out, break the loop
-                break
-            except Exception as e:
-                # Handle any other errors and break the loop
-                print(f"Error handling request: {e}")
-                break
-                
-    finally:
-        connection.close()
+        connection.send(bytes(response))
 
 
 def main() -> None:

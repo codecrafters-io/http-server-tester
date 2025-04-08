@@ -72,5 +72,20 @@ var testerDefinition = tester_definition.TesterDefinition{
 			TestFunc: testRespondWithEncodedData,
 			Timeout:  15 * time.Second,
 		},
+		{
+			Slug:     "ag9",
+			TestFunc: testPersistence1,
+			Timeout:  15 * time.Second,
+		},
+		{
+			Slug:     "ul1",
+			TestFunc: testPersistence2,
+			Timeout:  15 * time.Second,
+		},
+		{
+			Slug:     "kh7",
+			TestFunc: testPersistence3,
+			Timeout:  15 * time.Second,
+		},
 	},
 }

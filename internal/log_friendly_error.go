@@ -1,7 +1,7 @@
 package internal
 
 import (
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/logger"
 	"strings"
 )
 

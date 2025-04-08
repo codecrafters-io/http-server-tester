@@ -130,7 +130,7 @@ extensions:
       [http-compression]: https://en.wikipedia.org/wiki/HTTP_compression
 
 stages:
-  # A identifier for this stage, needs to be unique within a course.
+  # An identifier for this stage, needs to be unique within a course.
   - legacy_slug: "connect-to-port"
     slug: "at4"
     concept_slugs:
@@ -748,3 +748,7 @@ stages:
 
     marketing_md: |
       In this stage, you'll add support for encoding the response body using `gzip`.
+
+  - slug: "ag9"
+  - slug: "ul1"
+  - slug: "kh7"

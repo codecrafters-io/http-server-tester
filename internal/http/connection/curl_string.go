@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"sort"
 	"strings"
-
-	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 func httpRequestToCurlString(req *http.Request) string {
@@ -24,6 +22,34 @@ func httpRequestToCurlString(req *http.Request) string {
 	}
 
 	return curlCommand
+}
+
+func HttpKeepAliveRequestToCurlString(requests []*http.Request) string {
+	// While sending multiple requests on the same connection,
+	// We need to log all requests at once to properly emulate with curl
+	shouldAddNext := false
+	allHeaders := make(map[string]struct{})
+	for _, req := range requests {
+		header := formatHeaders(req.Header)
+		allHeaders[header] = struct{}{}
+	}
+
+	// At least 2 separate unique headers
+	if len(allHeaders) > 1 {
+		shouldAddNext = true
+	}
+
+	var requestsBuilder strings.Builder
+	for i, req := range requests {
+		if i > 0 && shouldAddNext {
+			requestsBuilder.WriteString(fmt.Sprintf("--next %s%s%s ",
+				req.URL.String(), formatHeaders(req.Header), formatBody(req)))
+		} else {
+			requestsBuilder.WriteString(fmt.Sprintf("%s%s%s ",
+				req.URL.String(), formatHeaders(req.Header), formatBody(req)))
+		}
+	}
+	return fmt.Sprintf("curl --http1.1 -v %s", requestsBuilder.String())
 }
 
 func formatHeaders(headers http.Header) string {
@@ -69,10 +95,4 @@ func bodyToString(req *http.Request) string {
 
 func escapeSingleQuotes(s string) string {
 	return strings.ReplaceAll(s, "'", `\'`)
-}
-
-func logFriendlyHTTPMessage(logger *logger.Logger, msg string, logPrefix string) {
-	for _, line := range strings.Split(msg, "\r\n") {
-		logger.Debugf("%s %s", logPrefix, line)
-	}
 }

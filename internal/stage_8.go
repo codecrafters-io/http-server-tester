@@ -13,12 +13,8 @@ import (
 )
 
 func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
-	err := os.MkdirAll(DATA_DIR, 0755)
-	if err != nil {
-		panic(err)
-	}
+	setupDataDirectory()
 	defer os.RemoveAll(DATA_DIR)
-
 	b := NewHTTPServerBinary(stageHarness)
 	if err := b.Run("--directory", DATA_DIR); err != nil {
 		return err
@@ -30,11 +26,11 @@ func testPostFile(stageHarness *test_case_harness.TestCaseHarness) error {
 	fileContent := randomFileContent()
 
 	request, err := http.NewRequest("POST", URL+"files/"+fileName, bytes.NewBufferString(fileContent))
-	request.Header.Add("Content-Length", fmt.Sprint(len(fileContent)))
-	request.Header.Add("Content-Type", "application/octet-stream")
 	if err != nil {
 		return err
 	}
+	request.Header.Add("Content-Length", fmt.Sprint(len(fileContent)))
+	request.Header.Add("Content-Type", "application/octet-stream")
 	expectedStatusLine := http_parser.StatusLine{Version: "HTTP/1.1", StatusCode: 201, Reason: "Created"}
 	expectedResponse := http_parser.HTTPResponse{StatusLine: expectedStatusLine}
 
