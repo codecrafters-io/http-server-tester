@@ -1,0 +1,48 @@
+{
+    # Enable debug logging
+    debug
+}
+
+:4221 {
+    # Root endpoint
+    handle / {
+        respond "OK" 200
+    }
+
+    # Echo endpoint
+    handle /echo/* {
+        header Content-Type text/plain
+        header Content-Length {len {http.request.uri.path}}
+        respond {http.request.uri.path} 200
+    }
+
+    # User-Agent endpoint
+    handle /user-agent {
+        header Content-Type text/plain
+        header Content-Length {len {http.request.header.User-Agent}}
+        respond {http.request.header.User-Agent} 200
+    }
+
+    # Files endpoint
+    handle /files/* {
+        root * /tmp/data/codecrafters.io/http-server-tester
+        file_server
+        try_files {path} {path}/
+        
+        # Handle POST requests
+        @post {
+            method POST
+        }
+        handle @post {
+            respond 201
+        }
+    }
+
+    # Handle 404 for all other paths
+    handle {
+        respond 404
+    }
+
+    # Enable gzip compression
+    encode gzip
+} 
