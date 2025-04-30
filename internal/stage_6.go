@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"fmt"
+
 	"github.com/codecrafters-io/tester-utils/random"
 
 	http_assertions "github.com/codecrafters-io/http-server-tester/internal/http/assertions"
@@ -37,6 +39,9 @@ func testHandlesMultipleConcurrentConnections(stageHarness *test_case_harness.Te
 		// Test connections in reverse order so that we don't accidentally test the listen backlog
 		// Ref: https://github.com/codecrafters-io/http-server-tester/pull/60
 		if err := testCase.RunWithConn(connections[i], logger); err != nil {
+			if i == connectionCount-1 {
+				return fmt.Errorf("Please make sure your server can handle multiple concurrent connections.\n\n%v", err.Error())
+			}
 			return err
 		}
 
