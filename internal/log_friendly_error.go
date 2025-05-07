@@ -18,6 +18,6 @@ func logFriendlyError(logger *logger.Logger, err error) {
 	}
 
 	if strings.Contains(err.Error(), "connection refused") {
-		logger.Infof("Hint: 'connection refused' usually means that the server is not running, probably because it didn't compile properly.")
+		logger.Infof("Hint: 'connection refused' usually means that your server is not running.")
 	}
 }
