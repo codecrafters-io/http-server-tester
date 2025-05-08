@@ -24,6 +24,11 @@ func spawnPersistentConnection(stageHarness *test_case_harness.TestCaseHarness, 
 
 	conn, err := http_connection.NewInstrumentedHttpConnection(stageHarness, TCP_DEST, "")
 
+	if err != nil {
+		logFriendlyError(logger, err)
+		return nil, err
+	}
+
 	// We want to log all the requests at once, not one by one
 	// Note: No support for logPrefix here
 	conn.Callbacks.BeforeSendRequest = nil
@@ -33,11 +38,6 @@ func spawnPersistentConnection(stageHarness *test_case_harness.TestCaseHarness, 
 		}
 		stageHarness.Logger.Debugf("%s%s", "< ", "")
 		stageHarness.Logger.Debugf("* Connection #0 to host localhost left intact")
-	}
-
-	if err != nil {
-		logFriendlyError(logger, err)
-		return nil, err
 	}
 
 	return conn, nil

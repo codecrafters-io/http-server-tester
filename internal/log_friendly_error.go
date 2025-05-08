@@ -1,8 +1,9 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/tester-utils/logger"
 	"strings"
+
+	"github.com/codecrafters-io/tester-utils/logger"
 )
 
 func logFriendlyError(logger *logger.Logger, err error) {
@@ -14,5 +15,9 @@ func logFriendlyError(logger *logger.Logger, err error) {
 
 	if strings.Contains(err.Error(), "connection reset by peer") {
 		logger.Infof("Hint: 'connection reset by peer' usually means that your program closed the connection before sending a complete response.")
+	}
+
+	if strings.Contains(err.Error(), "connection refused") {
+		logger.Infof("Hint: 'connection refused' usually means that your server is not running.")
 	}
 }
