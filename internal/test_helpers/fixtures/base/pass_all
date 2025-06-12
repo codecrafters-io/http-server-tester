@@ -1,210 +1,210 @@
 Debug = true
 
-[33m[stage-8] [0m[94mRunning tests for Stage #8: qv8[0m
-[33m[stage-8] [0m[36mRunning program[0m
-[33m[stage-8] [0m[94m$ ./your_server.sh --directory /tmp/data/codecrafters.io/http-server-tester/[0m
-[33m[stage-8] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-8] [0m[94m$ curl -v -X POST http://localhost:4221/files/pear_orange_raspberry_mango -H "Content-Length: 52" -H "Content-Type: application/octet-stream" -d 'pear banana blueberry banana pear orange grape grape'[0m
-[33m[stage-8] [0m[36m> POST /files/pear_orange_raspberry_mango HTTP/1.1[0m
-[33m[stage-8] [0m[36m> Host: localhost:4221[0m
-[33m[stage-8] [0m[36m> Content-Length: 52[0m
-[33m[stage-8] [0m[36m> Content-Type: application/octet-stream[0m
-[33m[stage-8] [0m[36m> [0m
-[33m[stage-8] [0m[36m> pear banana blueberry banana pear orange grape grape[0m
-[33m[stage-8] [0m[36m> [0m
-[33m[stage-8] [0m[36mSent bytes: "POST /files/pear_orange_raspberry_mango HTTP/1.1\r\nHost: localhost:4221\r\nContent-Length: 52\r\nContent-Type: application/octet-stream\r\n\r\npear banana blueberry banana pear orange grape grape"[0m
-[33m[stage-8] [0m[36mReceived bytes: "HTTP/1.1 201 Created\r\n\r\n"[0m
-[33m[stage-8] [0m[36m< HTTP/1.1 201 Created[0m
-[33m[stage-8] [0m[36m< [0m
-[33m[stage-8] [0m[92mReceived response with 201 status code[0m
-[33m[stage-8] [0m[36mValidating file `pear_orange_raspberry_mango` exists on disk[0m
-[33m[stage-8] [0m[36mValidating file `pear_orange_raspberry_mango` content[0m
-[33m[stage-8] [0m[92mTest passed.[0m
-[33m[stage-8] [0m[36mTerminating program[0m
-[33m[stage-8] [0m[36mProgram terminated successfully[0m
+[33m[tester::#QV8] [0m[94mRunning tests for Stage #QV8 (qv8)[0m
+[33m[tester::#QV8] [0m[36mRunning program[0m
+[33m[tester::#QV8] [0m[94m$ ./your_server.sh --directory /tmp/data/codecrafters.io/http-server-tester/[0m
+[33m[tester::#QV8] [0m[36mConnected to localhost port 4221[0m
+[33m[tester::#QV8] [0m[94m$ curl -v -X POST http://localhost:4221/files/pear_orange_raspberry_mango -H "Content-Length: 52" -H "Content-Type: application/octet-stream" -d 'pear banana blueberry banana pear orange grape grape'[0m
+[33m[tester::#QV8] [0m[36m> POST /files/pear_orange_raspberry_mango HTTP/1.1[0m
+[33m[tester::#QV8] [0m[36m> Host: localhost:4221[0m
+[33m[tester::#QV8] [0m[36m> Content-Length: 52[0m
+[33m[tester::#QV8] [0m[36m> Content-Type: application/octet-stream[0m
+[33m[tester::#QV8] [0m[36m> [0m
+[33m[tester::#QV8] [0m[36m> pear banana blueberry banana pear orange grape grape[0m
+[33m[tester::#QV8] [0m[36m> [0m
+[33m[tester::#QV8] [0m[36mSent bytes: "POST /files/pear_orange_raspberry_mango HTTP/1.1\r\nHost: localhost:4221\r\nContent-Length: 52\r\nContent-Type: application/octet-stream\r\n\r\npear banana blueberry banana pear orange grape grape"[0m
+[33m[tester::#QV8] [0m[36mReceived bytes: "HTTP/1.1 201 Created\r\n\r\n"[0m
+[33m[tester::#QV8] [0m[36m< HTTP/1.1 201 Created[0m
+[33m[tester::#QV8] [0m[36m< [0m
+[33m[tester::#QV8] [0m[92mReceived response with 201 status code[0m
+[33m[tester::#QV8] [0m[36mValidating file `pear_orange_raspberry_mango` exists on disk[0m
+[33m[tester::#QV8] [0m[36mValidating file `pear_orange_raspberry_mango` content[0m
+[33m[tester::#QV8] [0m[92mTest passed.[0m
+[33m[tester::#QV8] [0m[36mTerminating program[0m
+[33m[tester::#QV8] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-7] [0m[94mRunning tests for Stage #7: ap6[0m
-[33m[stage-7] [0m[36mRunning program[0m
-[33m[stage-7] [0m[94m$ ./your_server.sh --directory /tmp/data/codecrafters.io/http-server-tester/[0m
-[33m[stage-7] [0m[94mTesting existing file[0m
-[33m[stage-7] [0m[36mCreating file apple_apple_banana_mango in /tmp/data/codecrafters.io/http-server-tester/[0m
-[33m[stage-7] [0m[36mFile Content: "grape banana mango apple pear banana pineapple raspberry"[0m
-[33m[stage-7] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-7] [0m[94m$ curl -v http://localhost:4221/files/apple_apple_banana_mango[0m
-[33m[stage-7] [0m[36m> GET /files/apple_apple_banana_mango HTTP/1.1[0m
-[33m[stage-7] [0m[36m> Host: localhost:4221[0m
-[33m[stage-7] [0m[36m> [0m
-[33m[stage-7] [0m[36mSent bytes: "GET /files/apple_apple_banana_mango HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-7] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: 56\r\n\r\ngrape banana mango apple pear banana pineapple raspberry"[0m
-[33m[stage-7] [0m[36m< HTTP/1.1 200 OK[0m
-[33m[stage-7] [0m[36m< Content-Type: application/octet-stream[0m
-[33m[stage-7] [0m[36m< Content-Length: 56[0m
-[33m[stage-7] [0m[36m< [0m
-[33m[stage-7] [0m[36m< grape banana mango apple pear banana pineapple raspberry[0m
-[33m[stage-7] [0m[36m< [0m
-[33m[stage-7] [0m[92mReceived response with 200 status code[0m
-[33m[stage-7] [0m[92m✓ Content-Type header is present[0m
-[33m[stage-7] [0m[92m✓ Content-Length header is present[0m
-[33m[stage-7] [0m[92m✓ Body is correct[0m
-[33m[stage-7] [0m[92mFirst test passed.[0m
-[33m[stage-7] [0m[94mTesting non existent file returns 404[0m
-[33m[stage-7] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-7] [0m[94m$ curl -v http://localhost:4221/files/non-existentapple_apple_mango_banana[0m
-[33m[stage-7] [0m[36m> GET /files/non-existentapple_apple_mango_banana HTTP/1.1[0m
-[33m[stage-7] [0m[36m> Host: localhost:4221[0m
-[33m[stage-7] [0m[36m> [0m
-[33m[stage-7] [0m[36mSent bytes: "GET /files/non-existentapple_apple_mango_banana HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-7] [0m[36mReceived bytes: "HTTP/1.1 404 Not Found\r\n\r\n"[0m
-[33m[stage-7] [0m[36m< HTTP/1.1 404 Not Found[0m
-[33m[stage-7] [0m[36m< [0m
-[33m[stage-7] [0m[92mReceived response with 404 status code[0m
-[33m[stage-7] [0m[92mTest passed.[0m
-[33m[stage-7] [0m[36mTerminating program[0m
-[33m[stage-7] [0m[36mProgram terminated successfully[0m
+[33m[tester::#AP6] [0m[94mRunning tests for Stage #AP6 (ap6)[0m
+[33m[tester::#AP6] [0m[36mRunning program[0m
+[33m[tester::#AP6] [0m[94m$ ./your_server.sh --directory /tmp/data/codecrafters.io/http-server-tester/[0m
+[33m[tester::#AP6] [0m[94mTesting existing file[0m
+[33m[tester::#AP6] [0m[36mCreating file apple_apple_banana_mango in /tmp/data/codecrafters.io/http-server-tester/[0m
+[33m[tester::#AP6] [0m[36mFile Content: "grape banana mango apple pear banana pineapple raspberry"[0m
+[33m[tester::#AP6] [0m[36mConnected to localhost port 4221[0m
+[33m[tester::#AP6] [0m[94m$ curl -v http://localhost:4221/files/apple_apple_banana_mango[0m
+[33m[tester::#AP6] [0m[36m> GET /files/apple_apple_banana_mango HTTP/1.1[0m
+[33m[tester::#AP6] [0m[36m> Host: localhost:4221[0m
+[33m[tester::#AP6] [0m[36m> [0m
+[33m[tester::#AP6] [0m[36mSent bytes: "GET /files/apple_apple_banana_mango HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[tester::#AP6] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: 56\r\n\r\ngrape banana mango apple pear banana pineapple raspberry"[0m
+[33m[tester::#AP6] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[tester::#AP6] [0m[36m< Content-Type: application/octet-stream[0m
+[33m[tester::#AP6] [0m[36m< Content-Length: 56[0m
+[33m[tester::#AP6] [0m[36m< [0m
+[33m[tester::#AP6] [0m[36m< grape banana mango apple pear banana pineapple raspberry[0m
+[33m[tester::#AP6] [0m[36m< [0m
+[33m[tester::#AP6] [0m[92mReceived response with 200 status code[0m
+[33m[tester::#AP6] [0m[92m✓ Content-Type header is present[0m
+[33m[tester::#AP6] [0m[92m✓ Content-Length header is present[0m
+[33m[tester::#AP6] [0m[92m✓ Body is correct[0m
+[33m[tester::#AP6] [0m[92mFirst test passed.[0m
+[33m[tester::#AP6] [0m[94mTesting non existent file returns 404[0m
+[33m[tester::#AP6] [0m[36mConnected to localhost port 4221[0m
+[33m[tester::#AP6] [0m[94m$ curl -v http://localhost:4221/files/non-existentapple_apple_mango_banana[0m
+[33m[tester::#AP6] [0m[36m> GET /files/non-existentapple_apple_mango_banana HTTP/1.1[0m
+[33m[tester::#AP6] [0m[36m> Host: localhost:4221[0m
+[33m[tester::#AP6] [0m[36m> [0m
+[33m[tester::#AP6] [0m[36mSent bytes: "GET /files/non-existentapple_apple_mango_banana HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[tester::#AP6] [0m[36mReceived bytes: "HTTP/1.1 404 Not Found\r\n\r\n"[0m
+[33m[tester::#AP6] [0m[36m< HTTP/1.1 404 Not Found[0m
+[33m[tester::#AP6] [0m[36m< [0m
+[33m[tester::#AP6] [0m[92mReceived response with 404 status code[0m
+[33m[tester::#AP6] [0m[92mTest passed.[0m
+[33m[tester::#AP6] [0m[36mTerminating program[0m
+[33m[tester::#AP6] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-6] [0m[94mRunning tests for Stage #6: ej5[0m
-[33m[stage-6] [0m[36mRunning program[0m
-[33m[stage-6] [0m[94m$ ./your_server.sh[0m
-[33m[stage-6] [0m[94mCreating 2 parallel connections[0m
-[33m[stage-6] [0m[36mCreating connection 1[0m
-[33m[stage-6] [0m[36mCreating connection 2[0m
-[33m[stage-6] [0m[36mSending first set of requests[0m
-[33m[stage-6] [0m[94mclient-2: $ curl -v http://localhost:4221/[0m
-[33m[stage-6] [0m[36mclient-2: > GET / HTTP/1.1[0m
-[33m[stage-6] [0m[36mclient-2: > Host: localhost:4221[0m
-[33m[stage-6] [0m[36mclient-2: > [0m
-[33m[stage-6] [0m[36mclient-2: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-2: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-2: < HTTP/1.1 200 OK[0m
-[33m[stage-6] [0m[36mclient-2: < [0m
-[33m[stage-6] [0m[92mReceived response with 200 status code[0m
-[33m[stage-6] [0m[36mClosing connection 2[0m
-[33m[stage-6] [0m[94mclient-1: $ curl -v http://localhost:4221/[0m
-[33m[stage-6] [0m[36mclient-1: > GET / HTTP/1.1[0m
-[33m[stage-6] [0m[36mclient-1: > Host: localhost:4221[0m
-[33m[stage-6] [0m[36mclient-1: > [0m
-[33m[stage-6] [0m[36mclient-1: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-1: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-1: < HTTP/1.1 200 OK[0m
-[33m[stage-6] [0m[36mclient-1: < [0m
-[33m[stage-6] [0m[92mReceived response with 200 status code[0m
-[33m[stage-6] [0m[36mClosing connection 1[0m
-[33m[stage-6] [0m[94mCreating 2 parallel connections[0m
-[33m[stage-6] [0m[36mCreating connection 1[0m
-[33m[stage-6] [0m[36mCreating connection 2[0m
-[33m[stage-6] [0m[36mSending second set of requests[0m
-[33m[stage-6] [0m[94mclient-1: $ curl -v http://localhost:4221/[0m
-[33m[stage-6] [0m[36mclient-1: > GET / HTTP/1.1[0m
-[33m[stage-6] [0m[36mclient-1: > Host: localhost:4221[0m
-[33m[stage-6] [0m[36mclient-1: > [0m
-[33m[stage-6] [0m[36mclient-1: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-1: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-1: < HTTP/1.1 200 OK[0m
-[33m[stage-6] [0m[36mclient-1: < [0m
-[33m[stage-6] [0m[92mReceived response with 200 status code[0m
-[33m[stage-6] [0m[36mClosing connection 1[0m
-[33m[stage-6] [0m[94mclient-2: $ curl -v http://localhost:4221/[0m
-[33m[stage-6] [0m[36mclient-2: > GET / HTTP/1.1[0m
-[33m[stage-6] [0m[36mclient-2: > Host: localhost:4221[0m
-[33m[stage-6] [0m[36mclient-2: > [0m
-[33m[stage-6] [0m[36mclient-2: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-2: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
-[33m[stage-6] [0m[36mclient-2: < HTTP/1.1 200 OK[0m
-[33m[stage-6] [0m[36mclient-2: < [0m
-[33m[stage-6] [0m[92mReceived response with 200 status code[0m
-[33m[stage-6] [0m[36mClosing connection 2[0m
-[33m[stage-6] [0m[92mTest passed.[0m
-[33m[stage-6] [0m[36mTerminating program[0m
-[33m[stage-6] [0m[36mProgram terminated successfully[0m
+[33m[tester::#EJ5] [0m[94mRunning tests for Stage #EJ5 (ej5)[0m
+[33m[tester::#EJ5] [0m[36mRunning program[0m
+[33m[tester::#EJ5] [0m[94m$ ./your_server.sh[0m
+[33m[tester::#EJ5] [0m[94mCreating 2 parallel connections[0m
+[33m[tester::#EJ5] [0m[36mCreating connection 1[0m
+[33m[tester::#EJ5] [0m[36mCreating connection 2[0m
+[33m[tester::#EJ5] [0m[36mSending first set of requests[0m
+[33m[tester::#EJ5] [0m[94mclient-2: $ curl -v http://localhost:4221/[0m
+[33m[tester::#EJ5] [0m[36mclient-2: > GET / HTTP/1.1[0m
+[33m[tester::#EJ5] [0m[36mclient-2: > Host: localhost:4221[0m
+[33m[tester::#EJ5] [0m[36mclient-2: > [0m
+[33m[tester::#EJ5] [0m[36mclient-2: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[tester::#EJ5] [0m[36mclient-2: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[tester::#EJ5] [0m[36mclient-2: < HTTP/1.1 200 OK[0m
+[33m[tester::#EJ5] [0m[36mclient-2: < [0m
+[33m[tester::#EJ5] [0m[92mReceived response with 200 status code[0m
+[33m[tester::#EJ5] [0m[36mClosing connection 2[0m
+[33m[tester::#EJ5] [0m[94mclient-1: $ curl -v http://localhost:4221/[0m
+[33m[tester::#EJ5] [0m[36mclient-1: > GET / HTTP/1.1[0m
+[33m[tester::#EJ5] [0m[36mclient-1: > Host: localhost:4221[0m
+[33m[tester::#EJ5] [0m[36mclient-1: > [0m
+[33m[tester::#EJ5] [0m[36mclient-1: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[tester::#EJ5] [0m[36mclient-1: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[tester::#EJ5] [0m[36mclient-1: < HTTP/1.1 200 OK[0m
+[33m[tester::#EJ5] [0m[36mclient-1: < [0m
+[33m[tester::#EJ5] [0m[92mReceived response with 200 status code[0m
+[33m[tester::#EJ5] [0m[36mClosing connection 1[0m
+[33m[tester::#EJ5] [0m[94mCreating 2 parallel connections[0m
+[33m[tester::#EJ5] [0m[36mCreating connection 1[0m
+[33m[tester::#EJ5] [0m[36mCreating connection 2[0m
+[33m[tester::#EJ5] [0m[36mSending second set of requests[0m
+[33m[tester::#EJ5] [0m[94mclient-1: $ curl -v http://localhost:4221/[0m
+[33m[tester::#EJ5] [0m[36mclient-1: > GET / HTTP/1.1[0m
+[33m[tester::#EJ5] [0m[36mclient-1: > Host: localhost:4221[0m
+[33m[tester::#EJ5] [0m[36mclient-1: > [0m
+[33m[tester::#EJ5] [0m[36mclient-1: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[tester::#EJ5] [0m[36mclient-1: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[tester::#EJ5] [0m[36mclient-1: < HTTP/1.1 200 OK[0m
+[33m[tester::#EJ5] [0m[36mclient-1: < [0m
+[33m[tester::#EJ5] [0m[92mReceived response with 200 status code[0m
+[33m[tester::#EJ5] [0m[36mClosing connection 1[0m
+[33m[tester::#EJ5] [0m[94mclient-2: $ curl -v http://localhost:4221/[0m
+[33m[tester::#EJ5] [0m[36mclient-2: > GET / HTTP/1.1[0m
+[33m[tester::#EJ5] [0m[36mclient-2: > Host: localhost:4221[0m
+[33m[tester::#EJ5] [0m[36mclient-2: > [0m
+[33m[tester::#EJ5] [0m[36mclient-2: Sent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[tester::#EJ5] [0m[36mclient-2: Received bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[tester::#EJ5] [0m[36mclient-2: < HTTP/1.1 200 OK[0m
+[33m[tester::#EJ5] [0m[36mclient-2: < [0m
+[33m[tester::#EJ5] [0m[92mReceived response with 200 status code[0m
+[33m[tester::#EJ5] [0m[36mClosing connection 2[0m
+[33m[tester::#EJ5] [0m[92mTest passed.[0m
+[33m[tester::#EJ5] [0m[36mTerminating program[0m
+[33m[tester::#EJ5] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-5] [0m[94mRunning tests for Stage #5: fs3[0m
-[33m[stage-5] [0m[36mRunning program[0m
-[33m[stage-5] [0m[94m$ ./your_server.sh[0m
-[33m[stage-5] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-5] [0m[94m$ curl -v http://localhost:4221/user-agent -H "User-Agent: blueberry/mango"[0m
-[33m[stage-5] [0m[36m> GET /user-agent HTTP/1.1[0m
-[33m[stage-5] [0m[36m> Host: localhost:4221[0m
-[33m[stage-5] [0m[36m> User-Agent: blueberry/mango[0m
-[33m[stage-5] [0m[36m> [0m
-[33m[stage-5] [0m[36mSent bytes: "GET /user-agent HTTP/1.1\r\nHost: localhost:4221\r\nUser-Agent: blueberry/mango\r\n\r\n"[0m
-[33m[stage-5] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Length: 15\r\nContent-Type: text/plain\r\n\r\nblueberry/mango"[0m
-[33m[stage-5] [0m[36m< HTTP/1.1 200 OK[0m
-[33m[stage-5] [0m[36m< Content-Length: 15[0m
-[33m[stage-5] [0m[36m< Content-Type: text/plain[0m
-[33m[stage-5] [0m[36m< [0m
-[33m[stage-5] [0m[36m< blueberry/mango[0m
-[33m[stage-5] [0m[36m< [0m
-[33m[stage-5] [0m[92mReceived response with 200 status code[0m
-[33m[stage-5] [0m[92m✓ Content-Type header is present[0m
-[33m[stage-5] [0m[92m✓ Content-Length header is present[0m
-[33m[stage-5] [0m[92m✓ Body is correct[0m
-[33m[stage-5] [0m[92mTest passed.[0m
-[33m[stage-5] [0m[36mTerminating program[0m
-[33m[stage-5] [0m[36mProgram terminated successfully[0m
+[33m[tester::#FS3] [0m[94mRunning tests for Stage #FS3 (fs3)[0m
+[33m[tester::#FS3] [0m[36mRunning program[0m
+[33m[tester::#FS3] [0m[94m$ ./your_server.sh[0m
+[33m[tester::#FS3] [0m[36mConnected to localhost port 4221[0m
+[33m[tester::#FS3] [0m[94m$ curl -v http://localhost:4221/user-agent -H "User-Agent: blueberry/mango"[0m
+[33m[tester::#FS3] [0m[36m> GET /user-agent HTTP/1.1[0m
+[33m[tester::#FS3] [0m[36m> Host: localhost:4221[0m
+[33m[tester::#FS3] [0m[36m> User-Agent: blueberry/mango[0m
+[33m[tester::#FS3] [0m[36m> [0m
+[33m[tester::#FS3] [0m[36mSent bytes: "GET /user-agent HTTP/1.1\r\nHost: localhost:4221\r\nUser-Agent: blueberry/mango\r\n\r\n"[0m
+[33m[tester::#FS3] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Length: 15\r\nContent-Type: text/plain\r\n\r\nblueberry/mango"[0m
+[33m[tester::#FS3] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[tester::#FS3] [0m[36m< Content-Length: 15[0m
+[33m[tester::#FS3] [0m[36m< Content-Type: text/plain[0m
+[33m[tester::#FS3] [0m[36m< [0m
+[33m[tester::#FS3] [0m[36m< blueberry/mango[0m
+[33m[tester::#FS3] [0m[36m< [0m
+[33m[tester::#FS3] [0m[92mReceived response with 200 status code[0m
+[33m[tester::#FS3] [0m[92m✓ Content-Type header is present[0m
+[33m[tester::#FS3] [0m[92m✓ Content-Length header is present[0m
+[33m[tester::#FS3] [0m[92m✓ Body is correct[0m
+[33m[tester::#FS3] [0m[92mTest passed.[0m
+[33m[tester::#FS3] [0m[36mTerminating program[0m
+[33m[tester::#FS3] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-4] [0m[94mRunning tests for Stage #4: cn2[0m
-[33m[stage-4] [0m[36mRunning program[0m
-[33m[stage-4] [0m[94m$ ./your_server.sh[0m
-[33m[stage-4] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-4] [0m[94m$ curl -v http://localhost:4221/echo/banana[0m
-[33m[stage-4] [0m[36m> GET /echo/banana HTTP/1.1[0m
-[33m[stage-4] [0m[36m> Host: localhost:4221[0m
-[33m[stage-4] [0m[36m> [0m
-[33m[stage-4] [0m[36mSent bytes: "GET /echo/banana HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-4] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Length: 6\r\nContent-Type: text/plain\r\n\r\nbanana"[0m
-[33m[stage-4] [0m[36m< HTTP/1.1 200 OK[0m
-[33m[stage-4] [0m[36m< Content-Length: 6[0m
-[33m[stage-4] [0m[36m< Content-Type: text/plain[0m
-[33m[stage-4] [0m[36m< [0m
-[33m[stage-4] [0m[36m< banana[0m
-[33m[stage-4] [0m[36m< [0m
-[33m[stage-4] [0m[92mReceived response with 200 status code[0m
-[33m[stage-4] [0m[92m✓ Content-Type header is present[0m
-[33m[stage-4] [0m[92m✓ Content-Length header is present[0m
-[33m[stage-4] [0m[92m✓ Body is correct[0m
-[33m[stage-4] [0m[92mTest passed.[0m
-[33m[stage-4] [0m[36mTerminating program[0m
-[33m[stage-4] [0m[36mProgram terminated successfully[0m
+[33m[tester::#CN2] [0m[94mRunning tests for Stage #CN2 (cn2)[0m
+[33m[tester::#CN2] [0m[36mRunning program[0m
+[33m[tester::#CN2] [0m[94m$ ./your_server.sh[0m
+[33m[tester::#CN2] [0m[36mConnected to localhost port 4221[0m
+[33m[tester::#CN2] [0m[94m$ curl -v http://localhost:4221/echo/banana[0m
+[33m[tester::#CN2] [0m[36m> GET /echo/banana HTTP/1.1[0m
+[33m[tester::#CN2] [0m[36m> Host: localhost:4221[0m
+[33m[tester::#CN2] [0m[36m> [0m
+[33m[tester::#CN2] [0m[36mSent bytes: "GET /echo/banana HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[tester::#CN2] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\nContent-Length: 6\r\nContent-Type: text/plain\r\n\r\nbanana"[0m
+[33m[tester::#CN2] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[tester::#CN2] [0m[36m< Content-Length: 6[0m
+[33m[tester::#CN2] [0m[36m< Content-Type: text/plain[0m
+[33m[tester::#CN2] [0m[36m< [0m
+[33m[tester::#CN2] [0m[36m< banana[0m
+[33m[tester::#CN2] [0m[36m< [0m
+[33m[tester::#CN2] [0m[92mReceived response with 200 status code[0m
+[33m[tester::#CN2] [0m[92m✓ Content-Type header is present[0m
+[33m[tester::#CN2] [0m[92m✓ Content-Length header is present[0m
+[33m[tester::#CN2] [0m[92m✓ Body is correct[0m
+[33m[tester::#CN2] [0m[92mTest passed.[0m
+[33m[tester::#CN2] [0m[36mTerminating program[0m
+[33m[tester::#CN2] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-3] [0m[94mRunning tests for Stage #3: ih0[0m
-[33m[stage-3] [0m[36mRunning program[0m
-[33m[stage-3] [0m[94m$ ./your_server.sh[0m
-[33m[stage-3] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-3] [0m[94m$ curl -v http://localhost:4221/pear[0m
-[33m[stage-3] [0m[36m> GET /pear HTTP/1.1[0m
-[33m[stage-3] [0m[36m> Host: localhost:4221[0m
-[33m[stage-3] [0m[36m> [0m
-[33m[stage-3] [0m[36mSent bytes: "GET /pear HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-3] [0m[36mReceived bytes: "HTTP/1.1 404 Not Found\r\n\r\n"[0m
-[33m[stage-3] [0m[36m< HTTP/1.1 404 Not Found[0m
-[33m[stage-3] [0m[36m< [0m
-[33m[stage-3] [0m[92mReceived response with 404 status code[0m
-[33m[stage-3] [0m[92mTest passed.[0m
-[33m[stage-3] [0m[36mTerminating program[0m
-[33m[stage-3] [0m[36mProgram terminated successfully[0m
+[33m[tester::#IH0] [0m[94mRunning tests for Stage #IH0 (ih0)[0m
+[33m[tester::#IH0] [0m[36mRunning program[0m
+[33m[tester::#IH0] [0m[94m$ ./your_server.sh[0m
+[33m[tester::#IH0] [0m[36mConnected to localhost port 4221[0m
+[33m[tester::#IH0] [0m[94m$ curl -v http://localhost:4221/pear[0m
+[33m[tester::#IH0] [0m[36m> GET /pear HTTP/1.1[0m
+[33m[tester::#IH0] [0m[36m> Host: localhost:4221[0m
+[33m[tester::#IH0] [0m[36m> [0m
+[33m[tester::#IH0] [0m[36mSent bytes: "GET /pear HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[tester::#IH0] [0m[36mReceived bytes: "HTTP/1.1 404 Not Found\r\n\r\n"[0m
+[33m[tester::#IH0] [0m[36m< HTTP/1.1 404 Not Found[0m
+[33m[tester::#IH0] [0m[36m< [0m
+[33m[tester::#IH0] [0m[92mReceived response with 404 status code[0m
+[33m[tester::#IH0] [0m[92mTest passed.[0m
+[33m[tester::#IH0] [0m[36mTerminating program[0m
+[33m[tester::#IH0] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-2] [0m[94mRunning tests for Stage #2: ia4[0m
-[33m[stage-2] [0m[36mRunning program[0m
-[33m[stage-2] [0m[94m$ ./your_server.sh[0m
-[33m[stage-2] [0m[36mConnected to localhost port 4221[0m
-[33m[stage-2] [0m[94m$ curl -v http://localhost:4221/[0m
-[33m[stage-2] [0m[36m> GET / HTTP/1.1[0m
-[33m[stage-2] [0m[36m> Host: localhost:4221[0m
-[33m[stage-2] [0m[36m> [0m
-[33m[stage-2] [0m[36mSent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-2] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
-[33m[stage-2] [0m[36m< HTTP/1.1 200 OK[0m
-[33m[stage-2] [0m[36m< [0m
-[33m[stage-2] [0m[92mReceived response with 200 status code[0m
-[33m[stage-2] [0m[92mTest passed.[0m
-[33m[stage-2] [0m[36mTerminating program[0m
-[33m[stage-2] [0m[36mProgram terminated successfully[0m
+[33m[tester::#IA4] [0m[94mRunning tests for Stage #IA4 (ia4)[0m
+[33m[tester::#IA4] [0m[36mRunning program[0m
+[33m[tester::#IA4] [0m[94m$ ./your_server.sh[0m
+[33m[tester::#IA4] [0m[36mConnected to localhost port 4221[0m
+[33m[tester::#IA4] [0m[94m$ curl -v http://localhost:4221/[0m
+[33m[tester::#IA4] [0m[36m> GET / HTTP/1.1[0m
+[33m[tester::#IA4] [0m[36m> Host: localhost:4221[0m
+[33m[tester::#IA4] [0m[36m> [0m
+[33m[tester::#IA4] [0m[36mSent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[tester::#IA4] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[tester::#IA4] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[tester::#IA4] [0m[36m< [0m
+[33m[tester::#IA4] [0m[92mReceived response with 200 status code[0m
+[33m[tester::#IA4] [0m[92mTest passed.[0m
+[33m[tester::#IA4] [0m[36mTerminating program[0m
+[33m[tester::#IA4] [0m[36mProgram terminated successfully[0m
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: at4[0m
-[33m[stage-1] [0m[36mRunning program[0m
-[33m[stage-1] [0m[94m$ ./your_server.sh[0m
-[33m[stage-1] [0m[94mConnecting to localhost:4221 using TCP[0m
-[33m[stage-1] [0m[94mSuccess! Closing connection[0m
-[33m[stage-1] [0m[92mTest passed.[0m
-[33m[stage-1] [0m[36mTerminating program[0m
-[33m[stage-1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#AT4] [0m[94mRunning tests for Stage #AT4 (at4)[0m
+[33m[tester::#AT4] [0m[36mRunning program[0m
+[33m[tester::#AT4] [0m[94m$ ./your_server.sh[0m
+[33m[tester::#AT4] [0m[94mConnecting to localhost:4221 using TCP[0m
+[33m[tester::#AT4] [0m[94mSuccess! Closing connection[0m
+[33m[tester::#AT4] [0m[92mTest passed.[0m
+[33m[tester::#AT4] [0m[36mTerminating program[0m
+[33m[tester::#AT4] [0m[36mProgram terminated successfully[0m

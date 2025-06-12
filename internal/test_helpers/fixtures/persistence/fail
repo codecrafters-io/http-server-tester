@@ -1,21 +1,21 @@
 Debug = true
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: ag9[0m
-[33m[stage-1] [0m[36mRunning program[0m
-[33m[stage-1] [0m[94m$ ./your_server.sh[0m
-[33m[stage-1] [0m[36mCreating connection[0m
-[33m[stage-1] [0m[94m$ curl --http1.1 -v http://localhost:4221/ http://localhost:4221/ [0m
-[33m[stage-1] [0m[36m> GET / HTTP/1.1[0m
-[33m[stage-1] [0m[36m> Host: localhost:4221[0m
-[33m[stage-1] [0m[36m> [0m
-[33m[stage-1] [0m[36mSent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
-[33m[stage-1] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
-[33m[stage-1] [0m[36m< HTTP/1.1 200 OK[0m
-[33m[stage-1] [0m[36m< [0m
-[33m[stage-1] [0m[36m* Connection #0 to host localhost left intact[0m
-[33m[stage-1] [0m[92mReceived response with 200 status code[0m
-[33m[stage-1] [0m[36m* Re-using existing connection with host localhost[0m
-[33m[stage-1] [0m[91mExpected connection to stay open, but it is closed[0m
-[33m[stage-1] [0m[91mTest failed[0m
-[33m[stage-1] [0m[36mTerminating program[0m
-[33m[stage-1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#AG9] [0m[94mRunning tests for Stage #AG9 (ag9)[0m
+[33m[tester::#AG9] [0m[36mRunning program[0m
+[33m[tester::#AG9] [0m[94m$ ./your_server.sh[0m
+[33m[tester::#AG9] [0m[36mCreating connection[0m
+[33m[tester::#AG9] [0m[94m$ curl --http1.1 -v http://localhost:4221/ http://localhost:4221/ [0m
+[33m[tester::#AG9] [0m[36m> GET / HTTP/1.1[0m
+[33m[tester::#AG9] [0m[36m> Host: localhost:4221[0m
+[33m[tester::#AG9] [0m[36m> [0m
+[33m[tester::#AG9] [0m[36mSent bytes: "GET / HTTP/1.1\r\nHost: localhost:4221\r\n\r\n"[0m
+[33m[tester::#AG9] [0m[36mReceived bytes: "HTTP/1.1 200 OK\r\n\r\n"[0m
+[33m[tester::#AG9] [0m[36m< HTTP/1.1 200 OK[0m
+[33m[tester::#AG9] [0m[36m< [0m
+[33m[tester::#AG9] [0m[36m* Connection #0 to host localhost left intact[0m
+[33m[tester::#AG9] [0m[92mReceived response with 200 status code[0m
+[33m[tester::#AG9] [0m[36m* Re-using existing connection with host localhost[0m
+[33m[tester::#AG9] [0m[91mExpected connection to stay open, but it is closed[0m
+[33m[tester::#AG9] [0m[91mTest failed[0m
+[33m[tester::#AG9] [0m[36mTerminating program[0m
+[33m[tester::#AG9] [0m[36mProgram terminated successfully[0m

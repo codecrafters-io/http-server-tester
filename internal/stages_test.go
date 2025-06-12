@@ -78,10 +78,10 @@ func TestStages(t *testing.T) {
 
 func normalizeTesterOutput(testerOutput []byte) []byte {
 	replacements := map[string][]*regexp.Regexp{
-		"xx/xxx/xxxx xx:xx:xx": {regexp.MustCompile(`(\d{2}\/[A-Za-z]{3}\/\d{4} \d{2}:\d{2}:\d{2})`)},
-		"gzip_encoded_data_11": {regexp.MustCompile(`\[stage-3\] .*Received bytes: .*`)},
-		"gzip_encoded_data_10": {regexp.MustCompile(`\[stage-2\] .*Received bytes: .*`)},
-		"gzip_encoded_data_9":  {regexp.MustCompile(`\[stage-1\] .*Received bytes: .*`)},
+		"xx/xxx/xxxx xx:xx:xx":       {regexp.MustCompile(`(\d{2}\/[A-Za-z]{3}\/\d{4} \d{2}:\d{2}:\d{2})`)},
+		"gzip_encoded_data_stage_11": {regexp.MustCompile(`\[tester::#CR8\] .*Received bytes: .*`)},
+		"gzip_encoded_data_stage_10": {regexp.MustCompile(`\[tester::#IJ8\] .*Received bytes: .*`)},
+		"gzip_encoded_data_stage_9":  {regexp.MustCompile(`\[tester::#DF4\] .*Received bytes: .*`)},
 	}
 
 	for replacement, regexes := range replacements {
