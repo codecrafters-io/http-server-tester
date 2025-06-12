@@ -1,10 +1,10 @@
 Debug = true
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: at4[0m
-[33m[stage-1] [0m[36mRunning program[0m
-[33m[stage-1] [0m[94m$ ./your_server.sh[0m
-[33m[stage-1] [0m[94mConnecting to localhost:4221 using TCP[0m
-[33m[stage-1] [0m[94mSuccess! Closing connection[0m
-[33m[stage-1] [0m[92mTest passed.[0m
-[33m[stage-1] [0m[36mTerminating program[0m
-[33m[stage-1] [0m[36mProgram terminated successfully[0m
+[33m[tester::#AT4] [0m[94mRunning tests for Stage #AT4 (at4)[0m
+[33m[tester::#AT4] [0m[36mRunning program[0m
+[33m[tester::#AT4] [0m[94m$ ./your_server.sh[0m
+[33m[tester::#AT4] [0m[94mConnecting to localhost:4221 using TCP[0m
+[33m[tester::#AT4] [0m[94mSuccess! Closing connection[0m
+[33m[tester::#AT4] [0m[92mTest passed.[0m
+[33m[tester::#AT4] [0m[36mTerminating program[0m
+[33m[tester::#AT4] [0m[36mProgram terminated successfully[0m

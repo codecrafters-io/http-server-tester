@@ -1,18 +1,18 @@
-[33m[stage-1] [0m[94mRunning tests for Stage #1: at4[0m
-[33m[stage-1] [0m[94m$ ./your_server.sh[0m
-[33m[stage-1] [0m[94mConnecting to localhost:4221 using TCP[0m
+[33m[tester::#AT4] [0m[94mRunning tests for Stage #AT4 (at4)[0m
+[33m[tester::#AT4] [0m[94m$ ./your_server.sh[0m
+[33m[tester::#AT4] [0m[94mConnecting to localhost:4221 using TCP[0m
 [33m[your_program] [0mhey, i don't do anything but I take a while to exit!
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
-[33m[stage-1] [0m[91mtimed out, test exceeded 15 seconds[0m
-[33m[stage-1] [0m[91mTest failed (try setting 'debug: true' in your codecrafters.yml to see more details)[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[94mFailed to connect to port 4221, retrying in 1s[0m
+[33m[tester::#AT4] [0m[91mtimed out, test exceeded 15 seconds[0m
+[33m[tester::#AT4] [0m[91mTest failed (try setting 'debug: true' in your codecrafters.yml to see more details)[0m
