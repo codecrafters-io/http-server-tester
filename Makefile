@@ -33,7 +33,7 @@ test_base: build
 
 test_compression: build
 	CODECRAFTERS_REPOSITORY_DIR=./internal/test_helpers/scenarios/pass_base \
-	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\": \"ij8\", \"tester_log_prefix\": \"stage-10\", \"title\": \"compression-multiple-schemes\"}, {\"slug\": \"cr8\", \"tester_log_prefix\": \"stage-11\", \"title\": \"compression-gzip\"}]" \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\": \"df4\", \"tester_log_prefix\": \"stage-9\", \"title\": \"content-encoding header\"}, {\"slug\": \"ij8\", \"tester_log_prefix\": \"stage-10\", \"title\": \"compression-multiple-schemes\"}, {\"slug\": \"cr8\", \"tester_log_prefix\": \"stage-11\", \"title\": \"compression-gzip\"}]" \
 	dist/main.out
 
 test_persistence: build
