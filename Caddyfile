@@ -1,0 +1,52 @@
+{
+    # Enable debug logging
+    debug
+}
+
+:4221 {
+    # Root endpoint
+    handle / {
+        respond "OK" 200
+    }
+
+    # Echo endpoint
+    handle /echo/* {
+        uri strip_prefix /echo/
+        header Content-Type text/plain
+        header Content-Length {len {path}}
+        respond {path} 200
+    }
+
+    # User-Agent endpoint
+    handle /user-agent {
+        header Content-Type text/plain
+        header Content-Length {len {http.request.header.User-Agent}}
+        respond {http.request.header.User-Agent} 200
+    }
+
+    # Files endpoint
+    handle /files/* {
+        root * /tmp/data/codecrafters.io/http-server-tester
+        uri strip_prefix /files/
+
+        # Handle POST requests
+        @post {
+            method POST
+        }
+        handle @post {
+            # Forward to a local server that handles file writing
+            reverse_proxy localhost:4222
+        }
+
+        file_server
+        header Content-Type application/octet-stream
+    }
+
+    # Handle 404 for all other paths
+    handle {
+        respond 404
+    }
+
+    # Enable gzip compression
+    encode gzip
+} 
